@@ -4,9 +4,21 @@ var inbound = require('../controllers/inbound-message');
 var jwt = require('jsonwebtoken');
 
 //Set in env
-var TWILIO_ACCOUNT_SID = 'ACb196d10158ca8e11fb1503c7c7c78f1e'; 
-var TWILIO_AUTH_TOKEN = '00c4b99ad4770a8167f79e5c4458c8f3'; 
-var TWILIO_NUMBER = '+14153001549';
+if (!process.env) {
+
+	var TWILIO_ACCOUNT_SID = 'ACb196d10158ca8e11fb1503c7c7c78f1e'; 
+	var TWILIO_AUTH_TOKEN = '00c4b99ad4770a8167f79e5c4458c8f3'; 
+	var TWILIO_NUMBER = '+14153001549';
+
+}
+else {
+
+	var TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID;
+	var TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN;
+	var TWILIO_NUMBER = process.env.TWILIO_NUMBER;
+
+}
+
 
 var client = require('twilio')(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 var Message = mongoose.model('Message');
