@@ -36,7 +36,7 @@ router.route('/incoming')
 	    // Process any message the user sent to us
 	    function processMessage(phone) {
 	        // get the text message command sent by the user
-	        var msg = request.body.Body || '';
+	        var msg = req.body.Body || '';
 	        msg = msg.toLowerCase().trim();
 
 	        // Conditional logic to do different things based on the command from
@@ -82,8 +82,8 @@ router.route('/incoming')
 	    // Jade template - sends a text message back to user
 	    function respond(message) {
 	        console.log('redirecting to twiml to respond with: ', message);
-	        response.type('text/xml');
-	        response.render('twiml', {
+	        res.type('text/xml');
+	        res.render('twiml', {
 	            message: message
 	        });
 	    }
