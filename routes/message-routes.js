@@ -83,20 +83,16 @@ router.route('/incoming')
 	        }
 	        respond(responseMessage);
 	        console.log('attempting to respond with: ', responseMessage);*/
-	    }
-
-	    // Set Content-Type response header and render XML (TwiML) response in a 
-	    // Jade template - sends a text message back to user
-	    function respond(message) {
-	        console.log('redirecting to twiml to respond with: ', message);
-	        res.type('text/xml');
-	        res.render('twiml', {
-	            message: message
-	        });
-	    }
-
-	    //res.send('reached incoming');
-
+	
+	        // Set Content-Type response header and render XML (TwiML) response in a 
+		    // Jade template - sends a text message back to user
+		    function respond(message) {
+		        console.log('redirecting to twiml to respond with: ', message);
+		        res.type('text/xml');
+		        res.render('twiml', {
+		            message: message
+		        });
+		    }
 	});
 
 router.route('/')
