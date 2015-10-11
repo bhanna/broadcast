@@ -2,23 +2,31 @@ var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
-var passport = require('passport');
+//var passport = require('passport');
+var expressJwt = require('express-jwt');
+var jwt = require('jsonwebtoken');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 
-//initialze models - used by passport-init.js
+//initialze models - used by 
+//recipient-routes.js
+//message-routes.js
 require('./models/models.js');
 
 var index = require('./routes/index');
-var api = require('./routes/api');
-var authenticate = require('./routes/authenticate')(passport);
+var auth = require('./auth');
+var recipients = require('./routes/recipient-routes');
+var messages = require('./routes/message-routes');
+//var api = require('./routes/api');
+//var authenticate = require('./routes/authenticate')(passport);
 
 //connect to mongoDB
-if (process.env.DEV_ENV) {
+if (!process.env.MONGOLAB_URI) {
 
   mongoose.connect('mongodb://localhost/broadcastLocal');
+  console.log('Local DB');
 
 }
 else {
@@ -36,6 +44,7 @@ app.set('view engine', 'ejs');
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
+app.use('/api', expressJwt({secret: 'secret meowfriend'}));
 app.use(session({
 
   secret: process.env.SESSION_SECRET || 'secret cat',
@@ -47,14 +56,19 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(passport.initialize());
-app.use(passport.session());
+//app.use(passport.initialize());
+//app.use(passport.session());
 
 app.use('/', index);
-app.use('/auth', authenticate);
-app.use('/api', api);
+app.use('/auth', auth);
+app.use('/recipients', recipients);
+app.use('/messages', messages);
+//app.use('/auth', authenticate);
+//app.use('/api', api);
 
 
+// Mount middleware to notify Twilio of errors
+//app.use(twilioNotifications.notifyOnError);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -64,8 +78,8 @@ app.use(function(req, res, next) {
 });
 
 // Initialize Passport
-var initPassport = require('./passport-init');
-initPassport(passport);
+//var initPassport = require('./passport-init');
+//initPassport(passport);
 
 // error handlers
 
