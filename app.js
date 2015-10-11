@@ -3,7 +3,7 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 //var passport = require('passport');
-var expressJwt = require('express-jwt');
+//var expressJwt = require('express-jwt');
 var jwt = require('jsonwebtoken');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
@@ -44,7 +44,7 @@ app.set('view engine', 'ejs');
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
-app.use('/api', expressJwt({secret: 'secret meowfriend'}));
+//app.use('/api', expressJwt({secret: 'secret meowfriend'}));
 app.use(session({
 
   secret: process.env.SESSION_SECRET || 'secret cat',
