@@ -38,6 +38,7 @@ router.route('/incoming')
 		var phone = req.body.From;
 	    var responseMessage;
 	    console.log('response from client: ', phone);
+	    /*
 	    // Process any message the user sent to us
 	    function processMessage(phone) {
 	        // get the text message command sent by the user
@@ -47,7 +48,7 @@ router.route('/incoming')
 
 	        // Conditional logic to do different things based on the command from
 	        // the user
-	        if (msg === 'yes' || msg === 'no') {
+	        if (msg === 'yes' || msg === 'no') {*/
 	            // If the user has elected to subscribe for messages, flip the bit
 	            // and indicate that they have done so.
 	            /*
@@ -65,7 +66,7 @@ router.route('/incoming')
 	            
 	                respond(responseMessage);
 	            });*/
-	            
+	            /*
 	            if (msg === 'yes') {
 	                responseMessage = 'word.';
 	            }
@@ -81,7 +82,7 @@ router.route('/incoming')
 	            
 	        }
 	        respond(responseMessage);
-	        console.log('attempting to respond with: ', responseMessage);
+	        console.log('attempting to respond with: ', responseMessage);*/
 	    }
 
 	    // Set Content-Type response header and render XML (TwiML) response in a 
