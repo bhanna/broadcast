@@ -1,6 +1,6 @@
 var express = require('express');
 var mongoose = require( 'mongoose' );
-var inbound = require('../controllers/inbound-message');
+var incoming = require('../controllers/inbound-message');
 var jwt = require('jsonwebtoken');
 
 //Set in env
@@ -26,7 +26,7 @@ var Message = mongoose.model('Message');
 var router =  express.Router();
 
 // Twilio SMS webhook route
-router.get('/incoming', inbound.webhook);
+router.route('/incoming').get(inbound.webhook);
 
 router.route('/')
 	
