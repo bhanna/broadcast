@@ -38,6 +38,7 @@ router.route('/incoming')
 		var phone = req.body.From;
 	    var responseMessage;
 	    console.log('response from client: ', phone);
+	    res.send(phone);
 	    /*
 	    // Process any message the user sent to us
 	    function processMessage(phone) {
@@ -83,7 +84,7 @@ router.route('/incoming')
 	        }
 	        respond(responseMessage);
 	        console.log('attempting to respond with: ', responseMessage);*/
-	
+			/*
 	        // Set Content-Type response header and render XML (TwiML) response in a 
 		    // Jade template - sends a text message back to user
 		    function respond(message) {
@@ -93,6 +94,7 @@ router.route('/incoming')
 		            message: message
 		        });
 		    }
+		    */
 	});
 
 router.route('/')
