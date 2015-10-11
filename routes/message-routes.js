@@ -26,7 +26,7 @@ var Message = mongoose.model('Message');
 var router =  express.Router();
 
 // Twilio SMS webhook route
-router.post('/inbound', inbound.webhook);
+router.get('/inbound', inbound.webhook);
 
 router.route('/')
 	
