@@ -5,7 +5,7 @@ var jwt = require('jsonwebtoken');
 // Create a function to handle Twilio SMS / MMS webhook requests
 
 exports.webhook = function(req, res) {
-
+    console.log('reached incoming');
     /*
     // Get the user's phone number
     var phone = request.body.From;
