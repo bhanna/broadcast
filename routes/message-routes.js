@@ -2,6 +2,11 @@ var express = require('express');
 var mongoose = require( 'mongoose' );
 var incoming = require('../controllers/inbound-message');
 var jwt = require('jsonwebtoken');
+var bodyParser = require('body-parser');
+
+app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 //Set in env
 if (!process.env) {
@@ -38,6 +43,7 @@ router.route('/incoming')
 	        // get the text message command sent by the user
 	        var msg = req.body.Body || '';
 	        msg = msg.toLowerCase().trim();
+	        console.log('msg: ', msg);
 
 	        // Conditional logic to do different things based on the command from
 	        // the user
