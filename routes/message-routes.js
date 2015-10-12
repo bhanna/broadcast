@@ -25,7 +25,7 @@ else {
 }
 
 
-//var client = require('twilio')(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+var client = require('twilio')(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 var Message = mongoose.model('Message');
 
 var router =  express.Router();
