@@ -1,8 +1,8 @@
 var express = require('express');
 var mongoose = require( 'mongoose' );
+var bodyParser = require('body-parser');
 var incoming = require('../controllers/inbound-message');
 var jwt = require('jsonwebtoken');
-var bodyParser = require('body-parser');
 
 app = express();
 app.use(bodyParser.json());
@@ -25,7 +25,7 @@ else {
 }
 
 
-var client = require('twilio')(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+//var client = require('twilio')(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 var Message = mongoose.model('Message');
 
 var router =  express.Router();
@@ -33,13 +33,12 @@ var router =  express.Router();
 // Twilio SMS webhook route
 router.route('/incoming')
 	
-	.get(function(req, res) {
+	.post(function(req, res) {
 
 		var phone = req.body.From;
 	    var responseMessage;
 	    console.log('response from client: ', phone);
-	    res.send(phone);
-	    /*
+
 	    // Process any message the user sent to us
 	    function processMessage(phone) {
 	        // get the text message command sent by the user
@@ -49,7 +48,7 @@ router.route('/incoming')
 
 	        // Conditional logic to do different things based on the command from
 	        // the user
-	        if (msg === 'yes' || msg === 'no') {*/
+	        if (msg === 'yes' || msg === 'no') {
 	            // If the user has elected to subscribe for messages, flip the bit
 	            // and indicate that they have done so.
 	            /*
@@ -67,7 +66,7 @@ router.route('/incoming')
 	            
 	                respond(responseMessage);
 	            });*/
-	            /*
+	            
 	            if (msg === 'yes') {
 	                responseMessage = 'word.';
 	            }
@@ -83,8 +82,8 @@ router.route('/incoming')
 	            
 	        }
 	        respond(responseMessage);
-	        console.log('attempting to respond with: ', responseMessage);*/
-			/*
+	        console.log('attempting to respond with: ', responseMessage);
+			
 	        // Set Content-Type response header and render XML (TwiML) response in a 
 		    // Jade template - sends a text message back to user
 		    function respond(message) {
@@ -94,7 +93,7 @@ router.route('/incoming')
 		            message: message
 		        });
 		    }
-		    */
+		    
 	});
 
 router.route('/')
