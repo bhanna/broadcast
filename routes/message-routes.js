@@ -1,7 +1,7 @@
 var express = require('express');
 var mongoose = require( 'mongoose' );
 var bodyParser = require('body-parser');
-var incoming = require('../controllers/inbound-message');
+//var incoming = require('../controllers/inbound-message');
 var jwt = require('jsonwebtoken');
 
 app = express();
@@ -38,9 +38,10 @@ router.route('/incoming')
 		var phone = req.body.From;
 	    var responseMessage;
 	    console.log('response from client: ', phone);
+	    processMessage();
 
 	    // Process any message the user sent to us
-	    function processMessage(phone) {
+	    function processMessage() {
 	        // get the text message command sent by the user
 	        var msg = req.body.Body || '';
 	        msg = msg.toLowerCase().trim();
