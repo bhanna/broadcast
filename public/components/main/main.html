@@ -13,58 +13,7 @@
 
     <br />
     
-    <div class="row">
 
-      <h2>{{tasks[0]}}</h2> 
-      <div class="col-md-4">
-        <h4>Upload Single Recipient</h4>
-        <p>{{recipient_message}}</p>
-        <form class="form-auth" ng-Submit="postRecipient()" name="recipient-single">
-          
-          <label>First Name</label>
-          <input class="form-control" required placeholder="First Name" ng-model="recipient.firstName" /><br/>
-
-          <label>Last Name</label>
-          <input class="form-control" required placeholder="Last Name" ng-model="recipient.lastName" /><br/>
-
-          <label>Email</label>
-          <input class="form-control" required placeholder="Email" ng-model="recipient.email" /><br/>
-
-          <input class="btn submit-btn pull-right" type="submit" value="Submit!" ng-disabled="recipient-single.$invalid" />
-
-        </form>
-      </div>
-
-      <div class="col-md-4 col-md-offset-1">
-      <h4>Upload Recipient List (CSV)</h4>
-      </div>
-
-    </div><!-- End Row -->
-    
-    <br/>
-
-    <div class="row">
-
-      <h3>Recipients Uploaded</h3>
-
-      <table class="table table-hover table-bordered">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Created</th>
-          </tr>
-        </thead>
-        <tbody ng-repeat="recipient in allRecipients | orderBy:'created_at':true">
-          <tr>
-            <td>{{recipient.lastName}}, {{recipient.firstName}}</td>
-            <td>{{recipient.email}}</td>
-            <td>Created: {{recipient.created_at | date:"h:mma 'on' MMM d, y"}}</td>
-          </tr>
-        </tbody>
-      </table>
-
-    </div><!-- End Row -->
 
     <br/>
 
