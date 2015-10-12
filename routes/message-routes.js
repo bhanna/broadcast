@@ -1,13 +1,13 @@
 var express = require('express');
 var mongoose = require( 'mongoose' );
-var bodyParser = require('body-parser');
+//var bodyParser = require('body-parser');
 //var incoming = require('../controllers/inbound-message');
 var jwt = require('jsonwebtoken');
-
+/*
 app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
+*/
 //Set in env
 if (!process.env) {
 
