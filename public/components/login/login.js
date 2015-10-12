@@ -9,7 +9,7 @@ angular.module('login', [
 		.state('login', {
 			url: '/login',
 			controller: 'loginCtrl',
-			templateUrl: '/login.html'
+			templateUrl: 'components/login/login.html'
 	});
 
 })

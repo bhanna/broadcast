@@ -8,7 +8,7 @@ angular.module('broadcastApp', [
 ])
 .config( function broadcastAppConfig ($urlRouterProvider){
 
-		$urlRouterProvider.otherwise('/');
+	$urlRouterProvider.otherwise('/');
 
 });
 /*

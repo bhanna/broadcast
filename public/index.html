@@ -6,18 +6,17 @@
     <script type="text/javascript" src="https://cdn.rawgit.com/auth0/angular-storage/master/dist/angular-storage.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular-route.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular-resource.js"></script>
-    <script src="javascripts/broadcast-app.js"></script>
-    <script src="javascripts/signup.js"></script>
-    <script src="javascripts/login.js"></script>
-    <script src="javascripts/main.js"></script>
+    <script src="assets/javascripts/broadcast-app.js"></script>
+    <script src="components/signup/signup.js"></script>
+    <script src="components/login/login.js"></script>
+    <script src="components/main/main.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="stylesheets/style.css">
+    <link rel="stylesheet" href="assets/stylesheets/style.css">
   </head>
   <body ng-app="broadcastApp">
     <nav class="navbar-fluid navbar-default navbar-fixed-top">
       <div class="container">
         <a class="navbar-brand" ui-sref="main"> Broadcast </a>
-        <p class="navbar-text"> Send your request, get your answer</p>
         <p class="navbar-right navbar-text" ng-hide="authenticated"><a ui-sref="login">Login</a> or <a ui-sref="signup">Register</a></p>
         <p class="navbar-right navbar-text" ng-show="authenticated"><a ui-sref="login" ng-click="signout()">Logout</a></p>
         <p class="navbar-right navbar-text" ng-show="authenticated">Signed in as {{current_user}}</p>

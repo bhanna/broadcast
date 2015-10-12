@@ -6,7 +6,7 @@ function formatMessage(errorToReport) {
     'having issues. Exception: ' + errorToReport +
     '. Go to: http://newrelic.com ' +
     'for more details.';
-};
+}
 
 exports.notifyOnError = function(appError, request, response, next) {
   admins.forEach(function(admin) {

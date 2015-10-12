@@ -9,7 +9,7 @@ angular.module('signup', [
 		.state('signup', {
 			url: '/signup',
 			controller: 'signupCtrl',
-			templateUrl: '/signup.html'
+			templateUrl: 'components/signup/signup.html'
 	});
 
 })

@@ -5,7 +5,7 @@ angular.module('main', ['ngResource'])
 		.state('main', {
 			url: '/main',
 			controller: 'mainCtrl',
-			templateUrl: '/main.html'
+			templateUrl: 'components/main/main.html'
 	});
 
 })
