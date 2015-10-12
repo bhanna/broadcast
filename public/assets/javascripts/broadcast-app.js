@@ -4,7 +4,8 @@ angular.module('broadcastApp', [
 	'signup',
 	'login',
 	'main',
-	'lists'
+	'lists',
+	'broadcasts'
 
 ])
 .config( function broadcastAppConfig ($urlRouterProvider){

@@ -1,0 +1,19 @@
+<div class="row">
+
+  <div class="col-md-5">
+
+    <form ng-Submit="postMessage()">
+      <h4>{{username}} says</h4>
+      <small>{{message_sent}}</small>
+      <input required type="text" class="form-control" placeholder="Phone number" ng-model="message.to" />
+      <br/>
+      <input required type="text" class="form-control" placeholder="Message title" ng-model="message.title" />
+      <br/>
+      <textarea required class="form-control" maxlength="200" rows="3" placeholder="Say something" ng-model="message.body"></textarea>
+      <br/>
+      <input class="btn submit-btn pull-right" type="submit" value="Send!" />
+    </form>
+
+  </div>
+
+</div>
