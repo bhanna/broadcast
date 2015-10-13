@@ -21,7 +21,7 @@ else {
 
 
 //var client = require('twilio')(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
-var Message = mongoose.model('Message');
+var Broadcast = mongoose.model('Broadcast');
 
 var router =  express.Router();
 
@@ -104,27 +104,27 @@ router.route('/')
 	.post(function(req, res) {
 
 		var data = {};
-		var message = new Message();
-		message.to = req.body.to;
-		message.title = req.body.title;
-		message.body = req.body.body;
+		var broadcast = new Broadcast();
+		broadcast.to = req.body.to;
+		broadcast.header = req.body.header;
+		broadcast.body = req.body.body;
 
-		//TODO save message under specific user object
+		//TODO save broadcast under specific user object
 
-		message.save(function(err, message){
+		broadcast.save(function(err, broadcast){
 
 			//TODO make errors user friendly
 
 			if (err) {
-				console.log('err at saving Message', err);
+				console.log('err at saving broadcast', err);
 				return res.send(500, err);
 			}
 
 			client.sendSms({
-			    to:'+1' + message.to,
+			    to:'+1' + broadcast.to,
 			    from: TWILIO_NUMBER,
-			    body: message.body
-			}, function(error, message) {
+			    body: broadcast.body
+			}, function(error, broadcast) {
 			    // The HTTP request to Twilio will run asynchronously. This callback
 			    // function will be called when a response is received from Twilio
 			    // The "error" variable will contain error information, if any.
@@ -133,18 +133,18 @@ router.route('/')
 			        // The second argument to the callback will contain the information
 			        // sent back by Twilio for the request. In this case, it is the
 			        // information about the text messsage you just sent:
-			        console.log('Success! The SID for this SMS message is:');
-			        console.log(message.sid);
+			        console.log('Success! The SID for this SMS broadcast is:');
+			        console.log(broadcast.sid);
 			 
-			        console.log('Message sent on:');
-			        console.log(message.dateCreated);
+			        console.log('broadcast sent on:');
+			        console.log(broadcast.dateCreated);
 			    } else {
 			        console.log('Oops! There was an error.');
 			    }
 			});
 
-			console.log('message posted', message.to);
-			data.to = message.to;
+			console.log('broadcast posted', broadcast.to);
+			data.to = broadcast.to;
 			return res.json(data);
 
 		});

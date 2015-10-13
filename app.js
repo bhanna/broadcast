@@ -12,13 +12,13 @@ var mongoose = require('mongoose');
 
 //initialze models - used by 
 //recipient-routes.js
-//message-routes.js
+//broadcast-routes.js
 require('./models/models.js');
 
 var index = require('./routes/index');
 var auth = require('./auth');
 var recipients = require('./routes/recipient-routes');
-var messages = require('./routes/message-routes');
+var broadcasts = require('./routes/broadcast-routes');
 //var api = require('./routes/api');
 //var authenticate = require('./routes/authenticate')(passport);
 
@@ -62,7 +62,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/auth', auth);
 app.use('/recipients', recipients);
-app.use('/messages', messages);
+app.use('/broadcasts', broadcasts);
 //app.use('/auth', authenticate);
 //app.use('/api', api);
 

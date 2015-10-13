@@ -2,14 +2,14 @@
 
   <div class="col-md-5">
 
-    <form ng-Submit="postMessage()">
+    <form ng-Submit="broadcast()">
       <h4>{{username}} says</h4>
-      <small>{{message_sent}}</small>
-      <input required type="text" class="form-control" placeholder="Phone number" ng-model="message.to" />
+      <small>{{broadcast_sent}}</small>
+      <input required type="text" class="form-control" placeholder="Phone number" ng-model="broadcast.to" />
       <br/>
-      <input required type="text" class="form-control" placeholder="Message title" ng-model="message.title" />
+      <input required type="text" class="form-control" placeholder="Broadcast header" ng-model="broadcast.header" />
       <br/>
-      <textarea required class="form-control" maxlength="200" rows="3" placeholder="Say something" ng-model="message.body"></textarea>
+      <textarea required class="form-control" maxlength="200" rows="3" placeholder="Say something" ng-model="broadcast.body"></textarea>
       <br/>
       <input class="btn submit-btn pull-right" type="submit" value="Send!" />
     </form>

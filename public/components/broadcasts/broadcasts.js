@@ -16,14 +16,14 @@ angular.module('broadcasts', [
 .controller('broadcastsCtrl', function BroadcastsController ($scope, $http, $state) {
 
 	$scope.username = 'Matthew';
-	$scope.message = {};
+	$scope.broadcast = {};
 
-	$scope.postMessage = function () {
+	$scope.broadcast = function () {
 
-		$http.post('/messages/', $scope.message).success(function(data){
+		$http.post('/broadcast/', $scope.broadcast).success(function(data){
 
-			$scope.message = {title: '', body: '', to: ''};
-			$scope.message_sent = 'Sent to: ' + data.to;
+			$scope.broadcast = {header: '', body: '', to: ''};
+			$scope.broadcast_sent = 'Sent to: ' + data.to;
 
 		});
 

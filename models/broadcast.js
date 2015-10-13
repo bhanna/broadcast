@@ -1,10 +1,10 @@
 var mongoose = require('mongoose');
 
-var messageSchema = new mongoose.Schema({
+var braodcastSchema = new mongoose.Schema({
 
 	//TODO add sender
 	to: String,
-	title: String,
+	header: String,
 	body: String,
 	created_at: {type: Date, default: Date.now}
 	//TODO add received by
@@ -14,4 +14,4 @@ var messageSchema = new mongoose.Schema({
 
 });
 
-mongoose.model('Message', messageSchema);
+mongoose.model('Broadcast', braodcastSchema);
