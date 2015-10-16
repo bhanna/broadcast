@@ -24,16 +24,16 @@ angular.module('broadcasts', [
 		//TODO add Sender from User account
 		if ($scope.broadcast.numPositions != '1') {
 
-			$scope.broadcast.body = 'There are ' + $scope.broadcast.numPositions + ' job opening at ' + 
+			$scope.broadcast.body = 'There are ' + $scope.broadcast.numPositions + ' job openings at ' + 
 			$scope.broadcast.location + '.  The job lasts from ' + $scope.broadcast.time + ', on ' + 
-			$scope.broadcast.date + '.  The pay is ' + $scope.broadcast.pay;
+			$scope.broadcast.date + '.  The pay is ' + $scope.broadcast.pay + '. Are you available?  Please text "yes" or "no"';
 
 		}
 		else {
 
 			$scope.broadcast.body = 'There is 1 job opening to fill at ' + 
 			$scope.broadcast.location + '.  The job lasts from ' + $scope.broadcast.time + ', on ' + 
-			$scope.broadcast.date + '.  The pay is ' + $scope.broadcast.pay;
+			$scope.broadcast.date + '.  The pay is ' + $scope.broadcast.pay + '. Are you available?  Please text "yes" or "no"';
 
 		}
 		
