@@ -101,7 +101,7 @@ angular.module('broadcasts', [
 				});
 
 			});
-			$scope.broadcast = null;
+			//$scope.broadcast = null;
 
 		});
 
