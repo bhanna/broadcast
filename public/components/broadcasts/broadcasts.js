@@ -96,7 +96,7 @@ angular.module('broadcasts', [
 
 					$scope.broadcast_message = 'Sent to: ' + data.to;
 					$scope.broadcast_message_class = 'alert-success';
-					
+					console.log('tried to send to ', val);
 
 				});
 
