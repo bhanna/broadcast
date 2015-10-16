@@ -61,7 +61,6 @@ router.route('/:id')
 	//get specified list
 	.get(function(req, res, next){
 
-		console.log('reached :id');
 		List.findById(req.params.id, function(err, list){
 
 			if (err) {
@@ -110,7 +109,7 @@ router.route('/:id')
 			if (err) {
 				return res.status(500).send(err);
 			}
-			
+
 			data.message = 'Removed recipient';
 	        return res.json(data);
 

@@ -4,7 +4,9 @@ var mongoose = require('mongoose');
 //TODO learn about embedded docs
 //and dynamic models from user generated content/preferences
 
-//message
+//TODO add [broadcastSchema] to a Conversation model to track responses in Mongo
+
+//broadcast
 var broadcastSchema = new mongoose.Schema({
 
 	//TODO add sender
@@ -28,6 +30,16 @@ var broadcastSchema = new mongoose.Schema({
 		//accepted by
 		//confirmed at
 		//completed?
+
+});
+
+
+//response from Recipient and auto response from Broadcast
+var responseSchema = new mongoose.Schema({
+
+	broadcastID: String,
+	body: String,
+	created_at: {type: Date, default: Date.now}
 
 });
 
@@ -57,6 +69,7 @@ var userSchema = new mongoose.Schema({
     password: {type: String, required: true}, 
     created_at: {type: Date, default: Date.now},
     broadcasts: [broadcastSchema],
+    convesrations: [responseSchema], //TODO configure this
     lists: [listSchema]
 });
 

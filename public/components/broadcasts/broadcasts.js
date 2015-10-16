@@ -13,9 +13,47 @@ angular.module('broadcasts', [
 	});
 
 })
-.controller('broadcastsCtrl', function BroadcastsController ($scope, $http, $state) {
+//TODO remove duplicate code (copied from my-lists.js)
+.factory('getAllLists', function($resource){
 
-	$scope.username = 'Matthew';
+	return $resource('/lists/all');
+
+})
+//TODO remove duplicate code (copied from my-lists.js)
+.factory('List', function($resource){
+
+	return $resource('/lists/:id');
+
+})
+.controller('broadcastsCtrl', function BroadcastsController ($scope, $http, $state, getAllLists, List) {
+
+	//remove duplicate code (copied from my-lists.js)
+	$scope.lists = getAllLists.query();
+
+	//TODO make all this cleaner
+
+	//showCreateList
+	$scope.showSingle = null;
+	$scope.showSingleRecipient = function () {
+
+		$scope.selected = null;
+		$scope.showSingle = true;
+
+	};
+
+	//TODO remove duplicate code (copied from my-lists.js)
+	//selec list
+	$scope.selected = null;
+	$scope.selectList = function(list) {
+
+		List.get({id: list._id}, function(data) {
+			$scope.showSingle = null;
+			$scope.selected = data;
+
+		});
+
+	};
+
 	$scope.broadcast = {};
 
 	$scope.sendBroadcast = function () {
@@ -40,11 +78,35 @@ angular.module('broadcasts', [
 
 		$http.post('/broadcasts/', $scope.broadcast).success(function(data){
 
-			$scope.broadcast_sent = 'Sent to: ' + data.to;
+			$scope.broadcast_message = 'Sent to: ' + data.to;
+			$scope.broadcast_message_class = 'alert-success';
 			$scope.broadcast = null;
 
 		});
 
 	};
+
+	$scope.sendMultiBroadcast = function(id) {
+
+		List.get({id: id}, function(data) {
+
+			angular.forEach(data.listItems, function(val) {
+
+				$http.post('/broadcasts/', $scope.broadcast).success(function(data){
+
+					$scope.broadcast_message = 'Sent to: ' + data.to;
+					$scope.broadcast_message_class = 'alert-success';
+					
+
+				});
+
+			});
+			$scope.broadcast = null;
+
+		});
+
+	};
+	
+
 
 });
