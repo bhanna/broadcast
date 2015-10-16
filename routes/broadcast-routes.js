@@ -20,7 +20,7 @@ else {
 }
 
 
-//var client = require('twilio')(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+var client = require('twilio')(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 var Broadcast = mongoose.model('Broadcast');
 
 var router =  express.Router();
@@ -106,8 +106,9 @@ router.route('/')
 		var data = {};
 		var broadcast = new Broadcast();
 		broadcast.to = req.body.to;
-		broadcast.header = req.body.header;
 		broadcast.body = req.body.body;
+		broadcast.numPositions = req.body.numPositions;
+		broadcast.openPositions = req.body.numPositions;
 
 		//TODO save broadcast under specific user object
 
@@ -117,7 +118,7 @@ router.route('/')
 
 			if (err) {
 				console.log('err at saving broadcast', err);
-				return res.send(500, err);
+				return res.status(500).send(err);
 			}
 
 			client.sendSms({

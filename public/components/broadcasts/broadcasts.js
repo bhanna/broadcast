@@ -18,12 +18,30 @@ angular.module('broadcasts', [
 	$scope.username = 'Matthew';
 	$scope.broadcast = {};
 
-	$scope.broadcast = function () {
+	$scope.sendBroadcast = function () {
 
-		$http.post('/broadcast/', $scope.broadcast).success(function(data){
+		//TODO make this cleaner
+		//TODO add Sender from User account
+		if ($scope.broadcast.numPositions != '1') {
 
-			$scope.broadcast = {header: '', body: '', to: ''};
+			$scope.broadcast.body = 'There are ' + $scope.broadcast.numPositions + ' job opening at ' + 
+			$scope.broadcast.location + '.  The job lasts from ' + $scope.broadcast.time + ', on ' + 
+			$scope.broadcast.date + '.  The pay is ' + $scope.broadcast.pay;
+
+		}
+		else {
+
+			$scope.broadcast.body = 'There is 1 job opening to fill at ' + 
+			$scope.broadcast.location + '.  The job lasts from ' + $scope.broadcast.time + ', on ' + 
+			$scope.broadcast.date + '.  The pay is ' + $scope.broadcast.pay;
+
+		}
+		
+
+		$http.post('/broadcasts/', $scope.broadcast).success(function(data){
+
 			$scope.broadcast_sent = 'Sent to: ' + data.to;
+			$scope.broadcast = null;
 
 		});
 

@@ -8,10 +8,22 @@ var mongoose = require('mongoose');
 var broadcastSchema = new mongoose.Schema({
 
 	//TODO add sender
-	to: String,
-	header: String,
-	body: String,
+	//initially concat message from chosen fields.
+	//this allows the user to eventually add or remove fields in a Broadcast
+	to: {type: String, required: true},
+	body: {type: String, required: true},
+	numPositions: {type: Number, required: true}, //Needed for filling positions
+	openPositions: {type: Number, required: true}, //Needed to track filled positions
 	created_at: {type: Date, default: Date.now}
+	/*
+	to: {type: String, required: true},
+	time: {type: String, required: true},
+	date: {type: String, required: true}, //TODO format date input with selects...
+	location: {type: String, required: true}, //TODO separate fields in HTML and concat for model storage
+	pay: {type: String, required: true},
+	numPositions: {type: Number, required: true},
+	created_at: {type: Date, default: Date.now}
+	*/
 	//TODO add received by
 		//accepted by
 		//confirmed at
@@ -23,9 +35,8 @@ var broadcastSchema = new mongoose.Schema({
 //recipient
 var recipientSchema = new mongoose.Schema({
     firstName: String,
-    lastName: String,
-    email: {type: String, required: true },
-    phone: {type: String, required: true },
+    email: String,
+    phone: String,
     created_at: {type: Date, default: Date.now}
 });
 
@@ -34,6 +45,7 @@ var recipientSchema = new mongoose.Schema({
 var listSchema = new mongoose.Schema({
 
 	listName: {type: String, required: true},
+	listDesc: String,
 	listItems: [recipientSchema]
 
 });

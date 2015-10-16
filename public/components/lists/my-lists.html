@@ -1,0 +1,97 @@
+<div class="clearfix">
+
+  <div ng-controller="listCtrl">
+
+  <h1>My Lists</h1>
+
+    <div ng-show="list_message"class="alert {{list_message_class}}" role="alert">
+      <p>{{list_message}}</p>
+    </div>
+
+    <div class="row">
+
+      <div class="col-md-6 well well-large" ng-show="noLists">You currently have no lists.  <a ng-click="showCreateList()">Create a List</a></div> 
+
+      <div class="col-md-2" ng-hide="noLists">
+
+        <ul class="nav nav-pills nav-stacked">
+          <li ng-repeat="list in lists" ng-class="{active: list.title == selected.title}"><a href="" ng-click="getList(list)" >{{list.listName}}</a></li>
+          <li ng-class="{active: showCreate}"><a href="" ng-click="showCreateList()">+ Create List</a></li>
+        </ul>
+
+      </div>
+      
+      <div class="col-md-4 col-md-offset-1" ng-show="showCreate">
+
+        <h4>Create a List</h4>
+
+          <form class="form-auth" ng-Submit="createList()" name="list-details">
+            <label>List Name</label>
+            <input type="text" class="form-control"  ng-model="list.listName" required placeholder="Name your list" />
+            <br />
+            <label>List Description (optional)</label>
+            <textarea class="form-control" maxlength="200" rows="3" ng-model="list.listDesc" placeholder="Describe your list"></textarea>
+            <br/>
+            <input class="btn submit-btn pull-right" type="submit"  value="Submit!" ng-disabled="list-details.$invalid" />
+          </form>   
+  
+      </div>  <!-- End createList -->
+
+      <div class="col-md-8 col-md-offset-1" ng-show="selected">
+        
+        <h2>{{selected.listName}}</h2>
+
+        <button style="float:right; position: relative; bottom: 43px;" class="btn btn-danger" ng-click="deleteList()">Delete List</button>
+
+         <div ng-show="recipient_message"class="alert alert-success" role="alert">
+          <p>{{recipient_message}}</p>
+        </div>
+
+        <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Action</th>
+            <th>&nbsp;</th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <input class="form-control" required placeholder="First Name" ng-model="recipient.firstName" />
+              </td>
+              <td>  
+                <input class="form-control" required placeholder="Email" ng-model="recipient.email" />
+              </td>
+              <td>
+                <input class="form-control" required placeholder="Phone Number" ng-model="recipient.phone" />
+              </td>
+              <td>
+                <button class="btn btn-primary" ng-click="createRecipient()">Add</button>
+              </td>
+              <td>
+                <button class="btn btn-primary" ng-click="updateRecipient(recipient._id)">Update</button>
+              </td>
+            </tr>
+            <tr ng-repeat="recipient in selected.listItems | orderBy:'created_at':true">
+              <td>{{recipient.firstName}}</td>
+              <td>{{recipient.email}}</td>
+              <td>{{recipient.phone}}</td>
+              <td>
+                <button class="btn btn-primary" ng-click="editRecipient(recipient._id)">Edit</button>
+              <td>
+                <button class="btn btn-danger" ng-click="deleteRecipient(recipient._id)">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+    </div> <!-- End Row -->
+
+  </div><!-- End listCtrl -->
+
+</div>

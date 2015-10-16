@@ -1,18 +1,36 @@
 <div class="row">
 
-  <div class="col-md-5">
+  <div class="col-md-4 col-md-offset-1">
 
-    <form ng-Submit="broadcast()">
-      <h4>{{username}} says</h4>
+    <h2>Single Broadcast</h2>
+    <form ng-Submit="sendBroadcast()">
       <small>{{broadcast_sent}}</small>
+      <label>Who is this going to?</label>
       <input required type="text" class="form-control" placeholder="Phone number" ng-model="broadcast.to" />
       <br/>
-      <input required type="text" class="form-control" placeholder="Broadcast header" ng-model="broadcast.header" />
+      <label>What's the time frame?</label>
+      <input required type="text" class="form-control" placeholder="i.e. 9am - 5pm" ng-model="broadcast.time" />
       <br/>
-      <textarea required class="form-control" maxlength="200" rows="3" placeholder="Say something" ng-model="broadcast.body"></textarea>
+      <label>When?</label>
+      <input required type="text" class="form-control" placeholder="i.e. 11/15/2015" ng-model="broadcast.date" />
+      <br/>
+      <label>Where?</label>
+      <input required type="text" class="form-control" placeholder="i.e. Grace Cathedral, San Francisco" ng-model="broadcast.location" />
+      <br/>
+      <label>What does it pay?</label>
+      <input required type="text" class="form-control" placeholder="i.e. $120" ng-model="broadcast.pay" />
+      <br/>
+      <label>How many positions need to be filled?</label>
+      <input required type="text" class="form-control" placeholder="i.e. 25" ng-model="broadcast.numPositions" />
       <br/>
       <input class="btn submit-btn pull-right" type="submit" value="Send!" />
     </form>
+
+  </div>
+
+  <div class="col-md-4 col-md-offset-1">
+
+    <h2>Send to List</h2>
 
   </div>
 

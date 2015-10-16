@@ -4,7 +4,7 @@ angular.module('broadcastApp', [
 	'signup',
 	'login',
 	'main',
-	'lists',
+	'my-lists',
 	'broadcasts'
 
 ])
