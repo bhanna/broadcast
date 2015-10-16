@@ -85,6 +85,11 @@ angular.module('broadcasts', [
 		});
 
 	};
+	
+
+	//TODO clean up with multiple controllers?
+
+	$scope.broadcast_multi = {};
 
 	$scope.sendMultiBroadcast = function(id) {
 
@@ -92,7 +97,7 @@ angular.module('broadcasts', [
 
 			angular.forEach(data.listItems, function(val) {
 
-				$http.post('/broadcasts/', $scope.broadcast).success(function(data){
+				$http.post('/broadcasts/', $scope.broadcast_multi).success(function(data){
 
 					$scope.broadcast_message = 'Sent to: ' + data.to;
 					$scope.broadcast_message_class = 'alert-success';

@@ -52,19 +52,19 @@
     <h2>Sending to {{selected.listName}}</h2>
     <form ng-Submit="sendMultiBroadcast(selected._id)">
       <label>What's the time frame?</label>
-      <input required type="text" class="form-control" placeholder="i.e. 9am - 5pm" ng-model="broadcast.time" />
+      <input required type="text" class="form-control" placeholder="i.e. 9am - 5pm" ng-model="broadcast_multi.time" />
       <br/>
       <label>When?</label>
-      <input required type="text" class="form-control" placeholder="i.e. 11/15/2015" ng-model="broadcast.date" />
+      <input required type="text" class="form-control" placeholder="i.e. 11/15/2015" ng-model="broadcast_multi.date" />
       <br/>
       <label>Where?</label>
-      <input required type="text" class="form-control" placeholder="i.e. Grace Cathedral, San Francisco" ng-model="broadcast.location" />
+      <input required type="text" class="form-control" placeholder="i.e. Grace Cathedral, San Francisco" ng-model="broadcast_multi.location" />
       <br/>
       <label>What does it pay?</label>
-      <input required type="text" class="form-control" placeholder="i.e. $120" ng-model="broadcast.pay" />
+      <input required type="text" class="form-control" placeholder="i.e. $120" ng-model="broadcast_multi.pay" />
       <br/>
       <label>How many positions need to be filled?</label>
-      <input required type="text" class="form-control" placeholder="i.e. 25" ng-model="broadcast.numPositions" />
+      <input required type="text" class="form-control" placeholder="i.e. 25" ng-model="broadcast_multi.numPositions" />
       <br/>
       <input class="btn submit-btn pull-right" type="submit" value="Send!" />
     </form>
