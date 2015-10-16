@@ -93,18 +93,25 @@ angular.module('broadcasts', [
 
 	$scope.sendMultiBroadcast = function(id) {
 
+		$scope.broadcast_multi.body = 'There are ' + $scope.broadcast_multi.numPositions + ' job openings at ' + 
+		$scope.broadcast_multi.location + '.  The job lasts from ' + $scope.broadcast_multi.time + ', on ' + 
+		$scope.broadcast_multi.date + '.  The pay is ' + $scope.broadcast_multi.pay + '. Are you available?  Please text "yes" or "no"';
+
+
 		List.get({id: id}, function(data) {
 
 			angular.forEach(data.listItems, function(val) {
 
+				$scope.broadcast_multi.to = val.phone;
+				
 				$http.post('/broadcasts/', $scope.broadcast_multi).success(function(data){
 
 					$scope.broadcast_message = 'Sent to: ' + data.to;
 					$scope.broadcast_message_class = 'alert-success';
-					console.log('tried to send to ', val);
+					console.log('tried to send to ', val.firstName);
 
 				});
-
+				
 			});
 			//$scope.broadcast = null;
 
