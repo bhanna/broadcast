@@ -91,18 +91,21 @@ angular.module('broadcasts', [
 
 	$scope.broadcast_multi = {};
 
-	 var sendMultiBroadcast = function(broadcast, numbers) {
+	 var sendMultiBroadcast = function(broadcast, numbers, listName) {
 		
-		////loop through each number in numbers and send Twilio
+		//loop through each number in numbers and send Twilio
 		angular.forEach(numbers, function(number) {
+
+			//TODO log errors for bad phone numbers and continue loop!
 
 			$http.post('/broadcasts/multi?phone=' + number, broadcast).success(function(data) {
 
-				//$scope.broadcast_message = 'Sent to: ' + data.to;
-				//$scope.broadcast_message_class = 'alert-success';
 				console.log('tried to send ' + data.body + ' to ' + data.phone);
 
 			});
+
+			$scope.broadcast_message = 'Sent to: ' + listName;
+			$scope.broadcast_message_class = 'alert-success';
 
 		});
 
@@ -116,9 +119,10 @@ angular.module('broadcasts', [
 		$scope.broadcast_multi.date + '.  The pay is ' + $scope.broadcast_multi.pay + '. Are you available?  Please text "yes" or "no"';
 
 		var numbers = [];
+		var listName;
 
 		List.get({id: id}, function(data) {
-
+			listName = data.listName;
 			angular.forEach(data.listItems, function(val) {
 
 				numbers.push(val.phone);
@@ -126,7 +130,7 @@ angular.module('broadcasts', [
 			});
 
 			//send to $http post
-			sendMultiBroadcast($scope.broadcast_multi, numbers);
+			sendMultiBroadcast($scope.broadcast_multi, numbers, listName);
 
 		});
 
