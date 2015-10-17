@@ -91,29 +91,42 @@ angular.module('broadcasts', [
 
 	$scope.broadcast_multi = {};
 
-	$scope.sendMultiBroadcast = function(id) {
+	 var sendMultiBroadcast = function(broadcast, numbers) {
+		
+		////loop through each number in numbers and send Twilio
+		angular.forEach(numbers, function(number) {
+
+			$http.post('/broadcasts/multi?phone=' + number, broadcast).success(function(data) {
+
+				//$scope.broadcast_message = 'Sent to: ' + data.to;
+				//$scope.broadcast_message_class = 'alert-success';
+				console.log('tried to send ' + data.body + ' to ' + data.phone);
+
+			});
+
+		});
+
+
+	};
+
+	$scope.prepareMultiBroadcast = function(id) {
 
 		$scope.broadcast_multi.body = 'There are ' + $scope.broadcast_multi.numPositions + ' job openings at ' + 
 		$scope.broadcast_multi.location + '.  The job lasts from ' + $scope.broadcast_multi.time + ', on ' + 
 		$scope.broadcast_multi.date + '.  The pay is ' + $scope.broadcast_multi.pay + '. Are you available?  Please text "yes" or "no"';
 
+		var numbers = [];
 
 		List.get({id: id}, function(data) {
 
 			angular.forEach(data.listItems, function(val) {
 
-				$scope.broadcast_multi.to = val.phone;
-				
-				$http.post('/broadcasts/', $scope.broadcast_multi).success(function(data){
+				numbers.push(val.phone);
 
-					$scope.broadcast_message = 'Sent to: ' + data.to;
-					$scope.broadcast_message_class = 'alert-success';
-					console.log('tried to send to ', val.firstName);
-
-				});
-				
 			});
-			//$scope.broadcast = null;
+
+			//send to $http post
+			sendMultiBroadcast($scope.broadcast_multi, numbers);
 
 		});
 

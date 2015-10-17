@@ -103,7 +103,9 @@ router.route('/')
 	})
 	.post(function(req, res) {
 
+		//set response var
 		var data = {};
+
 		var broadcast = new Broadcast();
 		broadcast.to = req.body.to;
 		broadcast.body = req.body.body;
@@ -149,8 +151,63 @@ router.route('/')
 			return res.json(data);
 
 		});
-
 		
+	});
+
+router.route('/multi')
+
+	//TODO combine multi and single
+	.post(function(req, res) {
+
+		//set response var
+		var data = {};
+		
+		var broadcast = new Broadcast();
+		broadcast.to = req.query.phone;
+		broadcast.body = req.body.body;	
+		broadcast.numPositions = req.body.numPositions;
+		broadcast.openPositions = req.body.numPositions;
+
+		//TODO save broadcast under specific user object
+
+		broadcast.save(function(err, broadcast){
+
+			//TODO make errors user friendly
+
+			if (err) {
+				console.log('err at saving broadcast', err);
+				return res.status(500).send(err);
+			}
+
+			client.sendSms({
+			    to:'+1' + broadcast.to,
+			    from: TWILIO_NUMBER,
+			    body: broadcast.body
+			}, function(error, broadcast) {
+			    // The HTTP request to Twilio will run asynchronously. This callback
+			    // function will be called when a response is received from Twilio
+			    // The "error" variable will contain error information, if any.
+			    // If the request was successful, this value will be "falsy"
+			    if (!error) {
+			        // The second argument to the callback will contain the information
+			        // sent back by Twilio for the request. In this case, it is the
+			        // information about the text messsage you just sent:
+			        console.log('Success! The SID for this SMS broadcast is:');
+			        console.log(broadcast.sid);
+			 
+			        console.log('broadcast sent on:');
+			        console.log(broadcast.dateCreated);
+			    } else {
+			        console.log('Oops! There was an error.');
+			    }
+			});
+
+			console.log('broadcast posted', broadcast.to);
+			data.to = broadcast.to;
+			return res.json(data);
+
+		});
+
 	});
 
 module.exports = router;

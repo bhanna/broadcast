@@ -50,7 +50,7 @@
   <!-- send to List -->
   <div class="col-md-4" ng-show="selected">
     <h2>Sending to {{selected.listName}}</h2>
-    <form ng-Submit="sendMultiBroadcast(selected._id)">
+    <form ng-Submit="prepareMultiBroadcast(selected._id)">
       <label>What's the time frame?</label>
       <input required type="text" class="form-control" placeholder="i.e. 9am - 5pm" ng-model="broadcast_multi.time" />
       <br/>
