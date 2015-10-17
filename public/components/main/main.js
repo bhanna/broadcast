@@ -17,12 +17,5 @@ angular.module('main', ['ngResource'])
 .controller('mainCtrl', function MainController ($scope, $http, $location, getRecipients) {
 
 	$scope.username = 'Matthew';
-	$scope.tasks = [
-			'Upload recipient list',
-			'Input Message',
-			'Send message to recipients',
-			'Receive response "yes" & "no"',
-			'Update status in recipient list'
-			];
 
 });
