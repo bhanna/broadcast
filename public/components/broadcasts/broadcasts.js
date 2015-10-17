@@ -114,6 +114,8 @@ angular.module('broadcasts', [
 
 	$scope.prepareMultiBroadcast = function(id) {
 
+		//TODO need validation on inputs for any required types in broadcastSchema
+
 		$scope.broadcast_multi.body = 'There are ' + $scope.broadcast_multi.numPositions + ' job openings at ' + 
 		$scope.broadcast_multi.location + '.  The job lasts from ' + $scope.broadcast_multi.time + ', on ' + 
 		$scope.broadcast_multi.date + '.  The pay is ' + $scope.broadcast_multi.pay + '. Are you available?  Please text "yes" or "no"';
