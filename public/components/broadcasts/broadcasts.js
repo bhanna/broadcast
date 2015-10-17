@@ -100,11 +100,11 @@ angular.module('broadcasts', [
 
 			$http.post('/broadcasts/multi?phone=' + number, broadcast).success(function(data) {
 
-				console.log('tried to send ' + data.body + ' to ' + data.phone);
+				console.log('sent to ' + data.to);
 
 			});
 
-			$scope.broadcast_message = 'Sent to: ' + listName;
+			$scope.broadcast_message = 'Sent to ' + listName;
 			$scope.broadcast_message_class = 'alert-success';
 
 		});
