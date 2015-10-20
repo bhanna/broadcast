@@ -236,7 +236,9 @@ router.route('/outgoing')
 
 		}
 		//regex clear phone number so only numbers are present
-		thread.phone = req.query.phone;
+		//TODO This sould be in Model somehow
+		//add '+1' to all numbers for Twilio
+		thread.phone = '+1' + req.query.phone;
 
 		//find correct broadcast through req
 		Broadcast.findById(req.query.id, function(err, broadcast) {
