@@ -71,7 +71,10 @@ router.route('/incoming')
 	    function processMessage() {
 
 	        //NOT IN USE YET
-	    	BroadcastThread.find({'phone' : phone, 'broadcast_id' : broadcast_id}, function(err, thread) {
+	    	BroadcastThread.findOne({
+	    			phone: phone, 
+	    			broadcast_id: broadcast_id
+	    		}, function(err, thread) {
 		        // get the text message command sent by the user
 		        
 		        console.log('Thread found: ', thread);
