@@ -253,7 +253,7 @@ router.route('/outgoing')
 				console.log('phone ', thread.phone);
 				
 				client.messages.create({
-					to: '+'+ thread.phone,
+					to: '+1'+ thread.phone,
 				    from: TWILIO_NUMBER,
 				    body: broadcast.body
 				    //mediaUrl: "http://www.example.com/hearts.png"
