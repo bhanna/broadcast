@@ -61,6 +61,9 @@ router.route('/incoming')
 		msg = msg.toLowerCase().trim();
 		console.log('msg4: ', msg);
 
+		response = new Response();
+		response.body = msg;
+
 
 	    processMessage();
 
@@ -103,9 +106,6 @@ router.route('/incoming')
 							res.status(500).send(err);
 						}
 
-						response = new Response();
-						response.body = msg;
-
 						if (msg === 'yes') {
 		                	thread.status = 'Accepted';
 			            }
@@ -115,6 +115,10 @@ router.route('/incoming')
 
 
 			            thread.conversation.push(response);
+			            var subdoc = thread.conversation[0];
+			            console.log('conversation: ', subdoc);
+			            console.log('thread: ', thread);
+
 			            thread.save(function(err, thread) {
 
 			            	if (err) {
