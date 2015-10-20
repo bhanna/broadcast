@@ -21,11 +21,12 @@
   <!-- send to single Recipient -->
   <div class="col-md-4" ng-show="showSingle">
     <h2>Single Broadcast</h2>
+    <p></p>
     <form ng-Submit="prepareSingleMessage()">
       <label>What is this broadcast called?</label>
       <input required type="text" class="form-control" placeholder="Name your broadcast" ng-model="broadcast.title" />
       <br/>
-      <label >Who is this going to?</label>
+      <label>Who is this going to?</label>
       <input required type="text" class="form-control" placeholder="Phone number" ng-model="broadcast.phone" />
       <br />
       <label>What's the time frame?</label>

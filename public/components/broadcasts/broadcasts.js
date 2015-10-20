@@ -203,6 +203,7 @@ angular.module('broadcasts', [
 
 		//create message body
 		//NEED TO CREATE BODY AFTER TO GET THE JOB NUMBER FROM broadcast_id!!!!!!!
+		/*
 		if ($scope.broadcast.numPositions != '1') {
 
 			$scope.broadcast.body = 'There are ' + $scope.broadcast.numPositions + ' job openings at ' + 
@@ -217,6 +218,7 @@ angular.module('broadcasts', [
 			$scope.broadcast.date + '.  The pay is ' + $scope.broadcast.pay + '. Are you available?  Please text "yes" or "no"';
 
 		}
+		*/
 
 		broadcast.create($scope.broadcast)
 			.then(function(data) {
@@ -254,7 +256,8 @@ angular.module('broadcasts', [
 		//define list id to track during Broadcast creation
 		$scope.broadcast_multi.list_id = id;
 
-		//create message body
+		//create message body in broadcast-route and model
+		/*
 		if ($scope.broadcast_multi.numPositions != '1') {
 
 			$scope.broadcast_multi.body = 'There are ' + $scope.broadcast_multi.numPositions + ' job openings at ' + 
@@ -269,7 +272,7 @@ angular.module('broadcasts', [
 			$scope.broadcast_multi.date + '.  The pay is ' + $scope.broadcast_multi.pay + '. Are you available?  Please text "yes" or "no"';
 
 		}
-
+		*/
 		broadcast.create($scope.broadcast_multi)
 			.then(function(data) {
 

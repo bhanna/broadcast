@@ -171,6 +171,7 @@ router.route('/')
 	.post(function(req, res) {
 
 		//TODO save broadcast under specific user object
+		//TODO compose body of message here to get broadcast_id
 
 		var data = {};
 
@@ -179,7 +180,8 @@ router.route('/')
 
 		//set broadcast properties
 		broadcast.title = req.body.title;
-		broadcast.body = req.body.body;
+		broadcast.body = 'Hello, \n' + 'There is a position open at ' + req.body.location + ', on ' + req.body.date +
+		', from ' + req.body.time + '. Compensation for this job is ' + req.body.pay + '.';
 		broadcast.numPositions = req.body.numPositions;
 		broadcast.openPositions = req.body.numPositions;
 
@@ -236,9 +238,7 @@ router.route('/outgoing')
 				console.log('err at find Broadcast: ', err);
 				return res.status(500).send(err);
 			}
-			//broadcast.threads.push(thread);
-			//var subdoc = broadcast.threads[0];
-			//console.log('new thread: ', subdoc);
+			
 			thread.broadcast_id = broadcast.broadcast_id;
 			console.log('thread ', thread);
 
@@ -248,13 +248,22 @@ router.route('/outgoing')
 					console.log('err at thread post', err);
 					return res.status(500).send(err);
 				}
-
+				
+				client.messages.create({
+				    body: broadcast.body,
+				    to: '+'+ thread.phone,
+				    from: TWILIO_NUMBER,
+				    //mediaUrl: "http://www.example.com/hearts.png"
+				}, function(err, message) {
+				    process.stdout.write(message.sid);
+				});
+				
 				console.log('thread posted');
 				data = thread;
 				return res.json(data);
 
 			});
-			
+		
 		});
 
 			
@@ -304,7 +313,7 @@ router.route('/threads/:id')
 	});
 
 
-//get single open Broadcast
+//!!____DEPRECATED use /threads/:id
 router.route('/open/:id')
 
 	.get(function(req, res) {
