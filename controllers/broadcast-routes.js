@@ -250,11 +250,14 @@ router.route('/outgoing')
 				}
 				
 				client.messages.create({
-				    body: broadcast.body,
-				    to: '+'+ thread.phone,
-				    from: TWILIO_NUMBER,
+					to: '+'+ thread.phone,
+				    from: 'TWILIO_NUMBER',
+				    body: broadcast.body
 				    //mediaUrl: "http://www.example.com/hearts.png"
 				}, function(err, message) {
+					if (err) {
+						process.stdout.write(err);
+					}
 				    process.stdout.write(message);
 				    //process.stdout.write(message.sid);
 				});
