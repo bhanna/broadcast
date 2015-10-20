@@ -180,7 +180,7 @@ router.route('/')
 
 		//set broadcast properties
 		broadcast.title = req.body.title;
-		broadcast.body = 'Hello, \n' + 'There is a position open at ' + req.body.location + ', on ' + req.body.date +
+		broadcast.body = 'There is a position open at ' + req.body.location + ', on ' + req.body.date +
 		', from ' + req.body.time + '. Compensation for this job is ' + req.body.pay + '.';
 		broadcast.numPositions = req.body.numPositions;
 		broadcast.openPositions = req.body.numPositions;
