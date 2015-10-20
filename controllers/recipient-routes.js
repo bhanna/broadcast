@@ -41,7 +41,9 @@ router.route('/single')
 		var recipient = new Recipient();
 		recipient.firstName = req.body.firstName;
 		recipient.email = req.body.email;
-		recipient.phone = req.body.phone;
+		//TODO This sould be in Model somehow
+		//add '+1' to all numbers for Twilio
+		recipient.phone = '+1' + req.body.phone;
 
 		console.log('recipient', recipient);
 		//TODO save recipient under specific user object

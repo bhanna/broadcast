@@ -75,7 +75,6 @@ var recipientSchema = new mongoose.Schema({
     created_at: {type: Date, default: Date.now}
 });
 
-
 //list
 var listSchema = new mongoose.Schema({
 
