@@ -248,6 +248,9 @@ router.route('/outgoing')
 					console.log('err at thread post', err);
 					return res.status(500).send(err);
 				}
+
+				console.log('body ', broadcast.body);
+				console.log('phone ', thread.phone);
 				
 				client.messages.create({
 					to: '+'+ thread.phone,
@@ -256,9 +259,9 @@ router.route('/outgoing')
 				    //mediaUrl: "http://www.example.com/hearts.png"
 				}, function(err, message) {
 					if (err) {
-						process.stdout.write(err);
+						console.log('error at Twilio create ', err);
 					}
-				    process.stdout.write(message);
+				    console.log('message Twilio create ', message);
 				    //process.stdout.write(message.sid);
 				});
 				
