@@ -228,7 +228,7 @@ router.route('/outgoing')
 			thread.firstName = 'single';
 
 		}
-		
+		//regex clear phone number so only numbers are present
 		thread.phone = req.query.phone;
 
 		//find correct broadcast through req
@@ -255,7 +255,8 @@ router.route('/outgoing')
 				    from: TWILIO_NUMBER,
 				    //mediaUrl: "http://www.example.com/hearts.png"
 				}, function(err, message) {
-				    process.stdout.write(message.sid);
+				    process.stdout.write(message);
+				    //process.stdout.write(message.sid);
 				});
 				
 				console.log('thread posted');

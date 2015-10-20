@@ -33,6 +33,8 @@ angular.module('broadcasts', [
 	//create the Broadcast
 	b.create = function(data) {
 
+		//TODO set loading screen while broadcastThreads are sent
+
 		//var phone = data.to;
 		//var name = '';
 		var defer = $q.defer();
@@ -227,6 +229,7 @@ angular.module('broadcasts', [
 				broadcast.sendSingle($scope.broadcast, data.id)
 					.then(function(data) {
 
+						//TODO clear loading screen when done sending
 						$scope.broadcast_message = data.message;
 						$scope.broadcast_message_class = data.messageClass;
 
@@ -285,6 +288,7 @@ angular.module('broadcasts', [
 							.then(function(data) {
 
 								//success
+								//TODO clear loading screen when done sending
 								$scope.broadcast_message = 'Sent!';
 								$scope.broadcast_message_class = 'alert-success';
 
