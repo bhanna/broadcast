@@ -74,7 +74,7 @@ router.route('/incoming')
 	    	BroadcastThread.find({'phone' : phone, 'broadcast_id' : broadcast_id}, function(err, thread) {
 		        // get the text message command sent by the user
 		        
-
+		        console.log('Thread found: ', thread);
 
 		        // Conditional logic to do different things based on the command from
 		        // the user
