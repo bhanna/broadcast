@@ -15,11 +15,11 @@ var mongoose = require('mongoose');
 //broadcast-routes.js
 require('./models/models.js');
 
-var index = require('./routes/index');
-var auth = require('./auth');
-var recipients = require('./routes/recipient-routes');
-var broadcasts = require('./routes/broadcast-routes');
-var lists = require('./routes/list-routes');
+//var index = require('./routes/index');
+//var auth = require('./auth');
+//var recipients = require('./routes/recipient-routes');
+//var broadcasts = require('./routes/broadcast-routes');
+//var lists = require('./routes/list-routes');
 //var api = require('./routes/api');
 //var authenticate = require('./routes/authenticate')(passport);
 
@@ -60,11 +60,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 //app.use(passport.initialize());
 //app.use(passport.session());
 
-app.use('/', index);
-app.use('/auth', auth);
-app.use('/lists', lists);
-app.use('/recipients', recipients);
-app.use('/broadcasts', broadcasts);
+app.use(require('./controllers'));
+
+//app.use('/', index);
+//app.use('/auth', auth);
+//app.use('/lists', lists);
+//app.use('/recipients', recipients);
+//app.use('/broadcasts', broadcasts);
 //app.use('/auth', authenticate);
 //app.use('/api', api);
 

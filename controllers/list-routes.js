@@ -59,7 +59,7 @@ router.route('/all')
 router.route('/:id')
 	
 	//get specified list
-	.get(function(req, res, next){
+	.get(function(req, res){
 
 		List.findById(req.params.id, function(err, list){
 

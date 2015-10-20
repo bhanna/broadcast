@@ -9,13 +9,107 @@ angular.module('main', ['ngResource'])
 	});
 
 })
-.factory('getRecipients', function($resource){
+.factory('getOpenBroadcasts', function($resource){
 
-	return $resource('/recipients/:id');
+	//get all broadcasts where openPositions != 0
+	return $resource('/broadcasts/open/all');
 
 })
-.controller('mainCtrl', function MainController ($scope, $http, $location, getRecipients) {
+.factory('List', function($resource){
 
-	$scope.username = 'Matthew';
+	return $resource('/lists/:id');
+
+})
+.service('populateOpen', function populateOpen ($http, $q, List) {
+
+	var po = this;
+
+	//get broadcast by id and get List if necessary
+	po.getOpen = function(id) {
+
+		var defer = $q.defer();
+		$http.get('/broadcasts/threads/' + id).success(function(data) {
+
+			defer.resolve(data);
+			console.log('recieved ', data);
+
+		})
+		.error(function(err) {
+
+			defer.reject(err);
+			console.log('err ', err);
+
+		});
+
+		return defer.promise;
+
+	};
+
+
+})
+.controller('mainCtrl', function MainController ($scope, $http, getOpenBroadcasts, populateOpen) {
+
+	$scope.init = function() {
+
+		//set username
+		$scope.username = 'Matthew';
+		//get all open broadcasts
+		$scope.openBroadcasts = getOpenBroadcasts.query();
+
+		console.log($scope.openBroadcasts);
+
+		$scope.selected = {};
+
+
+	};
+	
+
+
+	//select open broadcast
+	//clean this the fuck up
+	$scope.selectOpen = function(oB) {
+
+		//set selected to the Open Broadcast
+		$scope.selected.oB = oB;
+		
+		populateOpen.getOpen(oB.broadcast_id)
+			.then(function(data) {
+
+				console.log('threads recieved in View: ', data);
+				//then populate open broadcast table with broadcast data
+				$scope.selected.threads = data;
+				console.log('oB data ', $scope.selected.oB);
+				console.log('threads ', $scope.selected.threads);
+
+				//populate table with recipient name from data.recipients
+
+				if ($scope.selected.threads[0].firstName === 'single') {
+
+					$scope.selected.threads[0].firstName = $scope.selected.threads[0].phone;
+				}
+
+				//TODO get status from data.conversations
+				//TODO get action from data.conversaions
+				//TODO add last action date
+				
+				
+
+
+			}, function(err) {
+
+				console.log('err at getOpen ', err);
+
+			});
+		
+
+		
+		
+
+		//display all selected oB threads?
+
+
+	};
+
+	$scope.init();
 
 });

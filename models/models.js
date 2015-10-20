@@ -1,48 +1,69 @@
 var express = require('express');
 var mongoose = require('mongoose');
 
-//TODO learn about embedded docs
-//and dynamic models from user generated content/preferences
+//TODO add dynamic models from user generated content/preferences
 
-//TODO add [broadcastSchema] to a Conversation model to track responses in Mongo
 
-//broadcast
-var broadcastSchema = new mongoose.Schema({
+//auto increment 
+//used in broadcast to differentiate between responses to broadcasts 
+var counterSchema = new mongoose.Schema({
+    _id: {type: String, required: true},
+    seq: { type: Number, default: 0 }
+});
+
+var Counter = mongoose.model('counter', counterSchema);
+
+//response from Recipient and auto response in broadcastThread
+var responseSchema = new mongoose.Schema({
+
+	//broadcastID: {type: String, required: true},
+	body: {type: String, required: true},
+	created_at: {type: Date, default: Date.now}
+
+});
+
+
+//broadcastThread (for individual broadcast thread as subdoc in broadcast)
+var broadcastThreadSchema = new mongoose.Schema({
 
 	//TODO add sender
 	//initially concat message from chosen fields.
 	//this allows the user to eventually add or remove fields in a Broadcast
-	to: {type: String, required: true},
+	//use broadcast_id to associate with Broadcast
+	broadcast_id: {type: Number, required: true},
+	firstName: {type: String, required: true},
+	phone: {type: String, required: true},
+	status: {type: String, required: true, default: 'Pending'},
+	conversation: [responseSchema], //TODO configure this
+	created_at: {type: Date, default: Date.now}
+
+});
+
+//broadcast (list for individual broadcast threads)
+var broadcastSchema = new mongoose.Schema({
+
+	broadcast_id: {type: Number},
+	title: {type: String, required: true},
 	body: {type: String, required: true},
 	numPositions: {type: Number, required: true}, //Needed for filling positions
 	openPositions: {type: Number, required: true}, //Needed to track filled positions
+	listID: String,
 	created_at: {type: Date, default: Date.now}
-	/*
-	to: {type: String, required: true},
-	time: {type: String, required: true},
-	date: {type: String, required: true}, //TODO format date input with selects...
-	location: {type: String, required: true}, //TODO separate fields in HTML and concat for model storage
-	pay: {type: String, required: true},
-	numPositions: {type: Number, required: true},
-	created_at: {type: Date, default: Date.now}
-	*/
-	//TODO add received by
-		//accepted by
-		//confirmed at
-		//completed?
+
+	//TODO add a user_id to associate rather than keep as a subdoc
 
 });
 
-
-//response from Recipient and auto response from Broadcast
-var responseSchema = new mongoose.Schema({
-
-	broadcastID: String,
-	body: String,
-	created_at: {type: Date, default: Date.now}
-
+//auto increment jobs
+broadcastSchema.pre('save', function(next) {
+    var doc = this;
+    Counter.findByIdAndUpdate({_id: 'broadcast_id'}, {$inc: { seq: 1} }, function(error, counter)   {
+        if(error)
+            return next(error);
+        doc.broadcast_id = counter.seq;
+        next();
+    });
 });
-
 
 //recipient
 var recipientSchema = new mongoose.Schema({
@@ -68,11 +89,13 @@ var userSchema = new mongoose.Schema({
     username: {type: String, required: true},
     password: {type: String, required: true}, 
     created_at: {type: Date, default: Date.now},
-    broadcasts: [broadcastSchema],
-    convesrations: [responseSchema], //TODO configure this
+    //broadcasts: [broadcastSchema],
     lists: [listSchema]
 });
 
+
+mongoose.model('BroadcastThread', broadcastThreadSchema);
+mongoose.model('Response', responseSchema);
 mongoose.model('Broadcast', broadcastSchema);
 mongoose.model('Recipient', recipientSchema);
 mongoose.model('User', userSchema);
