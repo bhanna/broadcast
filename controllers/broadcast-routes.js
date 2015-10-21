@@ -96,6 +96,11 @@ router.route('/incoming')
 				    			'broadcast_id': broadcast_id
 				    		}, function(err, thread) {
 					        // get the text message command sent by the user
+
+					        if (err) {
+								console.log('error at finding Thread ', err);
+								return respond('Something went wrong - please check your response and try again.');
+							}
 					        
 					        console.log('Thread found: ', thread);
 
@@ -120,19 +125,15 @@ router.route('/incoming')
 					                respond(responseMessage);
 					            });*/
 
-									if (err) {
-										console.log('error at finding Thread ', err);
-										res.status(500).send(err);
-									}
 
 									if (msg === 'yes') {
 					                	thread.status = 'Available';
-					                	responseMessage = 'word.';
+					                	responseMessage = 'Great.  We will contact you shortly to confirm the position.';
 					                	console.log('responseMessage Yes ', responseMessage);
 						            }
 						            else if (msg === 'no') {
 						                thread.status = 'Declined';
-						                responseMessage = 'whaaaat?';
+						                responseMessage = 'You have been unsubscribed from this position.';
 						                console.log('responseMessage No ', responseMessage);
 						            }
 						            else if (msg === 'confirm') {
