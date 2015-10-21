@@ -143,6 +143,7 @@ router.route('/incoming')
 		                responseMessage = 'whaaaat?';
 		            }
 		            else if (msg === 'confirm') {
+		            	//TODO update broadcast openPositions!!!!
 		            	responseMessage = 'Thank you for confirming!';
 		            }
 

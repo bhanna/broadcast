@@ -148,6 +148,7 @@ angular.module('main', ['ngResource'])
 
 
 	//TODO combine decline and accept and make status a variable
+	//TODO refresh openBroadcast List in case all positions are filled with one of the clicks...?
 	$scope.accept = function(thread) {
 
 		//TODO send broadcast_id and phone to outgoing
