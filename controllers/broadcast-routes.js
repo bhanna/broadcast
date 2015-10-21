@@ -81,7 +81,7 @@ router.route('/incoming')
 
 		        // Conditional logic to do different things based on the command from
 		        // the user
-		        if (msg === 'yes' || msg === 'no') {
+		        if (msg === 'yes' || msg === 'no' || msg === 'confirm') {
 		            // If the user has elected to subscribe for messages, flip the bit
 		            // and indicate that they have done so.
 		            /*
@@ -110,10 +110,13 @@ router.route('/incoming')
 						}
 
 						if (msg === 'yes') {
-		                	thread.status = 'Accepted';
+		                	thread.status = 'Available';
 			            }
 			            if (msg === 'no') {
 			                thread.status = 'Declined';
+			            }
+			            if (msg === 'confirm') {
+			            	thread.status = 'Confirmed';
 			            }
 
 
@@ -136,9 +139,13 @@ router.route('/incoming')
 		            if (msg === 'yes') {
 		                responseMessage = 'word.';
 		            }
-		            if (msg === 'no') {
+		            else if (msg === 'no') {
 		                responseMessage = 'whaaaat?';
 		            }
+		            else if (msg === 'confirm') {
+		            	responseMessage = 'Thank you for confirming!';
+		            }
+
 		            //respond(responseMessage);
 		        } else {
 		            // If we don't recognize the command, text back with the list of
@@ -310,7 +317,7 @@ router.route('/outgoing')
 					msg = 'The position is no longer available.  Thank you!';
 					console.log('msg Decline: ', msg);
 				}
-				else if (status === 'Confirmed') {
+				else if (status === 'Accepted') {
 
 					msg = 'You have been selected to fill the position....  Please reply Confirm' + thread.broadcast_id +
 					' to confirm your position.';

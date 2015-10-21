@@ -70,7 +70,7 @@ angular.module('main', ['ngResource'])
 	mo.accept = function(thread) {
 
 		var defer = $q.defer();
-		$http.post('/broadcasts/outgoing?status=Confirmed', thread).success(function(data) {
+		$http.post('/broadcasts/outgoing?status=Accepted', thread).success(function(data) {
 
 			defer.resolve(data);
 			console.log('successfully sent accept');
