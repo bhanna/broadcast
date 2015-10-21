@@ -87,6 +87,10 @@ router.route('/incoming')
 	    			console.log('error at find Broadcast to verify openPositions ', err);
 	    			return respond('Something went wrong - please check your response and try again.');
 	    		}
+	    		if (!broadcast) {
+	    			console.log('could not find broadcast ');
+	    			return respond('Something went wrong - please check your response and try again.');
+	    		}
 	    		else {
 	    			//positions available
 	    			if (broadcast.openPositions !== 0) {
@@ -102,7 +106,10 @@ router.route('/incoming')
 								console.log('error at finding Thread ', err);
 								return respond('Something went wrong - please check your response and try again.');
 							}
-					        
+					        if (!thread) {
+					        	console.log('could not find thread ');
+	    						return respond('Something went wrong - please check your response and try again.');
+					        }
 					        console.log('Thread found: ', thread);
 
 					        // Conditional logic to do different things based on the command from
