@@ -310,7 +310,7 @@ router.route('/outgoing')
 					msg = 'The position is no longer available.  Thank you!';
 					console.log('msg Decline: ', msg);
 				}
-				else if (status === 'Accepted') {
+				else if (status === 'Confirmed') {
 
 					msg = 'You have been selected to fill the position....  Please reply Confirm' + thread.broadcast_id +
 					' to confirm your position.';

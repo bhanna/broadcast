@@ -34,7 +34,7 @@
 		            <tr ng-repeat="t in selected.threads | orderBy: 'firstName'">
 			            <td>{{t.firstName}}</td>
 			            <td>{{t.status}}</td>
-			            <td><button class="btn btn-primary" ng-disabled="t.status == 'Pending' || t.status == 'Accepted'" ng-click="accept(t)"><span class="glyphicon glyphicon-ok"></span></button></td>
+			            <td><button class="btn btn-primary" ng-disabled="t.status == 'Pending' || t.status == 'Confirmed'" ng-click="accept(t)"><span class="glyphicon glyphicon-ok"></span></button></td>
 			            <td><button class="btn btn-danger" ng-disabled="t.status == 'Declined'" ng-click="decline(t)"><span class="glyphicon glyphicon-remove"></button></td>
 			            <td>{{t.created_at}}</td>
 		            </tr>
