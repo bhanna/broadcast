@@ -128,13 +128,17 @@ router.route('/incoming')
 									if (msg === 'yes') {
 					                	thread.status = 'Available';
 					                	responseMessage = 'word.';
+					                	console.log('responseMessage Yes ', responseMessage);
 						            }
 						            else if (msg === 'no') {
 						                thread.status = 'Declined';
 						                responseMessage = 'whaaaat?';
+						                console.log('responseMessage No ', responseMessage);
 						            }
 						            else if (msg === 'confirm') {
 						            	thread.status = 'Confirmed';
+						            	responseMessage = 'Thank you for confirming';
+						            	console.log('responseMessage Confirm ', responseMessage);
 						            	//update broadcast openPositions at Confirm
 						            	Broadcast.findOneAndUpdate({'broadcast_id': thread.broadcast_id}, { $inc: { openPositions: -1 }}, 
 						            		function(err) {
@@ -168,6 +172,8 @@ router.route('/incoming')
 						            	console.log('saved new Thread! ', thread);
 
 						            });
+						            respond(responseMessage);
+			        				console.log('attempting to respond with: ', responseMessage);
 
 					        } 
 						    
@@ -178,11 +184,12 @@ router.route('/incoming')
 	    			else {
 
 	    				responseMessage = 'All positions have been filled';
+	    				respond(responseMessage);
+			        	console.log('attempting to respond with: ', responseMessage);
 
 	    			}
 
-	    			respond(responseMessage);
-			        console.log('attempting to respond with: ', responseMessage);
+	    			
 					
 
 	    		}
