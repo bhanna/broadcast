@@ -76,6 +76,8 @@ router.route('/incoming')
 
 	    processMessage();
 
+	    //TODO tie all error messages to an error handler
+
 	    // Process any message the user sent to us
 	    function processMessage() {
 
@@ -85,11 +87,11 @@ router.route('/incoming')
 	    		if (err) {
 
 	    			console.log('error at find Broadcast to verify openPositions ', err);
-	    			return respond('Something went wrong - please check your response and try again.');
+	    			return respond('Something went wrong - perhaps you entered the wrong offer ID?  Please check your response and try again.');
 	    		}
 	    		if (!broadcast) {
 	    			console.log('could not find broadcast ');
-	    			return respond('Something went wrong - please check your response and try again.');
+	    			return respond('Something went wrong - perhaps you entered the wrong offer ID?  Please check your response and try again.');
 	    		}
 	    		else {
 	    			//positions available
@@ -104,11 +106,11 @@ router.route('/incoming')
 
 					        if (err) {
 								console.log('error at finding Thread ', err);
-								return respond('Something went wrong - please check your response and try again.');
+								return respond('Something went wrong - perhaps you responded to the wrong offer?  Please check your response and try again.');
 							}
 					        if (!thread) {
 					        	console.log('could not find thread ');
-	    						return respond('Something went wrong - please check your response and try again.');
+	    						return respond('Something went wrong - perhaps you responded to the wrong offer?  Please check your response and try again.');
 					        }
 					        console.log('Thread found: ', thread);
 
