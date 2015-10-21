@@ -85,6 +85,7 @@ router.route('/incoming')
 	    		if (err) {
 
 	    			console.log('error at find Broadcast to verify openPositions ', err);
+	    			return respond('Something went wrong - please check your response and try again.');
 	    		}
 	    		else {
 	    			//positions available
