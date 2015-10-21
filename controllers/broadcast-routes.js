@@ -64,111 +64,135 @@ router.route('/incoming')
 		response = new Response();
 		response.body = msg;
 
+		// Set Content-Type response header and render XML (TwiML) response in a 
+	    // Jade template - sends a text message back to user
+	    function respond(message) {
+	        console.log('redirecting to twiml to respond with: ', message);
+	        res.type('text/xml');
+	        res.render('twiml', {
+	            message: message
+	        });
+	    }
 
 	    processMessage();
 
 	    // Process any message the user sent to us
 	    function processMessage() {
 
-	        //NOT IN USE YET
-	    	BroadcastThread.findOne({
-	    			'phone': phone, 
-	    			'broadcast_id': broadcast_id
-	    		}, function(err, thread) {
-		        // get the text message command sent by the user
-		        
-		        console.log('Thread found: ', thread);
+	    	//check open positions in Broadcast
+	    	Broadcast.findOne({'broadcast_id': broadcast_id}, function(err, broadcast) {
 
-		        // Conditional logic to do different things based on the command from
-		        // the user
-		        if (msg === 'yes' || msg === 'no' || msg === 'confirm') {
-		            // If the user has elected to subscribe for messages, flip the bit
-		            // and indicate that they have done so.
-		            /*
-		            subscriber.subscribed = msg === 'subscribe';
-		            subscriber.save(function(err) {
-		                if (err)
-		                    return respond('We could not subscribe you - please try '
-		                        + 'again.');
+	    		if (err) {
 
-		                // Otherwise, our subscription has been updated
-		                var responseMessage = 'You are now subscribed for updates.';
-		                if (!subscriber.subscribed)
-		                    responseMessage = 'You have unsubscribed. Text "subscribe"'
-		                        + ' to start receiving updates again.';
-		            
-		                respond(responseMessage);
-		            });*/
+	    			console.log('error at find Broadcast to verify openPositions ', err);
+	    		}
+	    		else {
+	    			//positions available
+	    			if (broadcast.openPositions !== 0) {
 
-					//find the thread Recipient is responding to
+	    				//find the thread Recipient is responding to and update
+				    	BroadcastThread.findOne({
+				    			'phone': phone, 
+				    			'broadcast_id': broadcast_id
+				    		}, function(err, thread) {
+					        // get the text message command sent by the user
+					        
+					        console.log('Thread found: ', thread);
+
+					        // Conditional logic to do different things based on the command from
+					        // the user
+					        if (msg === 'yes' || msg === 'no' || msg === 'confirm') {
+					            // If the user has elected to subscribe for messages, flip the bit
+					            // and indicate that they have done so.
+					            /*
+					            subscriber.subscribed = msg === 'subscribe';
+					            subscriber.save(function(err) {
+					                if (err)
+					                    return respond('We could not subscribe you - please try '
+					                        + 'again.');
+
+					                // Otherwise, our subscription has been updated
+					                var responseMessage = 'You are now subscribed for updates.';
+					                if (!subscriber.subscribed)
+					                    responseMessage = 'You have unsubscribed. Text "subscribe"'
+					                        + ' to start receiving updates again.';
+					            
+					                respond(responseMessage);
+					            });*/
+
+									if (err) {
+										console.log('error at finding Thread ', err);
+										res.status(500).send(err);
+									}
+
+									if (msg === 'yes') {
+					                	thread.status = 'Available';
+					                	responseMessage = 'word.';
+						            }
+						            else if (msg === 'no') {
+						                thread.status = 'Declined';
+						                responseMessage = 'whaaaat?';
+						            }
+						            else if (msg === 'confirm') {
+						            	thread.status = 'Confirmed';
+						            	//update broadcast openPositions at Confirm
+						            	Broadcast.findOneAndUpdate({'broadcast_id': thread.broadcast_id}, { $inc: { openPositions: -1 }}, 
+						            		function(err) {
+
+							            		if (err) {
+							            			console.log('err at updating openPositions ', err);
+							            		}
+							            		else {
+							            			console.log('updated openPositions ', broadcast.openPositions);
+							            		}
+
+						            	});
+
+						            }
+						            else {
+						            	responseMessage = 'Please respond "Yes' +broadcast_id+'" or No'+broadcast_id+'"';
+						            }
+
+
+						            thread.conversation.push(response);
+						            var subdoc = thread.conversation[0];
+						            console.log('conversation: ', subdoc);
+						            console.log('thread: ', thread);
+
+						            thread.save(function(err, thread) {
+
+						            	if (err) {
+						            		console.log('error at saving Thread ', err);
+						            	}
+
+						            	console.log('saved new Thread! ', thread);
+
+						            });
+
+					        } 
+						    
+						});
+
+	    			}
+	    			//all positions filled
+	    			else {
+
+	    				responseMessage = 'All positions have been filled';
+
+	    			}
+
+	    			respond(responseMessage);
+			        console.log('attempting to respond with: ', responseMessage);
 					
-					
 
-						if (err) {
-							console.log('error at finding Thread ', err);
-							res.status(500).send(err);
-						}
-
-						if (msg === 'yes') {
-		                	thread.status = 'Available';
-			            }
-			            if (msg === 'no') {
-			                thread.status = 'Declined';
-			            }
-			            if (msg === 'confirm') {
-			            	thread.status = 'Confirmed';
-			            }
+	    		}
 
 
-			            thread.conversation.push(response);
-			            var subdoc = thread.conversation[0];
-			            console.log('conversation: ', subdoc);
-			            console.log('thread: ', thread);
 
-			            thread.save(function(err, thread) {
+	    	});
+	    	
 
-			            	if (err) {
-			            		console.log('error at saving Thread ', err);
-			            	}
-
-			            	console.log('saved new Thread! ', thread);
-
-			            });
-					
-		            
-		            if (msg === 'yes') {
-		                responseMessage = 'word.';
-		            }
-		            else if (msg === 'no') {
-		                responseMessage = 'whaaaat?';
-		            }
-		            else if (msg === 'confirm') {
-		            	//TODO update broadcast openPositions!!!!
-		            	responseMessage = 'Thank you for confirming!';
-		            }
-
-		            //respond(responseMessage);
-		        } else {
-		            // If we don't recognize the command, text back with the list of
-		            // available commands
-		            responseMessage = 'Come on now homie, available commands are: yes or no';
-
-		            
-		        }
-		        respond(responseMessage);
-		        console.log('attempting to respond with: ', responseMessage);
-				
-		        // Set Content-Type response header and render XML (TwiML) response in a 
-			    // Jade template - sends a text message back to user
-			    function respond(message) {
-			        console.log('redirecting to twiml to respond with: ', message);
-			        res.type('text/xml');
-			        res.render('twiml', {
-			            message: message
-			        });
-			    }
-			    
-			});
+	        
 	
 		}
 	});
@@ -317,14 +341,47 @@ router.route('/outgoing')
 
 					msg = 'The position is no longer available.  Thank you!';
 					console.log('msg Decline: ', msg);
+
+					//update openPositions
+					//update for Accepted will happen when a Recipient Confirms in /incoming
+					Broadcast.findOne({'broadcast_id': thread.broadcast_id}, 
+						function(err, broadcast) {
+
+		            		if (err) {
+		            			console.log('err at updating openPositions ', err);
+		            		}
+		            		//make sure openPositions does not exceed numPositions
+		            		if (broadcast.numPositions > broadcast.openPositions) {
+		            			broadcast.openPositions = broadcast.openPositions + 1;
+		            			console.log('new openPositions ', broadcast.openPositions);
+
+		            			broadcast.save(function(err, broadcast) {
+
+		            				if (err) {
+		            					console.log('err ', err);
+		            					return res.status(500).send(err);
+		            				}
+		            				console.log('updated openPositions ', broadcast);
+
+		            			});
+		            		} 
+		            		else {
+
+		            			//all positions are still open
+		            			console.log('did not update openPositions: numPositions: ' + broadcast.numPositions + ', openPositions: ' + broadcast.openPositions);
+		            		}
+		        
+	            	});
 				}
 				else if (status === 'Accepted') {
 
-					msg = 'You have been selected to fill the position....  Please reply Confirm' + thread.broadcast_id +
-					' to confirm your position.';
+					msg = 'You have been selected to fill the position.... To secure your spot please reply Confirm' + 
+					thread.broadcast_id + ' to confirm your position.';
+					
 					console.log('msg Accept: ', msg);
 
 				}
+				
 
 				if (err) {
 					console.log('err at find thread update status ', err);
@@ -412,7 +469,7 @@ router.route('/threads/:id')
 
 	});
 
-//!!____DEPRECATED use /threads/:id
+//currently used for refreshPositions...
 router.route('/open/:id')
 
 	.get(function(req, res) {
@@ -420,7 +477,14 @@ router.route('/open/:id')
 		//set return variable
 		var data = {};
 
+		var query;
+
+		if (req.query.openPositions) {
+			query = 'openPositions';
+		}
+
 		//TODO get open Broadcast by ID
+		//TODO make this a flexible query according to req.query values
 		Broadcast.findById(req.params.id, function(err, broadcast) {
 
 			if (err) {
@@ -428,7 +492,13 @@ router.route('/open/:id')
 				return res.status(500).send(err);
 			}
 
-			data = broadcast;
+			if (query == 'openPositions') {
+				data = broadcast.openPositions;
+			}
+			else {
+				data = broadcast;
+			}
+			
 
 			//if Broadcast is associated with a list
 			//get list and return all recipients

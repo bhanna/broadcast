@@ -20,12 +20,12 @@ angular.module('main', ['ngResource'])
 	return $resource('/lists/:id');
 
 })
-.service('manageOpen', function manageOpen ($http, $q, List) {
+.service('manageBroadcasts', function manageBroadcasts ($http, $q, List) {
 
-	var mo = this;
+	var mb = this;
 
 	//get broadcast by id and get List if necessary
-	mo.getOpen = function(id) {
+	mb.getOpen = function(id) {
 
 		var defer = $q.defer();
 		$http.get('/broadcasts/threads/' + id).success(function(data) {
@@ -45,16 +45,21 @@ angular.module('main', ['ngResource'])
 
 	};
 
-	//TODO combine decline and accept and make status a variable
+	//send Accepted or Declined response from Admin
+	mb.respond = function(response, thread) {
 
-	mo.decline = function(thread) {
-
+		var status;
+		if (response === 0) {
+			status = 'Declined';
+		}
+		else if (response === 1) {
+			status = 'Accepted';
+		}
 		var defer = $q.defer();
-		$http.post('/broadcasts/outgoing?status=Declined', thread).success(function(data) {
+		$http.post('/broadcasts/outgoing?status='+status, thread).success(function(data) {
 
 			defer.resolve(data);
-			console.log('successfully sent decline');
-			//refresh selected open broadcast with 
+			console.log('successfully sent status update ', status);
 			
 
 		}).error(function(err, status) {
@@ -67,28 +72,29 @@ angular.module('main', ['ngResource'])
 
 	};
 
-	mo.accept = function(thread) {
+	//TODO make one clean refresh function
+	mb.refreshPositions = function(id) {
 
 		var defer = $q.defer();
-		$http.post('/broadcasts/outgoing?status=Accepted', thread).success(function(data) {
+		//get open positions from broadcast using scope.selected.id
+		$http.get('/broadcasts/open/' + id + '?openPositions=true').success(function(data) {
 
 			defer.resolve(data);
-			console.log('successfully sent accept');
-			//refresh selected open broadcast with 
+			console.log('openPositions from refresh ', data);
 			
 
 		}).error(function(err, status) {
 
 			defer.reject(err);
-
+			
 		});
 
 		return defer.promise;
 
 	};
-
+	
 })
-.controller('mainCtrl', function MainController ($scope, $http, getOpenBroadcasts, manageOpen) {
+.controller('mainCtrl', function MainController ($scope, $http, getOpenBroadcasts, manageBroadcasts) {
 
 	$scope.init = function() {
 
@@ -115,7 +121,7 @@ angular.module('main', ['ngResource'])
 		//set selected to the Open Broadcast
 		$scope.selected.oB = oB;
 		
-		manageOpen.getOpen(oB.broadcast_id)
+		manageBroadcasts.getOpen(oB.broadcast_id)
 			.then(function(data) {
 
 				console.log('threads recieved in View: ', data);
@@ -141,25 +147,23 @@ angular.module('main', ['ngResource'])
 
 			});
 			
-		//display all selected oB threads?
+		//QUESTION display all selected oB threads?
 
 	};
 
 
+	//send Admin response Accepted or Declined
+	$scope.adminResponse = function(response, thread) {
 
-	//TODO combine decline and accept and make status a variable
-	//TODO refresh openBroadcast List in case all positions are filled with one of the clicks...?
-	$scope.accept = function(thread) {
-
-		//TODO send broadcast_id and phone to outgoing
-		//update thread status to 'Declined'
-		manageOpen.accept(thread)
+		//update thread status to 'response'
+		manageBroadcasts.respond(response, thread)
 			.then(function(data) {
-
-				manageOpen.getOpen(data.broadcast_id)
+				$scope.openBroadcasts = getOpenBroadcasts.query();
+				manageBroadcasts.getOpen(data.broadcast_id)
 					.then(function(data) {
 
 						console.log('threads recieved in View: ', data);
+						
 						//then populate open broadcast table with broadcast data
 						$scope.selected.threads = data;
 						console.log('oB data ', $scope.selected.oB);
@@ -175,12 +179,26 @@ angular.module('main', ['ngResource'])
 						//TODO get action from data.conversaions
 						//TODO add last action date
 						
+						manageBroadcasts.refreshPositions($scope.selected.oB._id)
+							.then(function(data) {
+								$scope.selected.oB.openPositions = data;
+								console.log('scope openPositions: ', $scope.selected.oB.openPositions);
+								
+								
+
+							}, function(err) {
+
+								console.log('err at refreshPositions ', err);
+
+							});
 
 					}, function(err) {
 
 						console.log('err at getOpen ', err);
 
 					});
+				
+				
 			}, function(err) {
 
 				console.log(err);
@@ -189,47 +207,6 @@ angular.module('main', ['ngResource'])
 
 	};
 
-
-	$scope.decline = function(thread) {
-
-		//TODO send broadcast_id and phone to outgoing
-		//update thread status to 'Declined'
-		manageOpen.decline(thread)
-			.then(function(data) {
-
-				manageOpen.getOpen(data.broadcast_id)
-					.then(function(data) {
-
-						console.log('threads recieved in View: ', data);
-						//then populate open broadcast table with broadcast data
-						$scope.selected.threads = data;
-						console.log('oB data ', $scope.selected.oB);
-						console.log('threads ', $scope.selected.threads);
-
-						//populate table with recipient name from data.recipients
-
-						if ($scope.selected.threads[0].firstName === 'single') {
-
-							$scope.selected.threads[0].firstName = $scope.selected.threads[0].phone;
-						}
-
-						//TODO get action from data.conversaions
-						//TODO add last action date
-						
-
-					}, function(err) {
-
-						console.log('err at getOpen ', err);
-
-					});
-
-			}, function(err) {
-
-				console.log(err);
-
-			});
-
-	};
 
 	$scope.init();
 

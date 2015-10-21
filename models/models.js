@@ -56,6 +56,11 @@ var broadcastSchema = new mongoose.Schema({
 
 //auto increment jobs
 broadcastSchema.pre('save', function(next) {
+
+	if (!this.isNew) {
+		return next();
+	}
+	
     var doc = this;
     Counter.findByIdAndUpdate({_id: 'broadcast_id'}, {$inc: { seq: 1} }, function(error, counter)   {
         if(error)
