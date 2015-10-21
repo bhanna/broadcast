@@ -223,67 +223,143 @@ router.route('/outgoing')
 		//set response var
 		var data = {};
 
-		//create thread
-		var thread = new BroadcastThread();
-		if (req.query.name) {
+		//TODO clean this up for fucks sake!
 
-			thread.firstName = req.query.name;
+		if (!req.query.status) {
+
+			//new thread is needed
+			//create thread
+			var thread = new BroadcastThread();
+			if (req.query.name) {
+
+				thread.firstName = req.query.name;
+
+			}
+			else {
+
+				thread.firstName = 'single';
+
+			}
+			//regex clear phone number so only numbers are present
+			//TODO This sould be in Model somehow
+			//add '+1' to all numbers for Twilio
+			thread.phone = '+1' + req.query.phone;
+
+			//find correct broadcast through req
+			Broadcast.findById(req.query.id, function(err, broadcast) {
+
+				if (err) {
+					console.log('err at find Broadcast: ', err);
+					return res.status(500).send(err);
+				}
+				
+				thread.broadcast_id = broadcast.broadcast_id;
+				console.log('thread ', thread);
+
+				thread.save(function(err, thread) {
+
+					if (err) {
+						console.log('err at thread post', err);
+						return res.status(500).send(err);
+					}
+
+					console.log('body ', broadcast.body);
+					console.log('phone ', thread.phone);
+					
+					//TWILIO SEND
+					client.messages.create({
+						to: thread.phone,
+					    from: TWILIO_NUMBER,
+					    body: broadcast.body
+					    //mediaUrl: "http://www.example.com/hearts.png"
+					}, function(err, message) {
+						if (err) {
+							console.log('error at Twilio create ', err);
+						}
+					    console.log('message Twilio create ', message);
+					    //process.stdout.write(message.sid);
+					});
+					
+					console.log('thread posted');
+					data = thread;
+					return res.json(data);
+
+				});
+			
+			});
 
 		}
 		else {
 
-			thread.firstName = 'single';
+			//TODO clean this up
+			//currently for update status
+			//these need to be centralized, perhaps in Models..
+			console.log('body: ',req.body);
+			var status = req.query.status;
+			console.log('query status: ', req.query.status);
 
-		}
-		//regex clear phone number so only numbers are present
-		//TODO This sould be in Model somehow
-		//add '+1' to all numbers for Twilio
-		thread.phone = '+1' + req.query.phone;
+			BroadcastThread.findById(req.body._id, function(err, thread) {
 
-		//find correct broadcast through req
-		Broadcast.findById(req.query.id, function(err, broadcast) {
+				//TODO set this message somewhere cleaner!
+				var msg; 
 
-			if (err) {
-				console.log('err at find Broadcast: ', err);
-				return res.status(500).send(err);
-			}
-			
-			thread.broadcast_id = broadcast.broadcast_id;
-			console.log('thread ', thread);
+				console.log('status: ', status);
 
-			thread.save(function(err, thread) {
+				if (status === 'Declined') {
+
+					msg = 'The position is no longer available.  Thank you!';
+					console.log('msg Decline: ', msg);
+				}
+				else if (status === 'Accepted') {
+
+					msg = 'You have been selected to fill the position....  Please reply Confirm' + thread.broadcast_id +
+					' to confirm your position.';
+					console.log('msg Accept: ', msg);
+
+				}
 
 				if (err) {
-					console.log('err at thread post', err);
+					console.log('err at find thread update status ', err);
 					return res.status(500).send(err);
 				}
 
-				console.log('body ', broadcast.body);
-				console.log('phone ', thread.phone);
-				
-				client.messages.create({
-					to: thread.phone,
-				    from: TWILIO_NUMBER,
-				    body: broadcast.body
-				    //mediaUrl: "http://www.example.com/hearts.png"
-				}, function(err, message) {
+				thread.status = status;
+				thread.save(function(err, thread) {
+
 					if (err) {
-						console.log('error at Twilio create ', err);
+						console.log('err at thread save update status ', err);
+						return res.status(500).send(err);
 					}
-				    console.log('message Twilio create ', message);
-				    //process.stdout.write(message.sid);
+
+					//TWILIO SEND
+					client.messages.create({
+						to: thread.phone,
+					    from: TWILIO_NUMBER,
+					    body: msg
+					    //mediaUrl: "http://www.example.com/hearts.png"
+					}, function(err, message) {
+						if (err) {
+							console.log('error at Twilio update decline/accept ', err);
+						}
+					    console.log('message Twilio update decline/accept ', message);
+					    //process.stdout.write(message.sid);
+					});
+					
+
+					console.log('save thread update status');
+					return res.json(thread);
+
 				});
-				
-				console.log('thread posted');
-				data = thread;
-				return res.json(data);
 
 			});
+
+		}
+
 		
-		});
 
 			
 	});
+
 
 router.route('/open/all')
 
@@ -318,7 +394,7 @@ router.route('/threads/:id')
 			if (err) {
 
 				console.log('error at threads ', err);
-				res.status(500).send(err);
+				return res.status(500).send(err);
 			}
 
 			console.log('got threads with id ' + req.params.id + ': ' + threads);
@@ -327,7 +403,6 @@ router.route('/threads/:id')
 		});
 
 	});
-
 
 //!!____DEPRECATED use /threads/:id
 router.route('/open/:id')

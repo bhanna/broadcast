@@ -46,6 +46,7 @@ app.set('view engine', 'ejs');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 //app.use('/api', expressJwt({secret: 'secret meowfriend'}));
+/*//TODO figure session out
 app.use(session({
 
   secret: process.env.SESSION_SECRET || 'secret cat',
@@ -53,6 +54,7 @@ app.use(session({
   resave: true
 
 }));
+*/
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
