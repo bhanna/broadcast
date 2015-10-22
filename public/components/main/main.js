@@ -15,10 +15,10 @@ angular.module('main', ['ngResource'])
 	return $resource('/broadcasts/open/all');
 
 })
-.factory('getFullBroadcasts', function($resource){
+.factory('getFilledBroadcasts', function($resource){
 
 	//get all broadcasts where openPositions != 0
-	return $resource('/broadcasts/full/all');
+	return $resource('/broadcasts/filled/all');
 
 })
 .factory('List', function($resource){
@@ -101,7 +101,7 @@ angular.module('main', ['ngResource'])
 	};
 	
 })
-.controller('mainCtrl', function MainController ($scope, $http, getOpenBroadcasts, getFullBroadcasts, manageBroadcasts) {
+.controller('mainCtrl', function MainController ($scope, $http, getOpenBroadcasts, getFilledBroadcasts, manageBroadcasts) {
 
 	$scope.init = function() {
 
@@ -112,9 +112,9 @@ angular.module('main', ['ngResource'])
 
 		console.log($scope.openBroadcasts);
 
-		$scope.fullBroadcasts = getFullBroadcasts.query();
+		$scope.filledBroadcasts = getFilledBroadcasts.query();
 
-		console.log($scope.fullBroadcasts);
+		console.log($scope.filledBroadcasts);
 
 		$scope.selected = null;
 
@@ -170,7 +170,7 @@ angular.module('main', ['ngResource'])
 		manageBroadcasts.respond(response, thread)
 			.then(function(data) {
 				$scope.openBroadcasts = getOpenBroadcasts.query();
-				$scope.fullBroadcasts = getFullBroadcasts.query();
+				$scope.filledBroadcasts = getFilledBroadcasts.query();
 				manageBroadcasts.get(data.broadcast_id)
 					.then(function(data) {
 

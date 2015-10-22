@@ -548,7 +548,7 @@ router.route('/open/:id')
 
 	});
 
-router.route('/full/all')
+router.route('/filled/all')
 
 	.get(function(req, res) {
 
@@ -557,11 +557,11 @@ router.route('/full/all')
 		Broadcast.find({ openPositions: 0}, { body: false, __v: false }, function(err, data){
 
 			if (err) {
-				console.log('failed to get full broadcasts', err);
+				console.log('failed to get filled broadcasts', err);
 				return res.status(500).send(err);
 			}
 
-			console.log('retrieved full broadcasts');
+			console.log('retrieved filled broadcasts');
 			return res.json(data);
 
 		});
