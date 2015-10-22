@@ -62,6 +62,9 @@ angular.module('main', ['ngResource'])
 		else if (response === 1) {
 			status = 'Accepted';
 		}
+		else if (response === 2) {
+			status = 'Reopened';
+		}
 		var defer = $q.defer();
 		$http.post('/broadcasts/outgoing?status='+status, thread).success(function(data) {
 
