@@ -11,15 +11,22 @@
 	    	<p>Open Broadasts</p>
 		    <ul ng-show="openBroadcasts" class="nav nav-pills nav-stacked">
 		    	<li ng-repeat="oB in openBroadcasts | orderBy:'created_at':true" ng-class="{active: oB._id == selected.oB._id}">
-		    		<a href="" ng-click="selectOpen(oB)">{{oB.title}}</a>
+		    		<a href="" ng-click="select(oB)">{{oB.title}}</a>
+		    	</li>
+		    </ul>
+		    <br/>
+		    <p>Archived Broadcasts</p>
+		    <ul ng-show="archivedBroadcasts" class="nav nav-pills nav-stacked">
+		    <li ng-repeat="aB in archivedBroadcasts | orderBy:'created_at':true" ng-class="{active: aB._id == selected.aB._id}">
+		    		<a href="" ng-click="select(aB)">{{aB.title}}</a>
 		    	</li>
 		    </ul>
 	    </div>
 
 	    <div class="col-md-8 col-md-offset-1" ng-show="selected">
         
-	        <h2>{{selected.oB.title}}</h2>
-	        <p>Remaining Open Positions - {{selected.oB.openPositions}}</p>
+	        <h2>{{selected.broadcast.title}}</h2>
+	        <p>Remaining Open Positions - {{selected.broadcast.openPositions}}</p>
 	        <br/>
 	        <table class="table table-striped table-bordered">
 	        	<thead>

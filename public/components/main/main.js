@@ -15,6 +15,12 @@ angular.module('main', ['ngResource'])
 	return $resource('/broadcasts/open/all');
 
 })
+.factory('getArchivedBroadcasts', function($resource){
+
+	//get all broadcasts where openPositions != 0
+	return $resource('/broadcasts/archived/all');
+
+})
 .factory('List', function($resource){
 
 	return $resource('/lists/:id');
@@ -25,7 +31,7 @@ angular.module('main', ['ngResource'])
 	var mb = this;
 
 	//get broadcast by id and get List if necessary
-	mb.getOpen = function(id) {
+	mb.get = function(id) {
 
 		var defer = $q.defer();
 		$http.get('/broadcasts/threads/' + id).success(function(data) {
@@ -45,6 +51,29 @@ angular.module('main', ['ngResource'])
 
 	};
 
+
+	//get archived broadcasts (openPositions === 0)
+	/*
+	mb.getArchived = function(id) {
+
+		var defer = $q.defer();
+		$http.get('/broadcasts/threads/' + id).success(function(data) {
+
+			defer.resolve(data);
+			console.log('recieved ', data);
+
+		})
+		.error(function(err) {
+
+			defer.reject(err);
+			console.log('err ', err);
+
+		});
+
+		return defer.promise;
+
+	};
+	*/
 	//send Accepted or Declined response from Admin
 	mb.respond = function(response, thread) {
 
@@ -94,7 +123,7 @@ angular.module('main', ['ngResource'])
 	};
 	
 })
-.controller('mainCtrl', function MainController ($scope, $http, getOpenBroadcasts, manageBroadcasts) {
+.controller('mainCtrl', function MainController ($scope, $http, getOpenBroadcasts, getArchivedBroadcasts, manageBroadcasts) {
 
 	$scope.init = function() {
 
@@ -105,6 +134,10 @@ angular.module('main', ['ngResource'])
 
 		console.log($scope.openBroadcasts);
 
+		$scope.archivedBroadcasts = getArchivedBroadcasts.query();
+
+		console.log($scope.archivedBroadcasts);
+
 		$scope.selected = null;
 
 
@@ -114,20 +147,20 @@ angular.module('main', ['ngResource'])
 
 	//select open broadcast
 	//clean this the fuck up
-	$scope.selectOpen = function(oB) {
+	$scope.select = function(broadcast) {
 
 		$scope.selected = {};
 
 		//set selected to the Open Broadcast
-		$scope.selected.oB = oB;
+		$scope.selected.broadcast = broadcast;
 		
-		manageBroadcasts.getOpen(oB.broadcast_id)
+		manageBroadcasts.get(broadcast.broadcast_id)
 			.then(function(data) {
 
 				console.log('threads recieved in View: ', data);
 				//then populate open broadcast table with broadcast data
 				$scope.selected.threads = data;
-				console.log('oB data ', $scope.selected.oB);
+				console.log('broadcast data ', $scope.selected.broadcast);
 				console.log('threads ', $scope.selected.threads);
 
 				//populate table with recipient name from data.recipients
@@ -143,11 +176,11 @@ angular.module('main', ['ngResource'])
 
 			}, function(err) {
 
-				console.log('err at getOpen ', err);
+				console.log('err at get ', err);
 
 			});
 			
-		//QUESTION display all selected oB threads?
+		//QUESTION display all selected broadcast threads?
 
 	};
 
@@ -159,14 +192,14 @@ angular.module('main', ['ngResource'])
 		manageBroadcasts.respond(response, thread)
 			.then(function(data) {
 				$scope.openBroadcasts = getOpenBroadcasts.query();
-				manageBroadcasts.getOpen(data.broadcast_id)
+				manageBroadcasts.get(data.broadcast_id)
 					.then(function(data) {
 
 						console.log('threads recieved in View: ', data);
 						
 						//then populate open broadcast table with broadcast data
 						$scope.selected.threads = data;
-						console.log('oB data ', $scope.selected.oB);
+						console.log('broadcast data ', $scope.selected.broadcast);
 						console.log('threads ', $scope.selected.threads);
 
 						//populate table with recipient name from data.recipients
@@ -179,10 +212,10 @@ angular.module('main', ['ngResource'])
 						//TODO get action from data.conversaions
 						//TODO add last action date
 						
-						manageBroadcasts.refreshPositions($scope.selected.oB._id)
+						manageBroadcasts.refreshPositions($scope.selected.broadcast._id)
 							.then(function(data) {
-								$scope.selected.oB.openPositions = data;
-								console.log('scope openPositions: ', $scope.selected.oB.openPositions);
+								$scope.selected.broadcast.openPositions = data;
+								console.log('scope openPositions: ', $scope.selected.broadcast.openPositions);
 								
 								
 
@@ -194,7 +227,7 @@ angular.module('main', ['ngResource'])
 
 					}, function(err) {
 
-						console.log('err at getOpen ', err);
+						console.log('err at get ', err);
 
 					});
 				

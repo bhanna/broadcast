@@ -548,4 +548,24 @@ router.route('/open/:id')
 
 	});
 
+router.route('/archived/all')
+
+	.get(function(req, res) {
+
+		//get all Broadcasts where openPositions != 0
+
+		Broadcast.find({ openPositions: 0}, { body: false, __v: false }, function(err, data){
+
+			if (err) {
+				console.log('failed to get open broadcasts', err);
+				return res.status(500).send(err);
+			}
+
+			console.log('retrieved open broadcasts');
+			return res.json(data);
+
+		});
+
+	});
+
 module.exports = router;
