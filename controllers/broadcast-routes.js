@@ -479,8 +479,15 @@ router.route('/outgoing')
 		            				console.log('updated openPositions Reopened ', broadcast);
 
 		            			});
+		            		}
+		            		else {
 
-				}
+		            			//all positions are still open
+		            			console.log('did not update openPositions: numPositions: ' + broadcast.numPositions + ', openPositions: ' + broadcast.openPositions);
+		            		}
+		            });
+
+			}	
 				
 
 				if (err) {
