@@ -85,7 +85,6 @@ router.route('/incoming')
 	    	Broadcast.findOne({'broadcast_id': broadcast_id}, function(err, broadcast) {
 
 	    		if (err) {
-
 	    			console.log('error at find Broadcast to verify openPositions ', err);
 	    			return respond('Something went wrong - perhaps you entered the wrong offer ID?  Please check your response and try again.');
 	    		}
@@ -94,28 +93,28 @@ router.route('/incoming')
 	    			return respond('Something went wrong - perhaps you entered the wrong offer ID?  Please check your response and try again.');
 	    		}
 	    		else {
-	    			//positions available
-	    			if (broadcast.openPositions !== 0) {
+	    			
+    				//find the thread Recipient is responding to and update
+			    	BroadcastThread.findOne({
+			    			'phone': phone, 
+			    			'broadcast_id': broadcast_id
+			    		}, function(err, thread) {
+				        // get the text message command sent by the user
 
-	    				//find the thread Recipient is responding to and update
-				    	BroadcastThread.findOne({
-				    			'phone': phone, 
-				    			'broadcast_id': broadcast_id
-				    		}, function(err, thread) {
-					        // get the text message command sent by the user
+				        if (err) {
+							console.log('error at finding Thread ', err);
+							return respond('Something went wrong - perhaps you responded to the wrong offer?  Please check your response and try again.');
+						}
+				        if (!thread) {
+				        	console.log('could not find thread ');
+    						return respond('Something went wrong - perhaps you responded to the wrong offer?  Please check your response and try again.');
+				        }
+				        console.log('Thread found: ', thread);
 
-					        if (err) {
-								console.log('error at finding Thread ', err);
-								return respond('Something went wrong - perhaps you responded to the wrong offer?  Please check your response and try again.');
-							}
-					        if (!thread) {
-					        	console.log('could not find thread ');
-	    						return respond('Something went wrong - perhaps you responded to the wrong offer?  Please check your response and try again.');
-					        }
-					        console.log('Thread found: ', thread);
+				        //positions available
+    					if (broadcast.openPositions !== 0) {
 
-					        // Conditional logic to do different things based on the command from
-					        // the user
+    						 // Handle yes no or confirm
 					        if (msg === 'yes' || msg === 'no' || msg === 'confirm') {
 					            // If the user has elected to subscribe for messages, flip the bit
 					            // and indicate that they have done so.
@@ -148,7 +147,7 @@ router.route('/incoming')
 						            }
 						            else if (msg === 'confirm') {
 						            	thread.status = 'Confirmed';
-						            	responseMessage = 'Thank you for confirming';
+						            	responseMessage = 'Thank you for confirming.  To cancel at any time please text Cancel' + broadcast_id;
 						            	console.log('responseMessage Confirm ', responseMessage);
 						            	//update broadcast openPositions at Confirm
 						            	Broadcast.findOneAndUpdate({'broadcast_id': thread.broadcast_id}, { $inc: { openPositions: -1 }}, 
@@ -187,18 +186,70 @@ router.route('/incoming')
 			        				console.log('attempting to respond with: ', responseMessage);
 
 					        } 
-						    
-						});
 
-	    			}
-	    			//all positions filled
-	    			else {
+				        }
+		    			//all positions filled
+		    			else {
 
-	    				responseMessage = 'All positions have been filled';
-	    				respond(responseMessage);
-			        	console.log('attempting to respond with: ', responseMessage);
+		    				if (msg === 'cancel') {
 
-	    			}
+		    					//Recipient is Cancelling
+
+		    					//set response message
+		    					responseMessage = 'Cancellation successful';
+		    					console.log('cancel message ', responseMessage);
+
+		    					thread.status = 'Cancelled';
+
+		    					Broadcast.findOneAndUpdate({'broadcast_id': thread.broadcast_id}, { $inc: { openPositions: 1 }}, 
+				            		function(err) {
+
+					            		if (err) {
+					            			console.log('err at updating openPositions cancel ', err);
+					            		}
+					            		else {
+					            			console.log('updated openPositions cancel ', broadcast.openPositions);
+					            		}
+
+				            	});
+
+				            	thread.conversation.push(response);
+					            var subdocCancel = thread.conversation[0];
+					            console.log('conversation: ', subdocCancel);
+					            console.log('thread: ', thread);
+
+					            thread.save(function(err, thread) {
+
+					            	if (err) {
+					            		console.log('error at saving Thread ', err);
+					            	}
+
+					            	console.log('saved new Thread! ', thread);
+
+					            });
+
+		    					//TODO message Owner about cancellation
+
+
+
+		    					respond(responseMessage);
+			        			console.log('attempting to respond with: ', responseMessage);
+
+		    				}
+		    				else {
+
+		    					responseMessage = 'All positions have been filled';
+			    				respond(responseMessage);
+					        	console.log('attempting to respond with: ', responseMessage);
+
+		    				}	
+
+		    			}
+				       
+					    
+					});
+
+	    			
 
 	    			
 					
@@ -428,7 +479,7 @@ router.route('/outgoing')
 					    //process.stdout.write(message.sid);
 					});
 					
-
+	
 					console.log('save thread update status');
 					return res.json(thread);
 
