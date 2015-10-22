@@ -18,7 +18,7 @@
 		    <p>Full Broadcasts</p>
 		    <ul ng-show="fullBroadcasts" class="nav nav-pills nav-stacked">
 		    <li ng-repeat="fB in fullBroadcasts | orderBy:'created_at':true" ng-class="{active: fB._id == selected.fB._id}">
-		    		<a href="" ng-click="select(aB)">{{fB.title}}</a>
+		    		<a href="" ng-click="select(fB)">{{fB.title}}</a>
 		    	</li>
 		    </ul>
 
