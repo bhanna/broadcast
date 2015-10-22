@@ -199,7 +199,7 @@ router.route('/incoming')
 		    					responseMessage = 'Cancellation successful';
 		    					console.log('cancel message ', responseMessage);
 
-		    					thread.status = 'Cancelled';
+		    					thread.status = 'Recipient Cancelled';
 
 		    					Broadcast.findOneAndUpdate({'broadcast_id': thread.broadcast_id}, { $inc: { openPositions: 1 }}, 
 				            		function(err) {
