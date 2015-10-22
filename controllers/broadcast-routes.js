@@ -147,7 +147,21 @@ router.route('/incoming')
 						            }
 						            else if (msg === 'confirm') {
 						            	//check if Owner Cancelled
-						            	if (thread.status !== 'Owner Cancelled') {
+						            	if (thread.status === 'Owner Cancelled') {
+
+						            		response.body = 'attempted to confirm when Owner Cancelled';
+						            		responseMessage = 'We\'re sorry, but this position has been cancelled.';
+						            		console.log('responseMessage Owner Cancelled Confirm ', responseMessage);
+
+						            	}
+						            	else if (thread.status === 'Recipient Cancelled') {
+
+						            		response.body = 'attempted to confirm when Recipient Cancelled';
+						            		responseMessage = 'To re-apply please text Yes' + broadcast_id;
+						            		console.log('responseMessage Owner Cancelled Confirm ', responseMessage);
+
+						            	}
+						            	else {
 
 						            		thread.status = 'Confirmed';
 							            	responseMessage = 'Thank you for confirming.  To cancel at any time please text Cancel' + broadcast_id;
@@ -164,20 +178,6 @@ router.route('/incoming')
 								            		}
 
 							            	});
-
-						            	}
-						            	else if (thread.status === 'Recipient Cancelled') {
-
-						            		response = 'attempted to confirm when Recipient Cancelled';
-						            		responseMessage = 'To re-apply please text Yes' + broadcast_id;
-						            		console.log('responseMessage Owner Cancelled Confirm ', responseMessage);
-
-						            	}
-						            	else {
-
-						            		response = 'attempted to confirm when Owner Cancelled';
-						            		responseMessage = 'We\'re sorry, but this position has been cancelled.';
-						            		console.log('responseMessage Owner Cancelled Confirm ', responseMessage);
 
 						            	}
 						            	
