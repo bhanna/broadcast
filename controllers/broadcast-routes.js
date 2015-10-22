@@ -547,7 +547,7 @@ router.route('/open/:id')
 
 	});
 
-router.route('/archived/all')
+router.route('/full/all')
 
 	.get(function(req, res) {
 
@@ -556,11 +556,11 @@ router.route('/archived/all')
 		Broadcast.find({ openPositions: 0}, { body: false, __v: false }, function(err, data){
 
 			if (err) {
-				console.log('failed to get open broadcasts', err);
+				console.log('failed to get full broadcasts', err);
 				return res.status(500).send(err);
 			}
 
-			console.log('retrieved open broadcasts');
+			console.log('retrieved full broadcasts');
 			return res.json(data);
 
 		});

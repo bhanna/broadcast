@@ -15,10 +15,10 @@ angular.module('main', ['ngResource'])
 	return $resource('/broadcasts/open/all');
 
 })
-.factory('getArchivedBroadcasts', function($resource){
+.factory('getFullBroadcasts', function($resource){
 
 	//get all broadcasts where openPositions != 0
-	return $resource('/broadcasts/archived/all');
+	return $resource('/broadcasts/full/all');
 
 })
 .factory('List', function($resource){
@@ -52,28 +52,6 @@ angular.module('main', ['ngResource'])
 	};
 
 
-	//get archived broadcasts (openPositions === 0)
-	/*
-	mb.getArchived = function(id) {
-
-		var defer = $q.defer();
-		$http.get('/broadcasts/threads/' + id).success(function(data) {
-
-			defer.resolve(data);
-			console.log('recieved ', data);
-
-		})
-		.error(function(err) {
-
-			defer.reject(err);
-			console.log('err ', err);
-
-		});
-
-		return defer.promise;
-
-	};
-	*/
 	//send Accepted or Declined response from Admin
 	mb.respond = function(response, thread) {
 
@@ -123,7 +101,7 @@ angular.module('main', ['ngResource'])
 	};
 	
 })
-.controller('mainCtrl', function MainController ($scope, $http, getOpenBroadcasts, getArchivedBroadcasts, manageBroadcasts) {
+.controller('mainCtrl', function MainController ($scope, $http, getOpenBroadcasts, getFullBroadcasts, manageBroadcasts) {
 
 	$scope.init = function() {
 
@@ -134,9 +112,9 @@ angular.module('main', ['ngResource'])
 
 		console.log($scope.openBroadcasts);
 
-		$scope.archivedBroadcasts = getArchivedBroadcasts.query();
+		$scope.fullBroadcasts = getFullBroadcasts.query();
 
-		console.log($scope.archivedBroadcasts);
+		console.log($scope.fullBroadcasts);
 
 		$scope.selected = null;
 
@@ -186,12 +164,13 @@ angular.module('main', ['ngResource'])
 
 
 	//send Admin response Accepted or Declined
-	$scope.adminResponse = function(response, thread) {
+	$scope.ownerResponse = function(response, thread) {
 
 		//update thread status to 'response'
 		manageBroadcasts.respond(response, thread)
 			.then(function(data) {
 				$scope.openBroadcasts = getOpenBroadcasts.query();
+				$scope.fullBroadcasts = getFullBroadcasts.query();
 				manageBroadcasts.get(data.broadcast_id)
 					.then(function(data) {
 
