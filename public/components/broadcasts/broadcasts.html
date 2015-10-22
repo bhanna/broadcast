@@ -28,18 +28,9 @@
       <br/>
       <label>Who is this going to?</label>
       <input required type="text" class="form-control" placeholder="Phone number" ng-model="broadcast.phone" />
-      <br />
-      <label>What's the time frame?</label>
-      <input required type="text" class="form-control" placeholder="i.e. 9am - 5pm" ng-model="broadcast.time" />
       <br/>
-      <label>When?</label>
-      <input required type="text" class="form-control" placeholder="i.e. 11/15/2015" ng-model="broadcast.date" />
-      <br/>
-      <label>Where?</label>
-      <input required type="text" class="form-control" placeholder="i.e. Grace Cathedral, San Francisco" ng-model="broadcast.location" />
-      <br/>
-      <label>What does it pay?</label>
-      <input required type="text" class="form-control" placeholder="i.e. $120" ng-model="broadcast.pay" />
+      <label>What would you like to say?</label>
+      <textarea required type="text" class="form-control" placeholder="Type your message here..." ng-model="broadcast.body" /></textarea>
       <br/>
       <label>How many positions need to be filled?</label>
       <input required type="text" class="form-control" placeholder="i.e. 25" ng-model="broadcast.numPositions" />
@@ -51,23 +42,14 @@
 
 
   <!-- send to List -->
-  <div class="col-md-4" ng-show="selected">
+  <div class="col-md-4" ng-show="selected"> 
     <h2>Send to {{selected.listName}}</h2>
     <form ng-Submit="prepareMultiMessage(selected._id)">
       <label>What is this broadcast called?</label>
       <input required type="text" class="form-control" placeholder="Name your broadcast" ng-model="broadcast_multi.title" />
       <br/>
-      <label>What's the time frame?</label>
-      <input required type="text" class="form-control" placeholder="i.e. 9am - 5pm" ng-model="broadcast_multi.time" />
-      <br/>
-      <label>When?</label>
-      <input required type="text" class="form-control" placeholder="i.e. 11/15/2015" ng-model="broadcast_multi.date" />
-      <br/>
-      <label>Where?</label>
-      <input required type="text" class="form-control" placeholder="i.e. Grace Cathedral, San Francisco" ng-model="broadcast_multi.location" />
-      <br/>
-      <label>What does it pay?</label>
-      <input required type="text" class="form-control" placeholder="i.e. $120" ng-model="broadcast_multi.pay" />
+      <label>What would you like to say?</label>
+      <textarea required type="text" class="form-control" placeholder="Type your message here..." ng-model="broadcast_multi.body" /></textarea>
       <br/>
       <label>How many positions need to be filled?</label>
       <input required type="text" class="form-control" placeholder="i.e. 25" ng-model="broadcast_multi.numPositions" />
@@ -75,7 +57,6 @@
       <input class="btn submit-btn pull-right" type="submit" value="Send!" />
     </form>
 
-  </div> 
-
+  </div>
 
 </div>
