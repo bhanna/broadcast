@@ -146,21 +146,34 @@ router.route('/incoming')
 						                console.log('responseMessage No ', responseMessage);
 						            }
 						            else if (msg === 'confirm') {
-						            	thread.status = 'Confirmed';
-						            	responseMessage = 'Thank you for confirming.  To cancel at any time please text Cancel' + broadcast_id;
-						            	console.log('responseMessage Confirm ', responseMessage);
-						            	//update broadcast openPositions at Confirm
-						            	Broadcast.findOneAndUpdate({'broadcast_id': thread.broadcast_id}, { $inc: { openPositions: -1 }}, 
-						            		function(err) {
+						            	//check if Owner Cancelled
+						            	if (thread.status !== 'Owner Cancelled') {
 
-							            		if (err) {
-							            			console.log('err at updating openPositions ', err);
-							            		}
-							            		else {
-							            			console.log('updated openPositions ', broadcast.openPositions);
-							            		}
+						            		thread.status = 'Confirmed';
+							            	responseMessage = 'Thank you for confirming.  To cancel at any time please text Cancel' + broadcast_id;
+							            	console.log('responseMessage Confirm ', responseMessage);
+							            	//update broadcast openPositions at Confirm
+							            	Broadcast.findOneAndUpdate({'broadcast_id': thread.broadcast_id}, { $inc: { openPositions: -1 }}, 
+							            		function(err) {
 
-						            	});
+								            		if (err) {
+								            			console.log('err at updating openPositions ', err);
+								            		}
+								            		else {
+								            			console.log('updated openPositions ', broadcast.openPositions);
+								            		}
+
+							            	});
+
+						            	}
+						            	else {
+
+						            		response = 'attempted to confirm when Owner Cancelled';
+						            		responseMessage = 'We\'re sorry, but this position has been cancelled.';
+						            		console.log('responseMessage Owner Cancelled Confirm ', responseMessage);
+
+						            	}
+						            	
 
 						            }
 						            else {
