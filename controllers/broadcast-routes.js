@@ -166,6 +166,13 @@ router.route('/incoming')
 							            	});
 
 						            	}
+						            	else if (thread.status === 'Recipient Cancelled') {
+
+						            		response = 'attempted to confirm when Recipient Cancelled';
+						            		responseMessage = 'To re-apply please text Yes' + broadcast_id;
+						            		console.log('responseMessage Owner Cancelled Confirm ', responseMessage);
+
+						            	}
 						            	else {
 
 						            		response = 'attempted to confirm when Owner Cancelled';
@@ -209,7 +216,7 @@ router.route('/incoming')
 		    					//Recipient is Cancelling
 
 		    					//set response message
-		    					responseMessage = 'Cancellation successful';
+		    					responseMessage = 'Cancellation successful. If you change your mind please text Yes' + broadcast_id;
 		    					console.log('cancel message ', responseMessage);
 
 		    					thread.status = 'Recipient Cancelled';
