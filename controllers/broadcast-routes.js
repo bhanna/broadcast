@@ -136,9 +136,21 @@ router.route('/incoming')
 
 
 									if (msg === 'yes') {
-					                	thread.status = 'Available';
-					                	responseMessage = 'Great.  We will contact you shortly to confirm the position.';
-					                	console.log('responseMessage Yes ', responseMessage);
+										if (thread.status === 'Owner Cancelled') {
+
+						            		response.body = 'attempted to confirm when Owner Cancelled';
+						            		responseMessage = 'We\'re sorry, but this position has been cancelled.';
+						            		console.log('responseMessage Owner Cancelled Confirm ', responseMessage);
+
+						            	}
+						            	else {
+
+						            		thread.status = 'Available';
+					                		responseMessage = 'Great.  We will contact you shortly to confirm the position.';
+					                		console.log('responseMessage Yes ', responseMessage);
+
+						            	}
+					                	
 						            }
 						            else if (msg === 'no') {
 						                thread.status = 'Declined';
