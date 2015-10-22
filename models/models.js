@@ -66,8 +66,7 @@ broadcastSchema.pre('save', function(next) {
         if(error)
             return next(error);
         doc.broadcast_id = counter.seq;
-        doc.body = doc.body + ' Please respond Yes' + doc.broadcast_id + ' if you are available, or No' + doc.broadcast_id + 
-        ' to unsubscribe from this opening.';
+        doc.body = doc.body + ' Yes' + doc.broadcast_id + ' or No' + doc.broadcast_id;
         next();
     });
 });

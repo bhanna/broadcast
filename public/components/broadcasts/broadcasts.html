@@ -30,7 +30,11 @@
       <input required type="text" class="form-control" placeholder="Phone number" ng-model="broadcast.phone" />
       <br/>
       <label>What would you like to say?</label>
-      <textarea required type="text" class="form-control" placeholder="Type your message here..." ng-model="broadcast.body" /></textarea>
+      <textarea required type="text" rows="4" class="form-control" maxlength="140" placeholder="Type your message here..." ng-model="broadcast.body" ng-trim="false" /></textarea>
+      <!--counter-->
+      <span class="form-help">{{140 - broadcast.body.length}}         
+      Characters left</span>
+      <br/>
       <br/>
       <label>How many positions need to be filled?</label>
       <input required type="text" class="form-control" placeholder="i.e. 25" ng-model="broadcast.numPositions" />
@@ -49,7 +53,11 @@
       <input required type="text" class="form-control" placeholder="Name your broadcast" ng-model="broadcast_multi.title" />
       <br/>
       <label>What would you like to say?</label>
-      <textarea required type="text" class="form-control" placeholder="Type your message here..." ng-model="broadcast_multi.body" /></textarea>
+      <textarea required type="text" rows="4" class="form-control" maxlength="140" placeholder="Type your message here..." ng-model="broadcast_multi.body" ng-trim="false" /></textarea>
+      <!--counter-->
+      <span class="form-help">{{140 - broadcast_multi.body.length}}         
+       Characters left</span>
+      <br/>
       <br/>
       <label>How many positions need to be filled?</label>
       <input required type="text" class="form-control" placeholder="i.e. 25" ng-model="broadcast_multi.numPositions" />
