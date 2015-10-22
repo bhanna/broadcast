@@ -46,7 +46,7 @@
 			            <td>{{t.firstName}}</td>
 			            <td>{{t.status}}</td>
 			            <td>
-			            	<button class="btn btn-primary" ng-hide="t.status == 'Recipient Cancelled' || t.status == 'Owner Cancelled" ng-disabled="t.status == 'Pending' || t.status == 'Confirmed' || t.status == 'Accepted' || t.status == 'Reopened'" ng-click="ownerResponse(1, t)"><span class="glyphicon glyphicon-ok"></span></button>
+			            	<button class="btn btn-primary" ng-hide="t.status == 'Recipient Cancelled' || t.status == 'Owner Cancelled'" ng-disabled="t.status == 'Pending' || t.status == 'Confirmed' || t.status == 'Accepted' || t.status == 'Reopened'" ng-click="ownerResponse(1, t)"><span class="glyphicon glyphicon-ok"></span></button>
 			            	<button class="btn btn-primary" ng-show="t.status == 'Recipient Cancelled' || t.status == 'Owner Cancelled" ng-disabled="t.status == 'Pending' || t.status == 'Confirmed' || t.status == 'Accepted'" ng-click="ownerResponse(3, t)"><span class="glyphicon glyphicon-ok"></span></button>
 			            </td>
 			            <td>
