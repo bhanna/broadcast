@@ -138,7 +138,7 @@ router.route('/incoming')
 									if (msg === 'yes') {
 										if (thread.status === 'Owner Cancelled') {
 
-						            		response.body = 'attempted to become available when Owner Cancelled';
+						            		response.body = 'attempted Yes when Owner Cancelled';
 						            		responseMessage = 'We\'re sorry, but this position has been cancelled.';
 						            		console.log('responseMessage Owner Cancelled Confirm ', responseMessage);
 
