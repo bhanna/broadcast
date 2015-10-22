@@ -406,7 +406,8 @@ router.route('/outgoing')
 
 				console.log('status: ', status);
 
-				if (status === 'Declined') {
+				//Owner Declined or Cancelled
+				if (status === 'Declined' || status === 'Owner Cancelled') {
 
 					msg = 'The position is no longer available.  Thank you!';
 					console.log('msg Decline: ', msg);

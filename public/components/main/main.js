@@ -57,13 +57,31 @@ angular.module('main', ['ngResource'])
 
 		var status;
 		if (response === 0) {
-			status = 'Declined';
+			if (thread.status === 'Pending') {
+				status = 'Declined';
+			}
+			else if (thread.status === 'Available') {
+				status = 'Declined';
+			}
+			else if (thread.status === 'Accepted') {
+				status = 'Owner Cancelled';
+			}
+			else if (thread.status === 'Confirmed') {
+				status = 'Owner Cancelled';
+			}
+			
 		}
 		else if (response === 1) {
-			status = 'Accepted';
-		}
-		else if (response === 2) {
-			status = 'Reopened';
+			if (thread.status === 'Available') {
+				status = 'Accepted';
+			}
+			else if (thread.status === 'Owner Cancelled') {
+				status = 'Reopened';
+			}
+			//else if (thread.status === 'Recipient Cancelled') {
+			//	status = 'Reopened';
+			//}
+	
 		}
 		var defer = $q.defer();
 		$http.post('/broadcasts/outgoing?status='+status, thread).success(function(data) {
