@@ -450,6 +450,37 @@ router.route('/outgoing')
 					console.log('msg Accept: ', msg);
 
 				}
+				else if (status === 'Reopened') {
+
+					msg = 'This position has been reopened.... To secure your spot please reply Confirm' + 
+					thread.broadcast_id + ' to confirm your position.';
+					
+					console.log('msg Accept: ', msg);
+
+					//update openPositions
+					//update for Accepted will happen when a Recipient Confirms in /incoming
+					Broadcast.findOne({'broadcast_id': thread.broadcast_id}, 
+						function(err, broadcast) {
+
+		            		if (err) {
+		            			console.log('err at updating openPositions Reopened ', err);
+		            		}
+		            		//make sure openPositions does not exceed numPositions
+		            		if (broadcast.numPositions > broadcast.openPositions) {
+		            			broadcast.openPositions = broadcast.openPositions + 1;
+		            			console.log('new openPositions ', broadcast.openPositions);
+
+		            			broadcast.save(function(err, broadcast) {
+
+		            				if (err) {
+		            					console.log('err ', err);
+		            					return res.status(500).send(err);
+		            				}
+		            				console.log('updated openPositions Reopened ', broadcast);
+
+		            			});
+
+				}
 				
 
 				if (err) {
