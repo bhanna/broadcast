@@ -1,5 +1,6 @@
 var express = require('express');
 var mongoose = require( 'mongoose' );
+var async = require('async');
 //var incoming = require('../controllers/inbound-message');
 var jwt = require('jsonwebtoken');
 
@@ -72,6 +73,24 @@ router.route('/incoming')
 	        res.render('twiml', {
 	            message: message
 	        });
+	    }
+
+	    function sendTwilio(phone, msg) {
+
+	    	//TWILIO SEND
+			client.messages.create({
+				to: phone,
+			    from: TWILIO_NUMBER,
+			    body: msg
+			    //mediaUrl: "http://www.example.com/hearts.png"
+			}, function(err, message) {
+				if (err) {
+					console.log('error at Twilio all positions filled ', err);
+				}
+			    console.log('message Twilio update all positions filled ', message);
+			    //process.stdout.write(message.sid);
+			});
+
 	    }
 
 	    processMessage();
@@ -153,7 +172,7 @@ router.route('/incoming')
 					                	
 						            }
 						            else if (msg === 'no') {
-						            	
+
 						            	if (thread.status === 'Owner Cancelled' || thread.status === 'Owner Declined') {
 
 						            		response.body = 'attempted Yes when Owner Cancelled or Owner Declined';
@@ -193,12 +212,56 @@ router.route('/incoming')
 							            	console.log('responseMessage Confirm ', responseMessage);
 							            	//update broadcast openPositions at Confirm
 							            	Broadcast.findOneAndUpdate({'broadcast_id': thread.broadcast_id}, { $inc: { openPositions: -1 }}, 
-							            		function(err) {
+							            		function(err, broadcast) {
 
 								            		if (err) {
 								            			console.log('err at updating openPositions ', err);
 								            		}
 								            		else {
+
+								            			//If openPositions === 0
+								            			//message all Available Recipients that the position has been reopened
+								            			if (broadcast.openPositions === 0) {
+
+								            				//TODO make a send function and call it...
+								            				//find Available Recipients
+								            				BroadcastThread.find({
+								            						'broadcast_id': broadcast.broadcast_id, 
+								            						'status': {$in: ['Available', 'Accepted']}
+								            					}, 
+								            					function(err, availableThread) {
+
+								            						responseMessage = 'All positions have been filled.  Thank you!';
+
+								            						//send to each availableThread.phone
+								            						async.forEach(availableThread.phone, function(phone, callback) {
+
+								            								console.log('available phone: ', phone);
+								            								if (!phone) {
+								            									console.log('could not find available phone');
+								            								}
+								            								else {
+								            									sendtwilio(phone, responseMessage);
+								            									console.log('sendtwilio tried with '+ phone + ' and msg ' + responseMessage);
+								            									callback();
+								            								}
+								            								
+
+								            							}, function (err) {
+
+								            								if (err) {
+								            									console.log('one send failed at available');
+								            								}
+								            								else {
+								            									console.log('all sends successful at available');
+								            								}
+								            						});
+								            						//log it all
+
+								            				});
+
+
+								            			}
 								            			console.log('updated openPositions ', broadcast.openPositions);
 								            		}
 
@@ -419,6 +482,8 @@ router.route('/outgoing')
 					console.log('phone ', thread.phone);
 					
 					//TWILIO SEND
+					sendTwilio(thread.phone, broadcast.body);
+					/*
 					client.messages.create({
 						to: thread.phone,
 					    from: TWILIO_NUMBER,
@@ -431,7 +496,7 @@ router.route('/outgoing')
 					    console.log('message Twilio create ', message);
 					    //process.stdout.write(message.sid);
 					});
-					
+					*/
 
 					console.log('thread posted');
 					data = thread;
@@ -560,6 +625,8 @@ router.route('/outgoing')
 					}
 
 					//TWILIO SEND
+					sendTwilio(thread.phone, msg);
+					/*
 					client.messages.create({
 						to: thread.phone,
 					    from: TWILIO_NUMBER,
@@ -572,7 +639,7 @@ router.route('/outgoing')
 					    console.log('message Twilio update decline/accept ', message);
 					    //process.stdout.write(message.sid);
 					});
-					
+					*/
 	
 					console.log('save thread update status');
 					return res.json(thread);
