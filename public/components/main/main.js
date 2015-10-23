@@ -75,7 +75,7 @@ angular.module('main', ['ngResource'])
 			if (thread.status === 'Available') {
 				status = 'Accepted';
 			}
-			else if (thread.status === 'Owner Cancelled') {
+			else if (thread.status === 'Owner Cancelled' || thread.status === 'Owner Declined') {
 				status = 'Reopened';
 			}
 			//else if (thread.status === 'Recipient Cancelled') {
