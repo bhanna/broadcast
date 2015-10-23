@@ -69,6 +69,9 @@ angular.module('main', ['ngResource'])
 			else if (thread.status === 'Confirmed') {
 				status = 'Owner Cancelled';
 			}
+			else if (thread.status === 'Reopened') {
+				status = 'Owner Declined';
+			}
 			
 		}
 		else if (response === 1) {
