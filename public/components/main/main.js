@@ -57,7 +57,7 @@ angular.module('main', ['ngResource'])
 
 		var status;
 		if (response === 0) {
-			if (thread.status === 'Pending') {
+			if (thread.status === 'Pending' || thread.status === 'undefined') {
 				status = 'Owner Declined';
 			}
 			else if (thread.status === 'Available') {
@@ -78,9 +78,10 @@ angular.module('main', ['ngResource'])
 			else if (thread.status === 'Owner Cancelled' || thread.status === 'Owner Declined') {
 				status = 'Reopened';
 			}
-			//else if (thread.status === 'Recipient Cancelled') {
-			//	status = 'Reopened';
-			//}
+			else if (thread.status === 'undefined') {
+				status = 'Reopened';
+			}
+			
 	
 		}
 		var defer = $q.defer();
