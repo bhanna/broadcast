@@ -153,9 +153,22 @@ router.route('/incoming')
 					                	
 						            }
 						            else if (msg === 'no') {
-						                thread.status = 'Recipient Declined';
-						                responseMessage = 'You have been unsubscribed from this position.  If you change your mind, please text Yes'+broadcast_id;
-						                console.log('responseMessage No ', responseMessage);
+						            	
+						            	if (thread.status === 'Owner Cancelled' || thread.status === 'Owner Declined') {
+
+						            		response.body = 'attempted Yes when Owner Cancelled or Owner Declined';
+						            		responseMessage = 'We\'re sorry, but this position has been cancelled.';
+						            		console.log('responseMessage Owner Cancelled or Owner Declined ', responseMessage);
+
+						            	}
+						            	else {
+
+						            		thread.status = 'Recipient Declined';
+						                	responseMessage = 'You have been unsubscribed from this position.  If you change your mind, please text Yes'+broadcast_id;
+						                	console.log('responseMessage No ', responseMessage);
+
+						            	}
+						                
 						            }
 						            else if (msg === 'confirm') {
 						            	//check if Owner Cancelled
