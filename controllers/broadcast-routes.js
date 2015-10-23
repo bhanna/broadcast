@@ -211,14 +211,17 @@ router.route('/incoming')
 							            	responseMessage = 'Thank you for confirming.  To cancel at any time please text Cancel' + broadcast_id;
 							            	console.log('responseMessage Confirm ', responseMessage);
 							            	//update broadcast openPositions at Confirm
-							            	Broadcast.findOneAndUpdate({'broadcast_id': thread.broadcast_id}, { $inc: { openPositions: -1 }}, 
+							            	Broadcast.findOneAndUpdate(
+							            		{'broadcast_id': thread.broadcast_id}, 
+							            		{ $inc: { openPositions: -1 }}, 
+							            		{ new: true }, 
 							            		function(err, broadcast) {
 
 								            		if (err) {
 								            			console.log('err at updating openPositions ', err);
 								            		}
 								            		else {
-
+								            			console.log('broadcast updated: ', broadcast);
 								            			//If openPositions === 0
 								            			//message all Available Recipients that the position has been reopened
 								            			if (broadcast.openPositions === 0) {
