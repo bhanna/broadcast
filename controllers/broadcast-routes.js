@@ -229,20 +229,21 @@ router.route('/incoming')
 								            						'broadcast_id': broadcast.broadcast_id, 
 								            						'status': {$in: ['Available', 'Accepted']}
 								            					}, 
-								            					function(err, availableThread) {
+								            					function(err, availableThreads) {
 
+								            						console.log('availableThreads ', availableThreads);
 								            						responseMessage = 'All positions have been filled.  Thank you!';
 
-								            						//send to each availableThread.phone
-								            						async.forEach(availableThread.phone, function(phone, callback) {
+								            						//send to each availableThread
+								            						async.forEach(availableThreads, function(available, callback) {
 
-								            								console.log('available phone: ', phone);
+								            								console.log('available phone: ', available.phone);
 								            								if (!phone) {
 								            									console.log('could not find available phone');
 								            								}
 								            								else {
-								            									sendtwilio(phone, responseMessage);
-								            									console.log('sendtwilio tried with '+ phone + ' and msg ' + responseMessage);
+								            									sendtwilio(available.phone, responseMessage);
+								            									console.log('sendtwilio tried with '+ available.phone + ' and msg ' + responseMessage);
 								            									callback();
 								            								}
 								            								
