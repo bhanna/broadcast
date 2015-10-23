@@ -29,6 +29,24 @@ var List = mongoose.model('List');
 
 var router =  express.Router();
 
+function sendTwilio(phone, msg) {
+
+	//TWILIO SEND
+	client.messages.create({
+		to: phone,
+	    from: TWILIO_NUMBER,
+	    body: msg
+	    //mediaUrl: "http://www.example.com/hearts.png"
+	}, function(err, message) {
+		if (err) {
+			console.log('error at Twilio all positions filled ', err);
+		}
+	    console.log('message Twilio update all positions filled ', message);
+	    //process.stdout.write(message.sid);
+	});
+
+}
+
 // Twilio SMS webhook route
 router.route('/incoming')
 	
@@ -73,24 +91,6 @@ router.route('/incoming')
 	        res.render('twiml', {
 	            message: message
 	        });
-	    }
-
-	    function sendTwilio(phone, msg) {
-
-	    	//TWILIO SEND
-			client.messages.create({
-				to: phone,
-			    from: TWILIO_NUMBER,
-			    body: msg
-			    //mediaUrl: "http://www.example.com/hearts.png"
-			}, function(err, message) {
-				if (err) {
-					console.log('error at Twilio all positions filled ', err);
-				}
-			    console.log('message Twilio update all positions filled ', message);
-			    //process.stdout.write(message.sid);
-			});
-
 	    }
 
 	    processMessage();
