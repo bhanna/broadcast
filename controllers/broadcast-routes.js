@@ -241,7 +241,7 @@ router.route('/incoming')
 								            						async.forEach(availableThreads, function(available, callback) {
 
 								            								console.log('available phone: ', available.phone);
-								            								if (!phone) {
+								            								if (!available.phone) {
 								            									console.log('could not find available phone');
 								            								}
 								            								else {
