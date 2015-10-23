@@ -245,6 +245,7 @@ router.route('/incoming')
 								            									console.log('could not find available phone');
 								            								}
 								            								else {
+								            									console.log('reached send, available phone ' + available.phone + ' and msg: ' + responseMessage);
 								            									sendtwilio(available.phone, responseMessage);
 								            									console.log('sendtwilio tried with '+ available.phone + ' and msg ' + responseMessage);
 								            									callback();
