@@ -154,7 +154,7 @@ router.route('/incoming')
 						            }
 						            else if (msg === 'no') {
 						                thread.status = 'Recipient Declined';
-						                responseMessage = 'You have been unsubscribed from this position.';
+						                responseMessage = 'You have been unsubscribed from this position.  If you change your mind, please text Yes'+broadcast_id;
 						                console.log('responseMessage No ', responseMessage);
 						            }
 						            else if (msg === 'confirm') {
@@ -196,7 +196,7 @@ router.route('/incoming')
 
 						            }
 						            else {
-						            	
+
 						            	if (thread.status === 'Accepted') {
 						            		responseMessage = 'Please respond "Confirm' +broadcast_id+'"';
 						            	}
