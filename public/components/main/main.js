@@ -58,13 +58,13 @@ angular.module('main', ['ngResource'])
 		var status;
 		if (response === 0) {
 			if (thread.status === 'Pending') {
-				status = 'Declined';
+				status = 'Owner Declined';
 			}
 			else if (thread.status === 'Available') {
-				status = 'Declined';
+				status = 'Owner Declined';
 			}
 			else if (thread.status === 'Accepted') {
-				status = 'Owner Cancelled';
+				status = 'Owner Declined';
 			}
 			else if (thread.status === 'Confirmed') {
 				status = 'Owner Cancelled';

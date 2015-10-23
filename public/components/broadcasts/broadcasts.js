@@ -122,7 +122,7 @@ angular.module('broadcasts', [
 	//send to all List members
 	b.sendMulti = function(message, data) {
 
-		var results = {};
+		
 		console.log('recipients ', data.recipients);
 		var promises = data.recipients.map(function(recipient) {
 

@@ -136,11 +136,11 @@ router.route('/incoming')
 
 
 									if (msg === 'yes') {
-										if (thread.status === 'Owner Cancelled') {
+										if (thread.status === 'Owner Cancelled' || thread.status === 'Owner Declined') {
 
-						            		response.body = 'attempted Yes when Owner Cancelled';
+						            		response.body = 'attempted Yes when Owner Cancelled or Owner Declined';
 						            		responseMessage = 'We\'re sorry, but this position has been cancelled.';
-						            		console.log('responseMessage Owner Cancelled Confirm ', responseMessage);
+						            		console.log('responseMessage Owner Cancelled or Owner Declined ', responseMessage);
 
 						            	}
 						            	else {
@@ -153,17 +153,17 @@ router.route('/incoming')
 					                	
 						            }
 						            else if (msg === 'no') {
-						                thread.status = 'Declined';
+						                thread.status = 'Recipient Declined';
 						                responseMessage = 'You have been unsubscribed from this position.';
 						                console.log('responseMessage No ', responseMessage);
 						            }
 						            else if (msg === 'confirm') {
 						            	//check if Owner Cancelled
-						            	if (thread.status === 'Owner Cancelled') {
+						            	if (thread.status === 'Owner Cancelled' || thread.status === 'Owner Declined') {
 
-						            		response.body = 'attempted to confirm when Owner Cancelled';
+						            		response.body = 'attempted to confirm when Owner Cancelled or Owner Declined';
 						            		responseMessage = 'We\'re sorry, but this position has been cancelled.';
-						            		console.log('responseMessage Owner Cancelled Confirm ', responseMessage);
+						            		console.log('responseMessage Owner Cancelled or Owner Declined ', responseMessage);
 
 						            	}
 						            	else if (thread.status === 'Recipient Cancelled') {
@@ -196,7 +196,14 @@ router.route('/incoming')
 
 						            }
 						            else {
-						            	responseMessage = 'Please respond "Yes' +broadcast_id+'" or No'+broadcast_id+'"';
+						            	
+						            	if (thread.status === 'Accepted') {
+						            		responseMessage = 'Please respond "Confirm' +broadcast_id+'"';
+						            	}
+						            	else if (thread.status === 'Pending') {
+						            		responseMessage = 'Please respond "Yes' +broadcast_id+'" or No'+broadcast_id+'"';
+						            	}
+						            	
 						            }
 
 
@@ -372,7 +379,7 @@ router.route('/outgoing')
 				thread.firstName = 'single';
 
 			}
-			//regex clear phone number so only numbers are present
+			
 			//TODO This sould be in Model somehow
 			//add '+1' to all numbers for Twilio
 			thread.phone = '+1' + req.query.phone;
@@ -439,41 +446,45 @@ router.route('/outgoing')
 				console.log('status: ', status);
 
 				//Owner Declined or Cancelled
-				if (status === 'Declined' || status === 'Owner Cancelled') {
+				if (status === 'Owner Declined' || status === 'Owner Cancelled') {
 
 					msg = 'The position is no longer available.  Thank you!';
 					console.log('msg Decline: ', msg);
 
-					//update openPositions
-					//update for Accepted will happen when a Recipient Confirms in /incoming
-					Broadcast.findOne({'broadcast_id': thread.broadcast_id}, 
-						function(err, broadcast) {
+					if (status === 'Owner Cancelled') {
 
-		            		if (err) {
-		            			console.log('err at updating openPositions ', err);
-		            		}
-		            		//make sure openPositions does not exceed numPositions
-		            		if (broadcast.numPositions > broadcast.openPositions) {
-		            			broadcast.openPositions = broadcast.openPositions + 1;
-		            			console.log('new openPositions ', broadcast.openPositions);
+						//update openPositions with a +1
+						Broadcast.findOne({'broadcast_id': thread.broadcast_id}, 
+							function(err, broadcast) {
 
-		            			broadcast.save(function(err, broadcast) {
+			            		if (err) {
+			            			console.log('err at updating openPositions ', err);
+			            		}
+			            		//make sure openPositions does not exceed numPositions
+			            		if (broadcast.numPositions > broadcast.openPositions) {
+			            			broadcast.openPositions = broadcast.openPositions + 1;
+			            			console.log('new openPositions ', broadcast.openPositions);
 
-		            				if (err) {
-		            					console.log('err ', err);
-		            					return res.status(500).send(err);
-		            				}
-		            				console.log('updated openPositions ', broadcast);
+			            			broadcast.save(function(err, broadcast) {
 
-		            			});
-		            		} 
-		            		else {
+			            				if (err) {
+			            					console.log('err ', err);
+			            					return res.status(500).send(err);
+			            				}
+			            				console.log('updated openPositions ', broadcast);
 
-		            			//all positions are still open
-		            			console.log('did not update openPositions: numPositions: ' + broadcast.numPositions + ', openPositions: ' + broadcast.openPositions);
-		            		}
-		        
-	            	});
+			            			});
+			            		} 
+			            		else {
+
+			            			//all positions are still open
+			            			console.log('did not update openPositions: numPositions: ' + broadcast.numPositions + ', openPositions: ' + broadcast.openPositions);
+			            		}
+			        
+		            	});
+
+					}
+					
 				}
 				else if (status === 'Accepted') {
 
@@ -490,8 +501,7 @@ router.route('/outgoing')
 					
 					console.log('msg Accept: ', msg);
 
-					//update openPositions
-					//update for Accepted will happen when a Recipient Confirms in /incoming
+					//update openPositions with a +1
 					Broadcast.findOne({'broadcast_id': thread.broadcast_id}, 
 						function(err, broadcast) {
 
