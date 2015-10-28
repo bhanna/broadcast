@@ -42,7 +42,7 @@ angular.module('broadcasts', [
 		$http.post('/broadcasts/', data).success(function(data) {
 
 			defer.resolve(data);
-			console.log('created broadcast ', data.title);
+			console.log('created broadcast ', data);
 			
 
 		})
@@ -58,13 +58,16 @@ angular.module('broadcasts', [
 		//sendBroadcast(data, phone, name);
 	};
 
+	//Moving all this to broadcast-routes
+
+	/*
 	//send to single Recipient
-	b.sendSingle = function(data, bID) {
+	b.sendSingle = function(data, broadcast_id) {
 
 		var results = {};
 		var defer = $q.defer();
 
-		$http.post('/broadcasts/outgoing?phone=' + data.phone + '&id=' + bID, data).success(function(data){
+		$http.post('/broadcasts/outgoing?phone=' + data.phone + '&name=Single&id=' + broadcast_id, data).success(function(data){
 
 			results.message = 'Sent to ' + data.phone;
 			results.messageClass = 'alert-success';
@@ -142,6 +145,7 @@ angular.module('broadcasts', [
 		return $q.all(promises);
 
 	};
+	*/
 
 	return b;
 
@@ -202,28 +206,32 @@ angular.module('broadcasts', [
 
 		
 		//TODO add Sender from User account
+		//TODO put this in broadcast-route functions
+
 
 		broadcast.create($scope.broadcast)
 			.then(function(data) {
 
 				//success
-				broadcast.sendSingle($scope.broadcast, data.id)
-					.then(function(data) {
+				//broadcast.sendSingle($scope.broadcast, broadcast_id)
+				//	.then(function(data) {
 
 						//TODO clear loading screen when done sending
 						$scope.broadcast_message = data.message;
 						$scope.broadcast_message_class = data.messageClass;
 
-					}, function(err) {
+				//	}, function(err) {
 
 						//error
-						console.log('send single err ', err);
+				//		console.log('send single err ', err);
 
-					});
+				//	});
 
 			}, function(err) {
 
 				//error
+				$scope.broadcast_message = data.message;
+				$scope.broadcast_message_class = data.messageClass;
 				console.log('create single err ', err);
 
 			});
@@ -237,12 +245,17 @@ angular.module('broadcasts', [
 
 		//TODO add Sender from User account
 
+		//TODO move all this to server side broadcast-routes
+
 		//define list id to track during Broadcast creation
 		$scope.broadcast_multi.list_id = id;
 
 		broadcast.create($scope.broadcast_multi)
 			.then(function(data) {
 
+				$scope.broadcast_message = data.message;
+				$scope.broadcast_message_class = data.messageClass;
+				/*
 				//success
 				broadcast.prepareMulti($scope.selected._id, data.id)
 					.then(function(data) {
@@ -272,11 +285,13 @@ angular.module('broadcasts', [
 						console.log('prepare Multi err ', err);
 
 					});
-
+			*/
 			}, function(err) {
 
 				//error
-				console.log('create single err ', err);
+				$scope.broadcast_message = 'Sorry! There was an error...';
+				$scope.broadcast_message_class = 'alert-danger';
+				console.log('create multi err ', err);
 
 			});
 
