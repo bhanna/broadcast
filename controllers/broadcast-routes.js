@@ -22,7 +22,7 @@ else {
 }
 
 
-//var client = require('twilio')(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+var client = require('twilio')(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 var Broadcast = mongoose.model('Broadcast');
 var BroadcastThread = mongoose.model('BroadcastThread');
 var Response = mongoose.model('Response');
@@ -40,11 +40,11 @@ var router =  express.Router();
 
 //clean up all errors to make user friendly
 
-//LOCAL
+/*//LOCAL
 function sendTwilio (phone, msg) {
 	return 'phone: ' + phone + ', msg: ' + msg;
-}
-/*//LIVE
+}*/
+//LIVE
 function sendTwilio(phone, msg) {
 
 	//TWILIO SEND
@@ -64,7 +64,7 @@ function sendTwilio(phone, msg) {
 	});
 
 }
-*/
+
 
 //create Broadcast
 function createBroadcast (broadcast_data, callback) {
