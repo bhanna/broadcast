@@ -76,6 +76,8 @@ angular.module('broadcasts', [
 		$scope.broadcast = {};
 		//message for List
 		$scope.broadcast_multi = {};
+		//enable submit button
+		$scope.isProcessing = false;
 
 	};
 	
@@ -117,8 +119,9 @@ angular.module('broadcasts', [
 
 		
 		//TODO add Sender from User account
-		//TODO put this in broadcast-route functions
 
+		//disable submit buttons
+		$scope.isProcessing = true;
 
 		broadcast.create($scope.broadcast)
 			.then(function(data) {
@@ -126,6 +129,9 @@ angular.module('broadcasts', [
 				//TODO clear loading screen when done sending
 				$scope.broadcast_message = data.message;
 				$scope.broadcast_message_class = data.messageClass;
+				
+				//enable submit buttons
+				$scope.isProcessing = false;
 
 			}, function(err) {
 
@@ -133,6 +139,9 @@ angular.module('broadcasts', [
 				$scope.broadcast_message = data.message;
 				$scope.broadcast_message_class = data.messageClass;
 				console.log('create single err ', err);
+
+				//enable submit buttons
+				$scope.isProcessing = false;
 
 			});
 
@@ -145,6 +154,9 @@ angular.module('broadcasts', [
 
 		//TODO add Sender from User account
 
+		//disable submit buttons
+		$scope.isProcessing = true;
+
 		//define list id to track during Broadcast creation
 		$scope.broadcast_multi.list_id = id;
 
@@ -153,6 +165,9 @@ angular.module('broadcasts', [
 
 				$scope.broadcast_message = data.message;
 				$scope.broadcast_message_class = data.messageClass;
+
+				//enable submit buttons
+				$scope.isProcessing = false;
 				
 			}, function(err) {
 
@@ -160,6 +175,9 @@ angular.module('broadcasts', [
 				$scope.broadcast_message = 'Sorry! There was an error...';
 				$scope.broadcast_message_class = 'alert-danger';
 				console.log('create multi err ', err);
+
+				//enable submit buttons
+				$scope.isProcessing = false;
 
 			});
 

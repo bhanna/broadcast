@@ -65,7 +65,7 @@ function sendTwilio(phone, msg, callback) {
 			return;
 		}
 	    console.log('message Twilio update all positions filled ', message);
-	    callback()
+	    callback();
 	    return;
 	    //process.stdout.write(message.sid);
 	});

@@ -31,35 +31,55 @@ angular.module('my-lists', [
 })
 .controller('listCtrl', function ListController ($scope, $http, $location, getAllLists, List, Recipient) {
 
-	$scope.username = 'Matthew';
-	//$scope.listRecipients = getListRecipients.query();
-	$scope.lists = getAllLists.query();
+	$scope.init = function() {
 
-	if ($scope.lists === {}) {
-		$scope.noLists = true;
-	}
-	else {
-		$scope.noLists = false;
-	}
+		//get all lists
+		$scope.lists = getAllLists.query();
 
-	//refresh list
-	var refreshList = function (list_id) {
+		if ($scope.lists === {}) {
+			$scope.noLists = true;
+		}
+		else {
+			$scope.noLists = false;
+		}
+		//list
+		$scope.list = {};
 
-		List.get({id: list_id}, function(data) {
+		//selected list
+		$scope.selected = null;
+
+		//show create list form
+		$scope.showCreate = null;
+
+		//recipient
+		$scope.recipient = {};
+
+		//recipient action message
+		$scope.recipient_message = null;
+
+	};
+	
+
+	//disable/enable
+	var disabled = true;
+
+	//refresh list 
+	var refreshList = function (id) {
+
+		List.get({id: id}, function(data) {
 
 			$scope.selected = data;
 
 		});
 		$scope.recipient = '';
 
-	};
+	};	
 
-	//select list
-	$scope.selected = null;
-	$scope.getList = function (list) {
+	var getList = function (id) {
 
 		$scope.showCreate = null;
-		List.get({id: list._id}, function(data) {
+
+		List.get({id: id}, function(data) {
 
 			$scope.selected = data;
 			$scope.list_message = null;
@@ -69,9 +89,15 @@ angular.module('my-lists', [
 
 	};
 
+	//select list
+	$scope.getList = function (id) {
+
+		getList(id);		
+
+	};
+
 
 	//showCreateList
-	$scope.showCreate = null;
 	$scope.showCreateList = function () {
 
 		$scope.selected = null;
@@ -81,8 +107,6 @@ angular.module('my-lists', [
 
 
 	//createList
-	$scope.list = {};
-
 	$scope.createList = function () {
 
 		$http.post('/lists/', $scope.list).success(function(data){
@@ -90,6 +114,7 @@ angular.module('my-lists', [
 			$scope.list_message_class = 'alert-success';
 			$scope.list_message = data.message;
 			$scope.lists = getAllLists.query();
+			getList(data.list_id);
 
 		});
 
@@ -114,31 +139,34 @@ angular.module('my-lists', [
 	};
 
 
-	//add Recipients
-	$scope.recipient = {};
-
+	//add Recipient
 	$scope.createRecipient = function () {
 
 		$http.post('/recipients/single?list_id=' + $scope.selected._id, $scope.recipient).success(function(data){
 
 			$scope.recipient_message = data.message;
+			$scope.recipient = '';
 			refreshList($scope.selected._id);
-			//$scope.listRecipients = getListRecipients.query();
+			
 
 		});
 
 	};
 
+	//edit Recipient
 	$scope.editRecipient = function (id) {
 
 		$http.get('/recipients/' + id + '?list_id=' + $scope.selected._id).success(function(data) {
 
 			$scope.recipient = data;
+			console.log('recipient ', $scope.recipient);
+			setDisabled(false);
 
 		});
 
 	};
 
+	//update after editing Recipient
 	$scope.updateRecipient = function (id) {
 
 		$http.put('/recipients/' + id + '?list_id=' + $scope.selected._id, $scope.recipient).success(function(data) {
@@ -152,17 +180,32 @@ angular.module('my-lists', [
 
 
 	//delete Recipient
-	$scope.recipient_message = null;
-	
 	$scope.deleteRecipient = function(id) {
 
 		$http.delete('/recipients/' + id + '?list_id=' + $scope.selected._id).success(function(data) {
 
 			$scope.recipient_message = data.message;
 			refreshList($scope.selected._id);
+			setDisabled(true);
 
 		});
 
 	};
+
+	var setDisabled = function(val) {
+
+		disabled = val; 
+
+	};
+
+	//enable and disable
+	$scope.isDisabled = function () {
+
+		return disabled;
+
+	};
+
+
+	$scope.init();
 
 });

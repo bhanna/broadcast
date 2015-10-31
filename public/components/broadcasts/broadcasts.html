@@ -39,7 +39,7 @@
       <label>How many positions need to be filled?</label>
       <input required type="text" class="form-control" placeholder="i.e. 25" ng-model="broadcast.numPositions" />
       <br/>
-      <input class="btn submit-btn pull-right" type="submit" value="Send!" />
+      <input ng-disabled="isProcessing" class="btn submit-btn pull-right" type="submit" value="Send!" />
     </form>
 
   </div>
@@ -62,7 +62,7 @@
       <label>How many positions need to be filled?</label>
       <input required type="text" class="form-control" placeholder="i.e. 25" ng-model="broadcast_multi.numPositions" />
       <br/>
-      <input class="btn submit-btn pull-right" type="submit" value="Send!" />
+      <input ng-disabled="isProcessing" class="btn submit-btn pull-right" type="submit" value="Send!" />
     </form>
 
   </div>

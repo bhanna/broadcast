@@ -66,8 +66,7 @@ router.route('/single')
 				}
 
 				console.log('recipient posted');
-				data.message = 'Added ' + list.listItems[0].firstName;
-				data.recipient = list.listItems[0];
+				data.message = 'Added ' + req.body.firstName;
 				return res.json(data);
 			});
 			

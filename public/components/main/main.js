@@ -26,7 +26,7 @@ angular.module('main', ['ngResource'])
 	return $resource('/lists/:id');
 
 })
-.service('manageBroadcasts', function manageBroadcasts ($http, $q, List) {
+.service('manageBroadcasts', function manageBroadcasts ($http, $q) {
 
 	var mb = this;
 

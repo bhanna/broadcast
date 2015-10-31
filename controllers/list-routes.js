@@ -31,6 +31,7 @@ router.route('/')
 
 			console.log('list posted');
 			data.message = 'Created List - ' + list.listName;
+			data.list_id = list._id;
 			return res.json(data);
 
 		});
