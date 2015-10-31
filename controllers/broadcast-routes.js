@@ -217,7 +217,7 @@ function createBroadcastThreads(broadcast, mainCallback) {
 	console.log('broadcast from create ', broadcast);
 	//callback(null, 'done');
 	//create a thread for each broadcast.results.recipients
-	async.each(broadcast.recipients, function(recipient, callback) {
+	async.each(broadcast.recipients, function(recipient, eachCallback) {
 
 		var thread = new BroadcastThread();
 		console.log('broadcast_id ', broadcast.broadcast_id);
@@ -244,6 +244,7 @@ function createBroadcastThreads(broadcast, mainCallback) {
 						console.log('err at thread post', err);
 						//return data;
 						nestedCallback(err);
+						return;
 					}
 
 					console.log('body ', broadcast.body);
@@ -267,11 +268,14 @@ function createBroadcastThreads(broadcast, mainCallback) {
 				data.message = 'err at thread post ' + err;
 				data.messageClass = 'alert-danger';
 				mainCallback(err);
+				return;
 			}
+
+			eachCallback();
 
 		});
 
-		callback();
+		
 
 	}, function (err) {
 
@@ -280,6 +284,7 @@ function createBroadcastThreads(broadcast, mainCallback) {
 			err = 'one send failed at createBroadcastThreads '+ err;
 			//return 'one send failed at createBroadcastThreads ' + err;
 			mainCallback(err, data);
+			return;
 		}
 		else {
 			console.log('all sends successful at createBroadcastThreads');
