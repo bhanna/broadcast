@@ -35,14 +35,18 @@ var router =  express.Router();
 //Put parsing Statuses in a function
 //Put incoming in a function
 //Put outgoing in a function
-//Put all functions here in modules
+//Put all functions here in Modules or Controllers!!
 //Make a LOCAL module and require it
-
+//send req and res to sendTwilio()
 //clean up all errors to make user friendly
+//create Owner class with respond() method
+//create Recipient class with respond() method
 
-/*//LOCAL
-function sendTwilio (phone, msg) {
-	return 'phone: ' + phone + ', msg: ' + msg;
+/*//LOCAL currently returns data for testing
+function sendTwilio (phone, msg, callback) {
+	var data = 'sentTwilio to phone: ' + phone + ', msg: ' + msg;
+	console.log('from sentTwilio: ', data);
+	callback(null, data);
 }*/
 //LIVE
 function sendTwilio(phone, msg) {
@@ -106,11 +110,7 @@ function createBroadcast (broadcast_data, callback) {
 		//return data;
 
 	});
-	/*
-	console.log('create DATA: ', broadcast_data);
-	data ='create';
-	callback(null, data);
-	*/
+
 }
 
 //prepare BroadcastThread(s)
@@ -123,15 +123,6 @@ function prepareBroadcastThreads(broadcast, callback) {
 
 	if (broadcast.listID) {
 
-		//get list from broadcast.listID
-		//var numbers = [];
-		//var listName;
-		
-		//results.recipients = [];
-		//var idString = broadcast.listID;
-		//console.log('idString: ', idString);
-		//var listID = new ObjectId(broadcast.listID);
-		//console.log('listID: ', listID);
 		List.findById(broadcast.listID, function(err, list) {
 
 			if (err) {
@@ -194,10 +185,6 @@ function prepareBroadcastThreads(broadcast, callback) {
 		        	console.log('broadcast recipients ', recipients);
 		        	seriesCallback();
     			},
-    			//function(done){
-		        	//broadcast.recipients.name = 'Single';
-		        //	done(null, broadcast);
-    			//},
 
 			],
 
@@ -215,11 +202,7 @@ function prepareBroadcastThreads(broadcast, callback) {
 			});	
 		
 	}
-	/*
-	console.log('prepare DATA: ', broadcast);
-	data = 'prepare';
-	callback(null, data);
-	*/
+
 }
 
 //create BroadcastThread
@@ -246,11 +229,12 @@ function createBroadcastThreads(broadcast, mainCallback) {
 		async.waterfall([
 
 			function(nestedCallback) {
-				var results = sendTwilio(thread.phone, broadcast.body);
-				console.log('sending Twilio at createBroadcastThread, ', results);
-				nestedCallback();
+				sendTwilio(thread.phone, broadcast.body, nestedCallback);
+				console.log('sending Twilio at createBroadcastThread');
 			},
-			function(nestedCallback) {
+			function(data, nestedCallback) {
+
+				console.log('data from sendTwilio: ', data);
 				thread.save(function(err, thread) {
 
 					if (err) {
@@ -305,30 +289,252 @@ function createBroadcastThreads(broadcast, mainCallback) {
 
 	});
 	
-	/*
-	console.log('createThread DATA: ', broadcast);
-	data = 'createThread';
-	callback(null, data);
-	*/
 }
 
+//update broadcast thread
+function updateBroadcastThread(req, res, thread, update) {
 
-function updateStatus (recipient, status) {
-	async.each(recipient, function(r, callback) {
+	console.log('update ', update);
+	console.log('thread ', thread);
+	
+	//TODO determine update type
+	//currently update only contains {status: status}
 
-		r.status = status;
+	//this needs to send back broadcast_id
+	updateThreadStatus(req, res, thread, update.status);
+	
+}
 
-	}, function(err) {
+//update thread status (also sends appropriate owner response)
+function updateThreadStatus (req, res, thread, response) {
+	
+	BroadcastThread.findById(thread._id, function(err, thread) {
 
-		if (err) {
-			console.log('err at updateStatus ', err);
-		}
-		else {
-			console.log('updateStatus successful');
-		}
+	//TODO set this message somewhere cleaner!
+	console.log('status: ', response);
+
+	async.waterfall([
+
+			function(waterfallCallback) {
+
+				//save the thread
+				thread.status = response;
+				thread.save(function(err, thread) {
+
+					if (err) {
+						console.log('err at thread save update status ', err);
+						return res.status(500).send(err);
+					}
+
+					console.log('save thread update status');
+					//return res.json(thread);
+					waterfallCallback(null, thread);
+
+				});
+
+				
+
+			},
+			function(thread, waterfallCallback) {
+
+				//parse response returns the appropriate message
+				parseResponse(req, res, response, thread, waterfallCallback);
+
+			},
+			function(msg, waterfallCallback) {
+
+				//TWILIO SEND the msg from parse response
+				sendTwilio(thread.phone, msg, waterfallCallback);
+
+			}
+
+		],
+		function(err, results) {
+
+			if (err) return res.status(500).send(err);
+			console.log('results: ', results);
+			//callback();
+			return res.json(thread.broadcast_id);
+
+		});
 
 	});
 }
+
+
+//parse response from Owner and return msg
+function parseResponse(req, res, response, thread, callback) {
+
+	var msg;
+
+	//Owner Declined or Cancelled
+	if (response === 'Owner Declined' || response === 'Owner Cancelled') {
+
+		msg = 'The position is no longer available.  Thank you!';
+		console.log('msg Owner Cancelled Owner Declined: ', msg);
+
+
+		if (response === 'Owner Cancelled') {
+
+			checkForNewOpenPosition(msg, thread, callback);
+			console.log('reached response === Owner Cancelled');
+
+		}
+		else {
+			callback(null, msg);
+			return;
+		}
+		
+	}
+	else if (response === 'Accepted') {
+
+		msg = 'You have been selected to fill the position.... To secure your spot please reply Confirm' + 
+		thread.broadcast_id + ' to confirm your position.';
+		
+		console.log('msg Accept: ', msg);
+		callback(null, msg);
+		return;
+
+	}
+	else if (response === 'Reopened') {
+		msg = 'This position has been reopened.... To secure your spot please reply Confirm' + 
+		thread.broadcast_id + ' to confirm your position.';
+		
+		console.log('msg Reopen: ', msg);
+		callback(null, msg);
+		return;
+	}
+
+	//return msg;
+	
+
+}
+
+
+function checkForNewOpenPosition (msg, thread, callback) {
+
+	console.log('checking for new open positions...');
+
+	//update openPositions with a +1
+	Broadcast.findOne({'broadcast_id': thread.broadcast_id}, 
+		function(err, broadcast) {
+
+    		if (err) {
+    			console.log('err at updating openPositions ', err);
+    		}
+
+    		var wasFull;
+    		//check if openPositions was zero, set marker
+    		if (broadcast.openPositions === 0) {
+    			wasFull = true;
+    		}
+
+    		//make sure openPositions does not exceed numPositions
+    		if (broadcast.numPositions > broadcast.openPositions) {
+    			broadcast.openPositions = broadcast.openPositions + 1;
+    			console.log('new openPositions ', broadcast.openPositions);
+
+    			//if openPostions used to === 0 send message that there is new opening
+    			//to all Available and Accepted
+    			if (typeof wasFull !== 'undefined') {
+
+    				var available = [];
+    				var openMsg = 'A position has opened up for ' + broadcast.broadcast_id + 
+    				'! Yes' + broadcast.broadcast_id + ' or No' + broadcast.broadcast_id + '?';
+    				//TODO clean this up
+    				//get Available and Accepted and store in obj array
+    				async.waterfall([
+    					function(waterfallCallback) {
+    						BroadcastThread.find({
+	            					'broadcast_id': broadcast.broadcast_id, 
+						            'status': {$in: ['Available', 'Accepted']},
+					        	},
+					            function(err, allAvailable) {
+
+					            	if (err) {
+					            		console.log('error at find allAvailable ', err);
+					            	}
+					            	else {
+					            		available = allAvailable;
+					            		console.log('set available: ', available);
+					            		waterfallCallback(null, available);							
+					            	}
+					            	
+					            
+					        });
+    					},
+    					//need function to set all available to Pending
+    					function(available, waterfallCallback) {
+
+    						async.each(available, function(a, eachCallback) {
+
+    							BroadcastThread.findById(a._id, function(err, a) {
+
+    								if (err) {
+    									console.log('could not find available by ID to set to Pending ', err);
+    									callback(err);
+    									return;
+    								}
+    								a.status = 'Pending';
+    								a.save(function(err, a) {
+
+    									if (err) {
+	    									console.log('could not save available status to Pending ', err);
+	    									callback(err);
+	    									return;
+	    								}
+	    								//eachCallback();
+	    								//sendTwilio that there is an open position
+	    								sendTwilio(a.phone, openMsg, eachCallback);
+
+    								});
+
+    							});
+
+    						}, function(err) {
+
+    							if (err) {
+									console.log('failed at async.each available set status to Pending ', err);
+									callback(err);
+									return;
+								}
+								else {
+									console.log('success at async.each available set status to Pending');
+									waterfallCallback(null, available);
+								}
+
+    						});
+
+    					},
+  
+    				]);
+    				           				
+    			}
+
+    			broadcast.save(function(err, broadcast) {
+
+    				if (err) {
+    					console.log('err ', err);
+    					return res.status(500).send(err);
+    				}
+    				console.log('updated openPositions ', broadcast);
+    				//return msg;
+    				callback(null, msg);
+
+    			});
+    		} 
+    		else {
+
+    			//all positions are still open
+    			console.log('did not update openPositions: numPositions: ' + broadcast.numPositions + ', openPositions: ' + broadcast.openPositions);
+    			//return msg;
+    			callback(null, msg);
+    		}
+
+	});
+
+}
+
 
 // Twilio SMS webhook route
 router.route('/incoming')
@@ -529,9 +735,9 @@ router.route('/incoming')
 								            								}
 								            								else {
 								            									console.log('reached send, available phone ' + available.phone + ' and msg: ' + responseMessage);
-								            									sendTwilio(available.phone, responseMessage);
-								            									console.log('sendtwilio tried with '+ available.phone + ' and msg ' + responseMessage);
-								            									callback();
+								            									sendTwilio(available.phone, responseMessage, callback);
+								            									//console.log('sendtwilio tried with '+ available.phone + ' and msg ' + responseMessage);
+								            									//callback();
 								            								}
 								            								
 
@@ -652,20 +858,11 @@ router.route('/incoming')
 					    
 					});
 
-	    			
-
-	    			
-					
 
 	    		}
 
-
-
 	    	});
 	    	
-
-	        
-	
 		}
 	});
 
@@ -719,242 +916,8 @@ router.route('/outgoing')
 
 	.post(function(req, res) {
 
-		//set response var
-		var data = {};
-
-		//TODO clean this up for fucks sake!
-
-		if (!req.query.status) {
-
-			//create broadcastThread
-			async.series([
-					function(callback) {
-						createBroadcastThread(req.query.name, req.query.phone, req.query.id);
-						callback();
-					},
-					function(callback) {
-						return res.json(callback);
-					}
-				]);
-			
-			/*
-			var thread = new BroadcastThread();
-			if (req.query.name) {
-
-				thread.firstName = req.query.name;
-
-			}
-			else {
-
-				thread.firstName = 'single';
-
-			}
-			*/
-
-			
-			/*
-			//add '+1' to all numbers for Twilio
-			thread.phone = '+1' + req.query.phone;
-
-			//find correct broadcast through req
-			Broadcast.findById(req.query.id, function(err, broadcast) {
-
-				if (err) {
-					console.log('err at find Broadcast: ', err);
-					return res.status(500).send(err);
-				}
-				
-				thread.broadcast_id = broadcast.broadcast_id;
-				console.log('thread ', thread);
-
-				thread.save(function(err, thread) {
-
-					if (err) {
-						console.log('err at thread post', err);
-						return res.status(500).send(err);
-					}
-
-					console.log('body ', broadcast.body);
-					console.log('phone ', thread.phone);
-					
-					//TWILIO SEND
-					sendTwilio(thread.phone, broadcast.body);
-
-					console.log('thread posted');
-					data = thread;
-					return res.json(data);
-
-				});
-			
-			});
-			*/
-
-		}
-		else {
-
-			//TODO clean this up
-
-			//TODO create updateBroadcastThread
-
-			//currently for update status
-			//these need to be centralized, perhaps in Models..
-			console.log('body: ',req.body);
-			var status = req.query.status;
-			console.log('query status: ', req.query.status);
-
-			BroadcastThread.findById(req.body._id, function(err, thread) {
-
-				//TODO set this message somewhere cleaner!
-				var msg; 
-
-				console.log('status: ', status);
-
-				//Owner Declined or Cancelled
-				if (status === 'Owner Declined' || status === 'Owner Cancelled') {
-
-					msg = 'The position is no longer available.  Thank you!';
-					console.log('msg Owner Cancelled Owner Declined: ', msg);
-
-
-					if (status === 'Owner Cancelled') {
-
-						//update openPositions with a +1
-						Broadcast.findOne({'broadcast_id': thread.broadcast_id}, 
-							function(err, broadcast) {
-
-			            		if (err) {
-			            			console.log('err at updating openPositions ', err);
-			            		}
-
-			            		var wasFull;
-			            		//check if openPositions was zero, set marker
-			            		if (broadcast.openPositions === 0) {
-			            			wasFull = true;
-			            		}
-
-			            		//make sure openPositions does not exceed numPositions
-			            		if (broadcast.numPositions > broadcast.openPositions) {
-			            			broadcast.openPositions = broadcast.openPositions + 1;
-			            			console.log('new openPositions ', broadcast.openPositions);
-
-			            			//if openPostions used to === 0 send message that there is new opening
-			            			//to all Available and Accepted
-			            			if (typeof wasFull !== 'undefined') {
-
-			            				var available = [];
-			            				var query = {
-			            					'broadcast_id': broadcast.broadcast_id, 
-									        'status': {$in: ['Available', 'Accepted']}
-									    };
-			            				//clean this up
-			            				//get Available and Accepted and store in obj array
-			            				async.series([
-			            					function(callback) {
-			            						BroadcastThread.find({
-						            					'broadcast_id': broadcast.broadcast_id, 
-											            'status': {$in: ['Available', 'Accepted']},
-										        	},
-										            function(err, allAvailable) {
-
-										            	if (err) {
-										            		console.log('error at find allAvailable ', err);
-										            	}
-										            	else {
-										            		available = allAvailable;
-										            		console.log('set available: ', available);
-										            		callback();							
-										            	}
-										            	
-										            
-										        });
-			            					},
-			            					function(callback) {
-			            						console.log('available array in function 2 ', available);
-			            					}
-			            				]);
-			            				
-			            				
-			            				//sendTwilio with async forEach to Available and Accepted obj arry
-
-			            			}
-
-			            			broadcast.save(function(err, broadcast) {
-
-			            				if (err) {
-			            					console.log('err ', err);
-			            					return res.status(500).send(err);
-			            				}
-			            				console.log('updated openPositions ', broadcast);
-
-			            			});
-			            		} 
-			            		else {
-
-			            			//all positions are still open
-			            			console.log('did not update openPositions: numPositions: ' + broadcast.numPositions + ', openPositions: ' + broadcast.openPositions);
-			            		}
-			        
-		            	});
-
-					}
-					
-				}
-				else if (status === 'Accepted') {
-
-					msg = 'You have been selected to fill the position.... To secure your spot please reply Confirm' + 
-					thread.broadcast_id + ' to confirm your position.';
-					
-					console.log('msg Accept: ', msg);
-
-				}
-				else if (status === 'Reopened') {
-					msg = 'This position has been reopened.... To secure your spot please reply Confirm' + 
-						thread.broadcast_id + ' to confirm your position.';
-						console.log('msg Reopen: ', msg);
-				}
-	
-
-				if (err) {
-					console.log('err at find thread update status ', err);
-					return res.status(500).send(err);
-				}
-
-				thread.status = status;
-				thread.save(function(err, thread) {
-
-					if (err) {
-						console.log('err at thread save update status ', err);
-						return res.status(500).send(err);
-					}
-
-					//TWILIO SEND
-					sendTwilio(thread.phone, msg);
-					/*
-					client.messages.create({
-						to: thread.phone,
-					    from: TWILIO_NUMBER,
-					    body: msg
-					    //mediaUrl: "http://www.example.com/hearts.png"
-					}, function(err, message) {
-						if (err) {
-							console.log('error at Twilio update decline/accept ', err);
-						}
-					    console.log('message Twilio update decline/accept ', message);
-					    //process.stdout.write(message.sid);
-					});
-					*/
-	
-					console.log('save thread update status');
-					return res.json(thread);
-
-				});
-
-			});
-
-		}
-
-		
-
+		console.log('req.query, ', req.query);
+		updateBroadcastThread(req, res, req.body, req.query);
 			
 	});
 
@@ -1003,6 +966,7 @@ router.route('/threads/:id')
 	});
 
 //currently used for refreshPositions...
+//TODO make this more flexible using req.query for db queries
 router.route('/open/:id')
 
 	.get(function(req, res) {
@@ -1031,33 +995,9 @@ router.route('/open/:id')
 			else {
 				data = broadcast;
 			}
-			
-
-			//if Broadcast is associated with a list
-			//get list and return all recipients
-			/*
-			if (broadcast.listID !== '') {
-
-				List.findById(broadcast.listID, function(err, list) {
-
-					if (err) {
-						return res.status(500).send(err);
-					}
-
-					data.recipients = list.listItems;
-
-					console.log('data ', data);
-					return res.json(data);
-				});
-
-			}
-			else {*/
-
-				console.log('data ', data);
-				return res.json(data);
-
-			//}
-
+		
+			console.log('broadcast from open/id data ', data);
+			return res.json(data);
 
 		});
 

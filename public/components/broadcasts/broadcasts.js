@@ -54,98 +54,9 @@ angular.module('broadcasts', [
 
 		return defer.promise;
 
-		//TODO post to sendBroadcast with all numbers or single number and listname or Single Name
-		//sendBroadcast(data, phone, name);
-	};
-
-	//Moving all this to broadcast-routes
-
-	/*
-	//send to single Recipient
-	b.sendSingle = function(data, broadcast_id) {
-
-		var results = {};
-		var defer = $q.defer();
-
-		$http.post('/broadcasts/outgoing?phone=' + data.phone + '&name=Single&id=' + broadcast_id, data).success(function(data){
-
-			results.message = 'Sent to ' + data.phone;
-			results.messageClass = 'alert-success';
-			defer.resolve(results);
-
-		})
-		.error(function(err, status) {
-
-			console.log('err ', err);
-			defer.reject(err);
-
-		});
-
-		return defer.promise;
 
 	};
 
-	//create phone number array from the List
-	b.prepareMulti = function(listID, bID) {
-
-		var numbers = [];
-		var listName;
-		var results = {};
-		results.recipients = [];
-		results.id = bID;
-
-		var defer = $q.defer();
-
-		List.get({id: listID}, function(list) {
-
-			results.listName = list.listName;
-			
-			angular.forEach(list.listItems, function(val) {
-
-				var recipient = {
-
-					name: val.firstName,
-					phone: val.phone
-
-				};
-
-				results.recipients.push(recipient);
-				console.log('results.recipients ', results.recipients);
-
-			});
-			console.log('results: ', results);
-			defer.resolve(results);
-		
-		});
-
-		return defer.promise;
-
-	};
-
-	//send to all List members
-	b.sendMulti = function(message, data) {
-
-		
-		console.log('recipients ', data.recipients);
-		var promises = data.recipients.map(function(recipient) {
-
-			return $http.post('/broadcasts/outgoing?phone=' + recipient.phone + '&name=' + recipient.name + '&id=' + data.id, message).success(function(data) {
-
-				console.log('sent to ' + data.phone);
-
-			})
-			.error(function(err, status) {
-
-				console.log('err ', err);
-
-			});
-
-		});
-		
-		return $q.all(promises);
-
-	};
-	*/
 
 	return b;
 
@@ -181,7 +92,7 @@ angular.module('broadcasts', [
 	};
 
 	//TODO remove duplicate code (copied from my-lists.js)
-	//selec list
+	//select list
 	
 	$scope.selectList = function(list) {
 
@@ -212,20 +123,9 @@ angular.module('broadcasts', [
 		broadcast.create($scope.broadcast)
 			.then(function(data) {
 
-				//success
-				//broadcast.sendSingle($scope.broadcast, broadcast_id)
-				//	.then(function(data) {
-
-						//TODO clear loading screen when done sending
-						$scope.broadcast_message = data.message;
-						$scope.broadcast_message_class = data.messageClass;
-
-				//	}, function(err) {
-
-						//error
-				//		console.log('send single err ', err);
-
-				//	});
+				//TODO clear loading screen when done sending
+				$scope.broadcast_message = data.message;
+				$scope.broadcast_message_class = data.messageClass;
 
 			}, function(err) {
 
@@ -245,8 +145,6 @@ angular.module('broadcasts', [
 
 		//TODO add Sender from User account
 
-		//TODO move all this to server side broadcast-routes
-
 		//define list id to track during Broadcast creation
 		$scope.broadcast_multi.list_id = id;
 
@@ -255,37 +153,7 @@ angular.module('broadcasts', [
 
 				$scope.broadcast_message = data.message;
 				$scope.broadcast_message_class = data.messageClass;
-				/*
-				//success
-				broadcast.prepareMulti($scope.selected._id, data.id)
-					.then(function(data) {
-
-						//success
-						broadcast.sendMulti($scope.broadcast_multi, data)
-							.then(function(data) {
-
-								//success
-								//TODO clear loading screen when done sending
-								$scope.broadcast_message = 'Sent!';
-								$scope.broadcast_message_class = 'alert-success';
-
-							},
-							function(err) {
-
-								//error
-								console.log('error at send Multi', err);
-								$scope.broadcast_message = 'There was an error...';
-								$scope.broadcast_message_class = 'alert-danger';
-
-							});
-						
-					}, function(err) {
-
-						//error
-						console.log('prepare Multi err ', err);
-
-					});
-			*/
+				
 			}, function(err) {
 
 				//error
