@@ -49,7 +49,7 @@ function sendTwilio (phone, msg, callback) {
 	callback(null, data);
 }*/
 //LIVE
-function sendTwilio(phone, msg) {
+function sendTwilio(phone, msg, callback) {
 
 	//TWILIO SEND
 	client.messages.create({
@@ -60,10 +60,13 @@ function sendTwilio(phone, msg) {
 	}, function(err, message) {
 		if (err) {
 			console.log('error at Twilio all positions filled ', err);
-			return res.status(500).send(err);
+			//return res.status(500).send(err);
+			callback(err);
+			return;
 		}
 	    console.log('message Twilio update all positions filled ', message);
-	    return true;
+	    callback()
+	    return;
 	    //process.stdout.write(message.sid);
 	});
 
