@@ -59,12 +59,12 @@ function sendTwilio(phone, msg, callback) {
 	    //mediaUrl: "http://www.example.com/hearts.png"
 	}, function(err, message) {
 		if (err) {
-			console.log('error at Twilio all positions filled ', err);
+			console.log('error at Twilio ', err);
 			//return res.status(500).send(err);
 			callback(err);
 			return;
 		}
-	    console.log('message Twilio update all positions filled ', message);
+	    console.log('message ', message);
 	    callback();
 	    return;
 	    //process.stdout.write(message.sid);
