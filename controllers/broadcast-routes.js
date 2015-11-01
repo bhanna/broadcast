@@ -235,8 +235,7 @@ function createBroadcastThreads(broadcast, callback) {
 				sendTwilio(thread.phone, broadcast.body, waterfallCallback);
 				console.log('sending Twilio at createBroadcastThread');
 			},
-			function(data, waterfallCallback) {
-
+			function(waterfallCallback) {
 				
 				thread.save(function(err, thread) {
 					console.log('data from sendTwilio: ', data);
