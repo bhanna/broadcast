@@ -375,22 +375,20 @@ function parseResponse(req, res, response, thread, callback) {
 	var msg;
 
 	//Owner Declined or Cancelled
-	if (response === 'Owner Declined' || response === 'Owner Cancelled') {
+	if (response === 'Owner Declined') {
 
 		msg = 'The position is no longer available.  Thank you!';
 		console.log('msg Owner Cancelled Owner Declined: ', msg);
+		callback(null, msg);
+		return;
+	}
 
+	else if (response === 'Owner Cancelled') {
 
-		if (response === 'Owner Cancelled') {
+		msg = 'Oh no, the creator of this job has cancelled it.  We\'re sorry for any inconvenience.';
+		checkForNewOpenPosition(msg, thread, callback);
+		console.log('reached response === Owner Cancelled');
 
-			checkForNewOpenPosition(msg, thread, callback);
-			console.log('reached response === Owner Cancelled');
-
-		}
-		else {
-			callback(null, msg);
-			return;
-		}
 		
 	}
 	else if (response === 'Accepted') {
