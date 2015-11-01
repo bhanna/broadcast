@@ -131,7 +131,7 @@ angular.module('main', ['ngResource'])
 	$scope.init = function() {
 
 		//set username
-		$scope.username = 'Matthew';
+		$scope.welcome_message = 'Welcome to Broadcast';
 		//get all open broadcasts
 		$scope.openBroadcasts = getOpenBroadcasts.query();
 
