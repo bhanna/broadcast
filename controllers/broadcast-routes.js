@@ -66,7 +66,7 @@ function sendTwilio(phone, msg, callback) {
 		}
 	    console.log('message ', message);
 	    callback();
-	    return;
+	    //return;
 	    //process.stdout.write(message.sid);
 	});
 
