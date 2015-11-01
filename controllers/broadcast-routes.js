@@ -237,9 +237,9 @@ function createBroadcastThreads(broadcast, callback) {
 			},
 			function(data, waterfallCallback) {
 
-				console.log('data from sendTwilio: ', data);
+				
 				thread.save(function(err, thread) {
-
+					console.log('data from sendTwilio: ', data);
 					if (err) {
 						console.log('err at thread post', err);
 						//return data;
@@ -254,10 +254,6 @@ function createBroadcastThreads(broadcast, callback) {
 					console.log('thread posted: ', thread);
 					//data = thread;
 					//return data;
-					
-
-				}, function(waterfallCallback) {
-
 					waterfallCallback();
 
 				});
