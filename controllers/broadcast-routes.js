@@ -238,7 +238,7 @@ function createBroadcastThreads(broadcast, callback) {
 			function(waterfallCallback) {
 				
 				thread.save(function(err, thread) {
-					console.log('data from sendTwilio: ', data);
+					//console.log('data from sendTwilio: ', data);
 					if (err) {
 						console.log('err at thread post', err);
 						//return data;
@@ -698,7 +698,14 @@ router.route('/incoming')
 
 						            		response.body = 'attempted to confirm when Recipient Cancelled';
 						            		responseMessage = 'To re-apply please text Yes' + broadcast_id;
-						            		console.log('responseMessage Owner Cancelled Confirm ', responseMessage);
+						            		console.log('responseMessage Recipient Cancelled Confirm ', responseMessage);
+
+						            	}
+						            	else if (thread.status === 'Pending') {
+
+						            		response.body = 'attempted to confirm when Pending';
+						            		responseMessage = 'Please text Yes' + broadcast_id + ' to tell us you are available.';
+						            		console.log('responseMessage Pending Confirm ', responseMessage);
 
 						            	}
 						            	else {
