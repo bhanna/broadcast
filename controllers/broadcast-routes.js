@@ -397,7 +397,9 @@ function parseResponse(req, res, response, thread, callback) {
 
 		msg = 'You have been selected to fill the position.... To secure your spot please reply Confirm' + 
 		thread.broadcast_id + ' to confirm your position.';
-		
+
+		//TODO check if there are openPositions
+
 		console.log('msg Accept: ', msg);
 		callback(null, msg);
 		return;
@@ -407,12 +409,12 @@ function parseResponse(req, res, response, thread, callback) {
 		msg = 'This position has been reopened.... To secure your spot please reply Confirm' + 
 		thread.broadcast_id + ' to confirm your position.';
 		
+		//TODO check if there are openPositions
+
 		console.log('msg Reopen: ', msg);
 		callback(null, msg);
 		return;
 	}
-
-	//return msg;
 	
 
 }
@@ -824,15 +826,52 @@ router.route('/incoming')
 
 		    					thread.status = 'Recipient Cancelled';
 
-		    					Broadcast.findOneAndUpdate({'broadcast_id': thread.broadcast_id}, { $inc: { openPositions: 1 }}, 
-				            		function(err) {
+		    					Broadcast.findOneAndUpdate(
+		    						{'broadcast_id': thread.broadcast_id}, 
+		    						{ $inc: { openPositions: 1 }},
+		    						{ new: true }, 
+				            		function(err, broadcast) {
 
 					            		if (err) {
 					            			console.log('err at updating openPositions cancel ', err);
 					            		}
 					            		else {
-					            			console.log('updated openPositions cancel ', broadcast.openPositions);
-					            		}
+					            			BroadcastThread.find({
+			            						'broadcast_id': broadcast.broadcast_id, 
+			            						'status': {$in: ['Available', 'Accepted']}
+			            					}, 
+			            					function(err, availableThreads) {
+						            			console.log('updated openPositions cancel ', broadcast.openPositions);
+						            			console.log('availableThreads ', availableThreads);
+			            						responseMessage = 'A position has opened for ' + broadcast.broadcast_id + '! Still available? Yes' + broadcast.broadcast_id + ' of No' + broadcast.broadcast_id + '?';
+
+			            						//send to each availableThread
+			            						async.each(availableThreads, function(available, callback) {
+
+			            								console.log('available phone: ', available.phone);
+			            								if (!available.phone) {
+			            									console.log('could not find available phone');
+			            								}
+			            								else {
+			            									console.log('reached send, available phone ' + available.phone + ' and msg: ' + responseMessage);
+			            									sendTwilio(available.phone, responseMessage, callback);
+			            									//console.log('sendtwilio tried with '+ available.phone + ' and msg ' + responseMessage);
+			            									//callback();
+			            								}
+			            								
+
+			            							}, function (err) {
+
+			            								if (err) {
+			            									console.log('one send failed at available');
+			            								}
+			            								else {
+			            									console.log('all sends successful at available');
+			            								}
+			            						});
+						            		});
+
+										}
 
 				            	});
 
