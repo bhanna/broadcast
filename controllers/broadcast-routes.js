@@ -209,7 +209,7 @@ function prepareBroadcastThreads(broadcast, callback) {
 }
 
 //create BroadcastThread
-function createBroadcastThreads(broadcast, mainCallback) {
+function createBroadcastThreads(broadcast, callback) {
 
 	var data = {};
 
@@ -231,11 +231,11 @@ function createBroadcastThreads(broadcast, mainCallback) {
 
 		async.waterfall([
 
-			function(nestedCallback) {
-				sendTwilio(thread.phone, broadcast.body, nestedCallback);
+			function(waterfallCallback) {
+				sendTwilio(thread.phone, broadcast.body, waterfallCallback);
 				console.log('sending Twilio at createBroadcastThread');
 			},
-			function(data, nestedCallback) {
+			function(data, waterfallCallback) {
 
 				console.log('data from sendTwilio: ', data);
 				thread.save(function(err, thread) {
@@ -243,7 +243,7 @@ function createBroadcastThreads(broadcast, mainCallback) {
 					if (err) {
 						console.log('err at thread post', err);
 						//return data;
-						nestedCallback(err);
+						waterfallCallback(err);
 						return;
 					}
 
@@ -254,7 +254,11 @@ function createBroadcastThreads(broadcast, mainCallback) {
 					console.log('thread posted: ', thread);
 					//data = thread;
 					//return data;
-					nestedCallback();
+					
+
+				}, function(waterfallCallback) {
+
+					waterfallCallback();
 
 				});
 			}
@@ -267,7 +271,7 @@ function createBroadcastThreads(broadcast, mainCallback) {
 				console.log('err at nested waterfall ', err);
 				data.message = 'err at thread post ' + err;
 				data.messageClass = 'alert-danger';
-				mainCallback(err);
+				callback(err);
 				return;
 			}
 
@@ -283,7 +287,7 @@ function createBroadcastThreads(broadcast, mainCallback) {
 			console.log('one send failed at createBroadcastThreads ', err);
 			err = 'one send failed at createBroadcastThreads '+ err;
 			//return 'one send failed at createBroadcastThreads ' + err;
-			mainCallback(err, data);
+			callback(err, data);
 			return;
 		}
 		else {
@@ -292,7 +296,7 @@ function createBroadcastThreads(broadcast, mainCallback) {
 			data.messageClass = 'alert-success';
 			data.message = 'Sent!';
 			//return data;
-			mainCallback(null, data);
+			callback(null, data);
 		}
 
 	});
