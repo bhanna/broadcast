@@ -66,7 +66,7 @@ router.route('/single')
 				}
 
 				console.log('recipient posted');
-				data.message = 'Added ' + req.body.firstName;
+				data.message = 'Added ' + req.body.firstName + '!';
 				return res.json(data);
 			});
 			
@@ -135,7 +135,7 @@ router.route('/:id')
 	                return res.send(err);
 	            }
 	            //console.log('tried to save update!');
-	            data.message = 'Updated recipient';
+	            data.message = 'Recipient updated!';
 	            return res.json(data);
 
 	        });
@@ -162,7 +162,7 @@ router.route('/:id')
 	                return res.send(err);
 	            }
 
-	            data.message = 'Removed recipient';
+	            data.message = 'Recipient removed!';
 	            return res.json(data);
 
 	        });

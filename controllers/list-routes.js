@@ -111,7 +111,8 @@ router.route('/:id')
 				return res.status(500).send(err);
 			}
 
-			data.message = 'Removed recipient';
+			data.message = 'List removed!';
+			data.message_class = 'alert-success';
 	        return res.json(data);
 
 		});

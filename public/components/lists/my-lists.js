@@ -57,6 +57,9 @@ angular.module('my-lists', [
 		//recipient action message
 		$scope.recipient_message = null;
 
+		//list action message
+		$scope.list_message = null;
+
 	};
 	
 
