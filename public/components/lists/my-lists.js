@@ -114,8 +114,8 @@ angular.module('my-lists', [
 
 		$http.post('/lists/', $scope.list).success(function(data){
 
-			$scope.list_message_class = 'alert-success';
-			$scope.list_message = data.message;
+			//$scope.list_message_class = 'alert-success';
+			//$scope.list_message = data.message;
 			$scope.lists = getAllLists.query();
 			getList(data.list_id);
 
