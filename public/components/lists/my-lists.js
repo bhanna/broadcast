@@ -132,6 +132,7 @@ angular.module('my-lists', [
 			$http.delete('/lists/' + $scope.selected._id).success(function(data) {
 
 				$scope.list_message = data.message;
+				$scope.list_message_class = data.message_class;
 				$scope.lists = getAllLists.query();
 				$scope.selected = null;
 
