@@ -393,7 +393,7 @@ function parseResponse(req, res, response, thread, callback) {
 	}
 	else if (response === 'Accepted') {
 
-		msg = 'You have been selected to fill the position.... To secure your spot please reply Confirm' + 
+		msg = 'You have been selected to fill the position. To secure your spot, please reply Confirm' + 
 		thread.broadcast_id + ' to confirm your position.';
 
 		//TODO check if there are openPositions
@@ -404,7 +404,7 @@ function parseResponse(req, res, response, thread, callback) {
 
 	}
 	else if (response === 'Reopened') {
-		msg = 'This position has been reopened.... To secure your spot please reply Confirm' + 
+		msg = 'This position has been reopened. To secure your spot please reply Confirm' + 
 		thread.broadcast_id + ' to confirm your position.';
 		
 		//TODO check if there are openPositions
@@ -601,11 +601,11 @@ router.route('/incoming')
 
 	    		if (err) {
 	    			console.log('error at find Broadcast to verify openPositions ', err);
-	    			return respond('Something went wrong - perhaps you entered the wrong offer ID?  Please check your response and try again.');
+	    			return respond('Whoops - that is not a response I recognize. Perhaps you entered the wrong offer ID? Please check your response and try again.');
 	    		}
 	    		if (!broadcast) {
 	    			console.log('could not find broadcast ');
-	    			return respond('Something went wrong - perhaps you entered the wrong offer ID?  Please check your response and try again.');
+	    			return respond('Whoops - that is not a response I recognize. Perhaps you entered the wrong offer ID? Please check your response and try again.');
 	    		}
 	    		else {
 	    			
@@ -618,11 +618,11 @@ router.route('/incoming')
 
 				        if (err) {
 							console.log('error at finding Thread ', err);
-							return respond('Something went wrong - perhaps you responded to the wrong offer?  Please check your response and try again.');
+							return respond('Whoops - that is not a response I recognize. Perhaps you entered the wrong offer ID? Please check your response and try again.');
 						}
 				        if (!thread) {
 				        	console.log('could not find thread ');
-    						return respond('Something went wrong - perhaps you responded to the wrong offer?  Please check your response and try again.');
+    						return respond('Whoops - that is not a response I recognize. Perhaps you entered the wrong offer ID? Please check your response and try again.');
 				        }
 				        console.log('Thread found: ', thread);
 
@@ -661,7 +661,7 @@ router.route('/incoming')
 						            	else {
 
 						            		thread.status = 'Available';
-					                		responseMessage = 'Great.  We will contact you shortly to confirm the position.';
+					                		responseMessage = 'Great, we will let you know if you have been selected to fill this position.';
 					                		console.log('responseMessage Yes ', responseMessage);
 
 						            	}
@@ -679,7 +679,7 @@ router.route('/incoming')
 						            	else {
 
 						            		thread.status = 'Recipient Declined';
-						                	responseMessage = 'You have been unsubscribed from this position.  If you change your mind, please text Yes'+broadcast_id;
+						                	responseMessage = 'Thanks for the update. We will let you know if future opportunities come up. If you change your mind, please text Yes'+broadcast_id;
 						                	console.log('responseMessage No ', responseMessage);
 
 						            	}
@@ -711,7 +711,7 @@ router.route('/incoming')
 						            	else {
 
 						            		thread.status = 'Confirmed';
-							            	responseMessage = 'Thank you for confirming.  To cancel at any time please text Cancel' + broadcast_id;
+							            	responseMessage = 'Thank you for confirming. We will be in touch with the details. If at any time you need to cancel, please let us know by texting Cancel' + broadcast_id;
 							            	console.log('responseMessage Confirm ', responseMessage);
 							            	//update broadcast openPositions at Confirm
 							            	Broadcast.findOneAndUpdate(
