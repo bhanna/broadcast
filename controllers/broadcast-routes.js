@@ -779,17 +779,6 @@ router.route('/incoming')
 						            	
 
 						            }
-						            else {
-
-						            	if (thread.status === 'Accepted') {
-						            		responseMessage = 'Please respond "Confirm' +broadcast_id+'"';
-						            	}
-						            	else if (thread.status === 'Pending') {
-						            		responseMessage = 'Please respond "Yes' +broadcast_id+'" or No'+broadcast_id+'"';
-						            	}
-						            	
-						            }
-
 
 						            thread.conversation.push(response);
 						            var subdoc = thread.conversation[0];
@@ -809,6 +798,16 @@ router.route('/incoming')
 			        				console.log('attempting to respond with: ', responseMessage);
 
 					        } 
+					        else {
+
+				            	if (thread.status === 'Accepted') {
+				            		responseMessage = 'Please respond "Confirm' +broadcast_id+'"';
+				            	}
+				            	else if (thread.status === 'Pending') {
+				            		responseMessage = 'Please respond "Yes' +broadcast_id+'" or No'+broadcast_id+'"';
+				            	}
+				            	
+				            }
 
 				        }
 		    			//all positions filled
