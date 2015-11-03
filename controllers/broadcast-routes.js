@@ -46,7 +46,7 @@ var router =  express.Router();
 function sendTwilio (phone, msg, callback) {
 	var data = 'sentTwilio to phone: ' + phone + ', msg: ' + msg;
 	console.log('from sentTwilio: ', data);
-	callback(null, data);
+	callback();
 }*/
 //LIVE
 function sendTwilio(phone, msg, callback) {

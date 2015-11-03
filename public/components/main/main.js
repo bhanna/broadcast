@@ -166,11 +166,13 @@ angular.module('main', ['ngResource'])
 				console.log('broadcast data ', $scope.selected.broadcast);
 				console.log('threads ', $scope.selected.threads);
 
+
 				//populate table with recipient name from data.recipients
 
-				if ($scope.selected.threads[0].firstName === 'single') {
+				if ($scope.selected.threads[0].firstName === 'Single') {
 
 					$scope.selected.threads[0].firstName = $scope.selected.threads[0].phone;
+					
 				}
 
 				//TODO get action from data.conversaions
