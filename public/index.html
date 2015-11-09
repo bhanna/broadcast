@@ -15,29 +15,51 @@
     <script src="components/main/main.js"></script>
     <script src="components/lists/my-lists.js"></script>
     <script src="components/broadcasts/broadcasts.js"></script>
-    <script src="assets/bower_components/bootstrap/js/tab.js"></script>
+    <script src="assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/stylesheets/style.css">
   </head>
   <body ng-app="broadcastApp">
-    <nav class="navbar-fluid navbar-default navbar-fixed-top">
-      <div class="container">
-        <a class="navbar-brand" ui-sref="main"> Broadcast </a>
-        <p class="navbar-right navbar-text" ng-hide="authenticated"><a ui-sref="login">Login</a> or <a ui-sref="signup">Register</a></p>
-        <p class="navbar-right navbar-text" ng-show="authenticated"><a ui-sref="login" ng-click="signout()">Logout</a></p>
-        <p class="navbar-right navbar-text" ng-show="authenticated">Signed in as {{current_user}}</p>
-      </div>
-    </nav>
-    <!-- side nav -->
-    <nav>
-      <ul class="nav nav-pills nav-stacked nav-justified">
-        <li role="presentation" ui-sref-active="active"><a ui-sref="main">Dashboard</a></li>
-        <li role="presentation" ui-sref-active="active"><a ui-sref="broadcasts">My Broadcasts</a></li>
-        <li role="presentation" ui-sref-active="active"><a ui-sref="myLists">My Lists</a></li>
-      </ul>
+
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" ui-sref="main"> Broadcast </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li role="presentation" ui-sref-active="active"><a ui-sref="main">Dashboard</a></li>
+                        <li role="presentation" ui-sref-active="active"><a ui-sref="broadcasts">Send Broadcast</a></li>
+                        <li role="presentation" ui-sref-active="active"><a ui-sref="myLists">My Lists</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+          <!--   <form class="navbar-form navbar-left" role="search">
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Search">
+              </div>
+              <button type="submit" class="btn btn-default">Submit</button>
+            </form> -->
+            <li ng-hide="authenticated"><a ui-sref="login">Login</a></li>
+            <li ng-hide="authenticated"><a ui-sref="signup">Register</a></li>
+            <li ng-show="authenticated"><a ui-sref="login" ng-click="signout()">Logout</a></li>
+            <li ng-show="authenticated">Signed in as {{current_user}}</li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
     </nav>
 
     <div ng-view ui-view>
     </div>
   </body>
 </html>
+
+
