@@ -1,70 +1,72 @@
-<div class="row">
-  <div ng-show="broadcast_message"class="alert {{broadcast_message_class}}" role="alert">
-    <p>{{broadcast_message}}</p>
+<div class="clearfix container">
+  <div class="row">
+    <div ng-show="broadcast_message"class="alert {{broadcast_message_class}}" role="alert">
+      <p>{{broadcast_message}}</p>
+    </div>
+  
+    <div class="col-md-4">
+  
+      <h2>Send To</h2>
+  
+      <ul class="nav nav-pills nav-stacked">
+        <li ng-class="{active: showSingle}">
+          <a href="" ng-click="showSingleRecipient()">Send to Individual</a>
+        </li>
+        <li ng-repeat="list in lists" ng-class="{active: selected.listName == list.listName}">
+          <a href="" ng-click="selectList(list)">{{list.listName}}</a>
+        </li>
+      </ul>
+  
+    </div>
+  
+    <!-- send to single Recipient -->
+    <div class="col-md-4" ng-show="showSingle">
+      <h2>Single Broadcast</h2>
+      <p></p>
+      <form ng-Submit="prepareSingleMessage()">
+        <label>What is this broadcast called?</label>
+        <input required type="text" class="form-control" placeholder="Name your broadcast" ng-model="broadcast.title" />
+        <br/>
+        <label>Who is this going to?</label>
+        <input required type="text" class="form-control" placeholder="Phone number" ng-model="broadcast.phone" />
+        <br/>
+        <label>What would you like to say?</label>
+        <textarea required type="text" rows="4" class="form-control" maxlength="140" placeholder="Type your message here..." ng-model="broadcast.body" ng-trim="false" /></textarea>
+        <!--counter-->
+        <span class="form-help">{{140 - broadcast.body.length}}         
+        Characters left</span>
+        <br/>
+        <br/>
+        <label>How many positions need to be filled?</label>
+        <input required type="text" class="form-control" placeholder="i.e. 25" ng-model="broadcast.numPositions" />
+        <br/>
+        <input ng-disabled="isProcessing" class="btn submit-btn pull-right" type="submit" value="Send!" />
+      </form>
+  
+    </div>
+  
+  
+    <!-- send to List -->
+    <div class="col-md-4" ng-show="selected"> 
+      <h2>Send to {{selected.listName}}</h2>
+      <form ng-Submit="prepareMultiMessage(selected._id)">
+        <label>What is this broadcast called?</label>
+        <input required type="text" class="form-control" placeholder="Name your broadcast" ng-model="broadcast_multi.title" />
+        <br/>
+        <label>What would you like to say?</label>
+        <textarea required type="text" rows="4" class="form-control" maxlength="140" placeholder="Type your message here..." ng-model="broadcast_multi.body" ng-trim="false" /></textarea>
+        <!--counter-->
+        <span class="form-help">{{140 - broadcast_multi.body.length}}         
+         Characters left</span>
+        <br/>
+        <br/>
+        <label>How many positions need to be filled?</label>
+        <input required type="text" class="form-control" placeholder="i.e. 25" ng-model="broadcast_multi.numPositions" />
+        <br/>
+        <input ng-disabled="isProcessing" class="btn submit-btn pull-right" type="submit" value="Send!" />
+      </form>
+  
+    </div>
+  
   </div>
-
-  <div class="col-md-4 col-md-offset-1">
-
-    <h2>Send To</h2>
-
-    <ul class="nav nav-pills nav-stacked">
-      <li ng-class="{active: showSingle}">
-        <a href="" ng-click="showSingleRecipient()">Send to Individual</a>
-      </li>
-      <li ng-repeat="list in lists" ng-class="{active: selected.listName == list.listName}">
-        <a href="" ng-click="selectList(list)">{{list.listName}}</a>
-      </li>
-    </ul>
-
-  </div>
-
-  <!-- send to single Recipient -->
-  <div class="col-md-4" ng-show="showSingle">
-    <h2>Single Broadcast</h2>
-    <p></p>
-    <form ng-Submit="prepareSingleMessage()">
-      <label>What is this broadcast called?</label>
-      <input required type="text" class="form-control" placeholder="Name your broadcast" ng-model="broadcast.title" />
-      <br/>
-      <label>Who is this going to?</label>
-      <input required type="text" class="form-control" placeholder="Phone number" ng-model="broadcast.phone" />
-      <br/>
-      <label>What would you like to say?</label>
-      <textarea required type="text" rows="4" class="form-control" maxlength="140" placeholder="Type your message here..." ng-model="broadcast.body" ng-trim="false" /></textarea>
-      <!--counter-->
-      <span class="form-help">{{140 - broadcast.body.length}}         
-      Characters left</span>
-      <br/>
-      <br/>
-      <label>How many positions need to be filled?</label>
-      <input required type="text" class="form-control" placeholder="i.e. 25" ng-model="broadcast.numPositions" />
-      <br/>
-      <input ng-disabled="isProcessing" class="btn submit-btn pull-right" type="submit" value="Send!" />
-    </form>
-
-  </div>
-
-
-  <!-- send to List -->
-  <div class="col-md-4" ng-show="selected"> 
-    <h2>Send to {{selected.listName}}</h2>
-    <form ng-Submit="prepareMultiMessage(selected._id)">
-      <label>What is this broadcast called?</label>
-      <input required type="text" class="form-control" placeholder="Name your broadcast" ng-model="broadcast_multi.title" />
-      <br/>
-      <label>What would you like to say?</label>
-      <textarea required type="text" rows="4" class="form-control" maxlength="140" placeholder="Type your message here..." ng-model="broadcast_multi.body" ng-trim="false" /></textarea>
-      <!--counter-->
-      <span class="form-help">{{140 - broadcast_multi.body.length}}         
-       Characters left</span>
-      <br/>
-      <br/>
-      <label>How many positions need to be filled?</label>
-      <input required type="text" class="form-control" placeholder="i.e. 25" ng-model="broadcast_multi.numPositions" />
-      <br/>
-      <input ng-disabled="isProcessing" class="btn submit-btn pull-right" type="submit" value="Send!" />
-    </form>
-
-  </div>
-
 </div>

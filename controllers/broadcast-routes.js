@@ -22,7 +22,7 @@ else {
 }
 
 
-var client = require('twilio')(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+//var client = require('twilio')(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 var Broadcast = mongoose.model('Broadcast');
 var BroadcastThread = mongoose.model('BroadcastThread');
 var Response = mongoose.model('Response');
