@@ -179,6 +179,7 @@ angular.module('my-lists', [
 
 			$scope.recipient_message = data.message;
 			refreshList($scope.selected._id);
+			setDisabled(true);
 
 		});
 

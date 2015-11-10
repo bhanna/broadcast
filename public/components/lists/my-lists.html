@@ -69,7 +69,7 @@
                 <input class="form-control" required placeholder="Phone Number" ng-model="recipient.phone" />
               </td>
               <td>
-                <button class="btn btn-primary" ng-click="addRecipient()">Add</button>
+                <button class="btn btn-primary" ng-disabled="!isDisabled()" ng-click="addRecipient()">Add</button>
               </td>
               <td>
                 <button class="btn btn-primary" ng-disabled="isDisabled()" ng-click="updateRecipient(recipient._id)">Update</button>

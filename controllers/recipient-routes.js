@@ -203,13 +203,11 @@ router.route('/:id')
 	//get specified recipient
 	.get(function(req, res){
 
-		List.findById(req.query.list_id, function(err, list) {
+		Recipient.findById(req.params.id, function(err, recipient) {
 
 			if (err) {
-				return res.send(err);
+				return res.status(500).send(err);
 			}
-
-			recipient = list.listItems.id(req.params.id);
 
 			return res.json(recipient);
 
@@ -221,14 +219,12 @@ router.route('/:id')
 
 		//console.log('listItems id: ', req.params.id);
 		var data = {};
-		List.findById(req.query.list_id, function(err, list) {
+		Recipient.findById(req.params.id, function(err, recipient) {
 
 			if (err) {
 				//console.log('err at find List: ', err);
-				return res.send(err);
+				return res.status(500).send(err);
 			}
-
-			var recipient = list.listItems.id(req.params.id);
 
 			//TODO make this more efficient
 
@@ -236,7 +232,7 @@ router.route('/:id')
 			recipient.email = req.body.email;
 			recipient.phone = req.body.phone;
 
-			list.save(function(err) {
+			recipient.save(function(err) {
 
 	        	if (err) return res.status(500).send(err);
 	            
@@ -253,25 +249,15 @@ router.route('/:id')
 	.delete(function(req, res) {
 
 		var data = {};
-		List.findById(req.query.list_id, function(err, list) {
+		Recipient.findById(req.params.id, function(err, recipient) {
 
 			if (err) {
 				console.log('err at find List: ', err);
 				return res.send(err);
 			}
 
-			list.listItems.id(req.params.id).remove();
-
-			list.save(function(err) {
-
-	        	if (err) {
-	                return res.send(err);
-	            }
-
-	            data.message = 'Recipient removed!';
-	            return res.json(data);
-
-	        });
+			//TODO remove list id from list_ids
+			//save recipient
 
 		});
             
