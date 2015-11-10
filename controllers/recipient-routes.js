@@ -146,7 +146,7 @@ router.route('/lists/add/:id')
 
 	});
 
-
+//remove recipient from list
 router.route('/lists/remove/:id')
 	.post(function(req, res) {
 
@@ -244,8 +244,10 @@ router.route('/:id')
 
 		});
 	
-	})
+	});
 
+	/*//currently not in use
+	//use /remove route
 	.delete(function(req, res) {
 
 		var data = {};
@@ -262,6 +264,6 @@ router.route('/:id')
 		});
             
     });
-
+	*/
 
 module.exports = router;
