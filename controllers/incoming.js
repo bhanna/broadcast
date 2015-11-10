@@ -5,7 +5,6 @@ var config = require('../config/config');
 var utils = require('./utils');
 
 
-
 var Broadcast = mongoose.model('Broadcast');
 var BroadcastThread = mongoose.model('BroadcastThread');
 var Response = mongoose.model('Response');
@@ -17,8 +16,7 @@ var router =  express.Router();
 
 
 // Twilio SMS webhook route
-//TODO this needs to be moved into a non-protected route!
-router.route('/incoming')
+router.route('/')
 	
 	.post(function(req, res) {
 
