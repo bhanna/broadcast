@@ -1,1 +1,6 @@
 node_modules
+bin/www
+broadcast.sublime-project
+broadcast.sublime-workspace
+config.codekit
+gulpfile.js
