@@ -1,19 +1,30 @@
 var express = require('express');
 var mongoose = require( 'mongoose' );
 var jwt = require('jsonwebtoken');
+var _ = require('lodash');
+var config = require('../config/config');
+var utils = require('./utils');
 
 var Recipient = mongoose.model('Recipient');
 var List = mongoose.model('List');
+var User = mongoose.model('User');
 
 var router =  express.Router();
 
-//TODO route through api and require jwt
 //TODO add error handling for status 500
 //TODO add validation for fields (phone number, email, etc in models)
 
 router.route('/')
 	
-	//return all recipients
+	//create recipient
+	.post(function(req, res) {
+
+		//TODO add create Recipient for a my-recipients section
+		//TODO add user_id field so that my-recipients shows the User the correct recipients
+
+	})
+	
+	//TODO return all recipients for specific user
 	.get(function(req, res){
 
 		Recipient.find(function(err, data){
@@ -30,63 +41,159 @@ router.route('/')
 
 	});
 
-router.route('/single')
+router.route('/lists/add/:id')
 
 	//create new recipient
 	.post(function(req, res){
-
 		var data = {};
 
-		//create Recipient (child Schema)
-		var recipient = new Recipient();
-		recipient.firstName = req.body.firstName;
-		recipient.email = req.body.email;
-		recipient.phone = req.body.phone;
+		console.log('user: ', req.user);
 
-		console.log('recipient', recipient);
-		//TODO save recipient under specific user object
-
-		//push to List (parent Schema)
-		List.findById(req.query.list_id, function(err, list) {
+		//verify List exists
+		List.findById(req.params.id, function(err, list) {
 
 			if (err) {
 				console.log('err at find List: ', err);
 				return res.status(500).send(err);
 			}
-			list.listItems.push(recipient);
-			var subdoc = list.listItems[0];
-			console.log('new recipient: ', subdoc);
-			console.log('list ', list);
-			
-			list.save(function(err, list){
 
-				if (err) {
-					console.log('err at recipient post', err);
-					return res.status(500).send(err);
+			Recipient.findOne({phone: req.body.phone}, function(err, recipient) {
+
+				if (err) return res.status(500).send(err);
+
+				console.log('recipient found ', recipient);
+
+				var user_id = utils.convertToObj(req.user._id);
+				
+				//recipient exists
+				if (recipient) {
+
+					//check if recipient is alread part of the list
+					if ( _.some(recipient.list_ids, list._id) ) {
+
+						console.log('recipient already in list');
+						data.message = recipient.firstName + ' is already part of this list!';
+						return res.json(data);
+
+					}
+					else {
+
+						//check if Recipient exists with this user_id
+						if ( !_.some(recipient.user_ids, user_id) ) {
+							
+							console.log('userid NOT in array');
+							//associate recipient with user_id
+							recipient.user_ids.push(user_id);
+
+							console.log('add userid: ', recipient.user_ids);
+
+						}
+
+						recipient.list_ids.push(list._id);
+						console.log('recipient with new list_id ', recipient);
+						
+						recipient.save(function(err, recipient){
+
+							if (err) {
+								//TODO make err user friendly
+								console.log('err at recipient post', err);
+								return res.status(500).send(err);
+							}
+
+							console.log('recipient added to list');
+							data.message = 'Added ' + recipient.firstName;
+							return res.json(data);
+
+						});
+
+					}
+					
+				}
+				//no recipient found
+				else {
+
+					//create Recipient AND add to list
+					var r = new Recipient();
+					
+					r.user_ids = [user_id];
+					r.list_ids = [list._id];
+					r.firstName = req.body.firstName;
+					r.email = req.body.email;
+					r.phone = req.body.phone;
+
+					console.log('recipient', r);
+
+					
+					r.save(function(err, recipient){
+
+						if (err) {
+							//TODO make err user friendly
+							console.log('err at recipient post', err);
+							return res.status(500).send(err);
+						}
+
+						console.log('recipient added and persisted');
+						data.message = 'Added ' + recipient.firstName;
+						return res.json(data);
+
+					});
+
 				}
 
-				console.log('recipient posted');
-				data.message = 'Added ' + req.body.firstName + '!';
-				return res.json(data);
 			});
 			
 		});
-		
-		/*
-		recipient.save(function(err, recipient){
+
+	});
+
+
+router.route('/lists/remove/:id')
+	.post(function(req, res) {
+
+		var data = {};
+		//verify List exists
+		List.findById(req.params.id, function(err, list) {
 
 			if (err) {
-				//TODO make err user friendly
-				console.log('err at recipient post', err);
-				return res.send(500, err);
-			}
+				console.log('err at find List: ', err);
+				return res.status(500).send(err);
+			}	
+		
+			Recipient.findById(req.body._id, function(err, recipient) {
 
-			console.log('recipient posted');
-			data.message = 'Recieved ' + recipient.firstName;
-			return res.json(data);
+				if (err) {
+					console.log('err at find Recipient: ', err);
+					return res.status(500).send(err);
+				}
+
+				var new_ids = [];
+
+				//var new_ids = _.without(recipient.list_ids, req.params.id); //TODO WHY DOESN'T THIS WORK??
+
+				for (var i = 0, l = recipient.list_ids.length; i < l; i++) {
+				  	if (new_ids[i] === req.params.id) {
+					    new_ids.splice(i, 1);
+					    return;
+				  	}
+				}
+
+				recipient.list_ids = new_ids;
+
+				console.log('recipient ', recipient);
+				
+				recipient.save(function(err) {
+
+					if (err) return res.status(500).send(err);
+
+					data.message = 'Removed recipient!';
+					return res.json(data);
+
+				});
+
+			});
 
 		});
-*/
+
 
 	});
 
@@ -131,9 +238,8 @@ router.route('/:id')
 
 			list.save(function(err) {
 
-	        	if (err) {
-	                return res.send(err);
-	            }
+	        	if (err) return res.status(500).send(err);
+	            
 	            //console.log('tried to save update!');
 	            data.message = 'Recipient updated!';
 	            return res.json(data);

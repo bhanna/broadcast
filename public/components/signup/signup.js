@@ -13,7 +13,7 @@ angular.module('signup', [
 	});
 
 })
-.controller('signupCtrl', function SignupController ($scope, $http, store) {
+.controller('signupCtrl', function SignupController ($scope, $state, $http, store) {
 
 	$scope.user = {};
 
@@ -21,17 +21,17 @@ angular.module('signup', [
 
 		$http({
 
-			url: '/auth/signup',
+			url: '/users',
 			data: $scope.user,
 			method: 'POST'
 
 		}).then(function(response) {
 
 			store.set('jwt', response.data.id_token);
-			$state.go('home');
+			$state.go('main');
 
-		}, function() {
-			alert(response.data);
+		}, function(error) {
+			alert(error.data);
 		});
 	};
 

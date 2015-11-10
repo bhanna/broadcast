@@ -1,12 +1,12 @@
 var express = require('express');
 var mongoose = require( 'mongoose' );
 var jwt = require('jsonwebtoken');
-
+var _ = require('lodash');
+var utils = require('./utils');
 var List = mongoose.model('List');
+var Recipient = mongoose.model('Recipient');
 
 var router =  express.Router();
-
-//TODO route through api and require jwt
 
 router.route('/')
 
@@ -15,11 +15,12 @@ router.route('/')
 
 		var data = {};
 
+		var user_id = utils.convertToObj(req.user._id);
+
 		var list = new List();
+		list.user_ids = [user_id];
 		list.listName = req.body.listName;
 		list.listDesc = req.body.listDesc;
-
-		//TODO save list under specific user object
 
 		list.save(function(err, list){
 
@@ -40,14 +41,15 @@ router.route('/')
 
 router.route('/all')
 
-	//return all lists
+	//return all lists for specific user
 	.get(function(req, res){
 
-		List.find(function(err, data){
+		var user_id = utils.convertToObj(req.user._id);
 
+		List.find({ user_ids : user_id }, function(err, data){
 			if (err) {
 				console.log('failed to get all lists', err);
-				return res.send(500, err);
+				return res.status(500).send(err);
 			}
 
 			console.log('retrieved all lists');
@@ -58,17 +60,31 @@ router.route('/all')
 	});
 
 router.route('/:id')
-	
+		
 	//get specified list
 	.get(function(req, res){
 
+		var data = {};
+
+		//verify List exists
 		List.findById(req.params.id, function(err, list){
 
-			if (err) {
-				return res.send(err);
-			}
+			if (err) return res.status(500).send(err);
 
-			return res.json(list);
+			console.log('list ', list);
+
+			//find all Recipients in this list
+			Recipient.find({list_ids: req.params.id}, function(err, recipients) {
+
+				if (err) return res.status(500).send(err);
+				data.recipients = recipients;
+				data._id = list._id;
+				console.log('recipients data ', data);
+				return res.json(data);
+
+			});
+
+			//return res.json(list);
 
 		});
 

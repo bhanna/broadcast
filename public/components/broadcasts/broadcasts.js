@@ -9,20 +9,23 @@ angular.module('broadcasts', [
 		.state('broadcasts', {
 			url: '/broadcasts',
 			controller: 'broadcastsCtrl',
-			templateUrl: 'components/broadcasts/broadcasts.html'
+			templateUrl: 'components/broadcasts/broadcasts.html',
+			data: {
+				requiresLogin: true
+			}
 	});
 
 })
 //TODO remove duplicate code (copied from my-lists.js)
 .factory('getAllLists', function($resource){
 
-	return $resource('/lists/all');
+	return $resource('/api/protected/lists/all');
 
 })
 //TODO remove duplicate code (copied from my-lists.js)
 .factory('List', function($resource){
 
-	return $resource('/lists/:id');
+	return $resource('/api/protected/lists/:id');
 
 })
 //TODO put services like broadcast and List in main app?
@@ -39,7 +42,7 @@ angular.module('broadcasts', [
 		//var name = '';
 		var defer = $q.defer();
 
-		$http.post('/broadcasts/', data).success(function(data) {
+		$http.post('/api/protected/broadcasts/', data).success(function(data) {
 
 			defer.resolve(data);
 			console.log('created broadcast ', data);

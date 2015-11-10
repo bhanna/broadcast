@@ -10,26 +10,24 @@ angular.module('my-lists', [
 		.state('myLists', {
 			url: '/my-lists',
 			controller: 'listCtrl',
-			templateUrl: 'components/lists/my-lists.html'
+			templateUrl: 'components/lists/my-lists.html',
+			data: {
+				requiresLogin: true
+			}
 	});
 
 })
 .factory('getAllLists', function($resource){
 
-	return $resource('/lists/all');
-
-})
-.factory('List', function($resource){
-
-	return $resource('/lists/:id');
+	return $resource('/api/protected/lists/all');
 
 })
 .factory('Recipient', function($resource){
 
-	return $resource('/recipients/:id');
+	return $resource('/api/protected/recipients/:id');
 
 })
-.controller('listCtrl', function ListController ($scope, $http, $location, getAllLists, List, Recipient) {
+.controller('listCtrl', function ListController ($scope, $http, $resource, $location, getAllLists, Recipient) {
 
 	$scope.init = function() {
 
@@ -60,8 +58,12 @@ angular.module('my-lists', [
 		//list action message
 		$scope.list_message = null;
 
+		
+
 	};
 	
+	//list getter
+	var List = $resource('/api/protected/lists/:id', {}, {'get': {method: 'GET', isArray: false}});
 
 	//disable/enable
 	var disabled = true;
@@ -83,7 +85,7 @@ angular.module('my-lists', [
 		$scope.showCreate = null;
 
 		List.get({id: id}, function(data) {
-
+			
 			$scope.selected = data;
 			$scope.list_message = null;
 			$scope.recipient_message = null;
@@ -112,7 +114,7 @@ angular.module('my-lists', [
 	//createList
 	$scope.createList = function () {
 
-		$http.post('/lists/', $scope.list).success(function(data){
+		$http.post('/api/protected/lists/', $scope.list).success(function(data){
 
 			//$scope.list_message_class = 'alert-success';
 			//$scope.list_message = data.message;
@@ -129,7 +131,7 @@ angular.module('my-lists', [
 
 		if (confirm('This cannot be undone!  Would you like to delete this list?')) {
 
-			$http.delete('/lists/' + $scope.selected._id).success(function(data) {
+			$http.delete('/api/protected/lists/' + $scope.selected._id).success(function(data) {
 
 				$scope.list_message = data.message;
 				$scope.list_message_class = data.message_class;
@@ -143,10 +145,10 @@ angular.module('my-lists', [
 	};
 
 
-	//add Recipient
-	$scope.createRecipient = function () {
+	//Create and add Recipient
+	$scope.addRecipient = function () {
 
-		$http.post('/recipients/single?list_id=' + $scope.selected._id, $scope.recipient).success(function(data){
+		$http.post('/api/protected/recipients/lists/add/' + $scope.selected._id, $scope.recipient).success(function(data){
 
 			$scope.recipient_message = data.message;
 			$scope.recipient = '';
@@ -160,7 +162,7 @@ angular.module('my-lists', [
 	//edit Recipient
 	$scope.editRecipient = function (id) {
 
-		$http.get('/recipients/' + id + '?list_id=' + $scope.selected._id).success(function(data) {
+		$http.get('/api/protected/recipients/' + id).success(function(data) {
 
 			$scope.recipient = data;
 			console.log('recipient ', $scope.recipient);
@@ -173,7 +175,7 @@ angular.module('my-lists', [
 	//update after editing Recipient
 	$scope.updateRecipient = function (id) {
 
-		$http.put('/recipients/' + id + '?list_id=' + $scope.selected._id, $scope.recipient).success(function(data) {
+		$http.put('/api/protected/recipients/' + id, $scope.recipient).success(function(data) {
 
 			$scope.recipient_message = data.message;
 			refreshList($scope.selected._id);
@@ -183,10 +185,10 @@ angular.module('my-lists', [
 	};
 
 
-	//delete Recipient
-	$scope.deleteRecipient = function(id) {
+	//remove Recipient from List
+	$scope.removeRecipient = function(recipient) {
 
-		$http.delete('/recipients/' + id + '?list_id=' + $scope.selected._id).success(function(data) {
+		$http.post('/api/protected/recipients/lists/remove/' + $scope.selected._id, recipient).success(function(data) {
 
 			$scope.recipient_message = data.message;
 			refreshList($scope.selected._id);

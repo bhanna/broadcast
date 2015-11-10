@@ -6,10 +6,11 @@ var router = express.Router();
 //TODO add user
 
 //Define routes
-//var auth = require('./auth');
-router.use('/lists', require('./list-routes'));
-router.use('/recipients', require('./recipient-routes'));
-router.use('/broadcasts', require('./broadcast-routes'));
+router.use(require('./protected-routes'));
+router.use('/users', require('./user-routes'));
+router.use('/api/protected/lists', require('./list-routes'));
+router.use('/api/protected/recipients', require('./recipient-routes'));
+router.use('/api/protected/broadcasts', require('./broadcast-routes'));
 
 
 /* GET home page. */

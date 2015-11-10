@@ -5,25 +5,28 @@ angular.module('main', ['ngResource'])
 		.state('main', {
 			url: '/main',
 			controller: 'mainCtrl',
-			templateUrl: 'components/main/main.html'
+			templateUrl: 'components/main/main.html',
+			data: {
+				requiresLogin: true
+			}
 	});
 
 })
 .factory('getOpenBroadcasts', function($resource){
 
 	//get all broadcasts where openPositions != 0
-	return $resource('/broadcasts/open/all');
+	return $resource('/api/protected/broadcasts/open/all');
 
 })
 .factory('getFilledBroadcasts', function($resource){
 
 	//get all broadcasts where openPositions != 0
-	return $resource('/broadcasts/filled/all');
+	return $resource('/api/protected/broadcasts/filled/all');
 
 })
 .factory('List', function($resource){
 
-	return $resource('/lists/:id');
+	return $resource('/api/protected/lists/:id');
 
 })
 .service('manageBroadcasts', function manageBroadcasts ($http, $q) {
@@ -34,7 +37,7 @@ angular.module('main', ['ngResource'])
 	mb.get = function(id) {
 
 		var defer = $q.defer();
-		$http.get('/broadcasts/threads/' + id).success(function(data) {
+		$http.get('/api/protected/broadcasts/threads/' + id).success(function(data) {
 
 			defer.resolve(data);
 			console.log('recieved ', data);
@@ -88,7 +91,7 @@ angular.module('main', ['ngResource'])
 	
 		}
 		var defer = $q.defer();
-		$http.post('/broadcasts/outgoing?status='+status, thread).success(function(data) {
+		$http.post('/api/protected/broadcasts/outgoing?status='+status, thread).success(function(data) {
 
 			defer.resolve(data);
 			console.log('successfully sent status update ', status);
@@ -109,7 +112,7 @@ angular.module('main', ['ngResource'])
 
 		var defer = $q.defer();
 		//get open positions from broadcast using scope.selected.id
-		$http.get('/broadcasts/open/' + id + '?openPositions=true').success(function(data) {
+		$http.get('/api/protected/broadcasts/open/' + id + '?openPositions=true').success(function(data) {
 
 			defer.resolve(data);
 			console.log('openPositions from refresh ', data);

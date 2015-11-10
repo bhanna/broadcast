@@ -8,6 +8,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular-route.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular-resource.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-animate.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/auth0/angular-jwt/master/dist/angular-jwt.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="assets/javascripts/broadcast-app.js"></script>
     <script src="components/signup/signup.js"></script>
@@ -29,7 +30,7 @@
       </div>
     </nav>
     <!-- side nav -->
-    <nav>
+    <nav ng-show="authenticated">
       <ul class="nav nav-pills nav-stacked nav-justified">
         <li role="presentation" ui-sref-active="active"><a ui-sref="main">Dashboard</a></li>
         <li role="presentation" ui-sref-active="active"><a ui-sref="broadcasts">My Broadcasts</a></li>

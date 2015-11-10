@@ -1,22 +1,38 @@
 var mongoose = require('mongoose');
 
-var Recipient = mongoose.model('Recipient');
+var Counter = mongoose.model('Counter');
 
-var Broadcast = mongoose.model('Broadcast');
-
-var listSchema = new mongoose.Schema({
-
-	listName: {type: String, required: true},
-	listItems: [Recipient]
-
-});
-
+//user
 var userSchema = new mongoose.Schema({
     username: {type: String, required: true},
     password: {type: String, required: true}, 
     created_at: {type: Date, default: Date.now},
-    broadcasts: [broadcastSchema],
-    lists: [listSchema]
+    //role: {type: String, required: true},
+  	//lists: [{ type : mongoose.Schema.Types.ObjectId, ref: 'List' }],
+  	//broadcasts: [{ type : mongoose.Schema.Types.ObjectId, ref: 'Broadcast' }]
+
+  	//TODO add role for user vs admin
+});
+
+//create new Counter each User
+userSchema.pre('save', function(next) {
+
+	if (!this.isNew) {
+		return next();
+	}
+		
+	var doc = this;
+
+    var counter = new Counter();
+
+    counter.user_id = doc._id;
+    counter.save(function(err) {
+
+    	if (err) return next(err);
+    	return next();
+
+    });
+
 });
 
 mongoose.model('User', userSchema);

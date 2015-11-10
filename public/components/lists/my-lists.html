@@ -15,7 +15,7 @@
       <div class="col-md-2" ng-hide="noLists">
 
         <ul class="nav nav-pills nav-stacked">
-          <li ng-repeat="list in lists" ng-class="{active: list.listName == selected.listName}"><a href="" ng-click="getList(list._id)" >{{list.listName}}</a></li>
+          <li ng-repeat="list in lists" ng-class="{active: list._id == selected._id}"><a href="" ng-click="getList(list._id)" >{{list.listName}}</a></li>
           <li ng-class="{active: showCreate}"><a href="" ng-click="showCreateList()">+ Create List</a></li>
         </ul>
 
@@ -69,20 +69,20 @@
                 <input class="form-control" required placeholder="Phone Number" ng-model="recipient.phone" />
               </td>
               <td>
-                <button class="btn btn-primary" ng-click="createRecipient()">Add</button>
+                <button class="btn btn-primary" ng-click="addRecipient()">Add</button>
               </td>
               <td>
                 <button class="btn btn-primary" ng-disabled="isDisabled()" ng-click="updateRecipient(recipient._id)">Update</button>
               </td>
             </tr>
-            <tr ng-repeat="recipient in selected.listItems | orderBy:'created_at':true">
+            <tr ng-repeat="recipient in selected.recipients | orderBy:'created_at':true">
               <td>{{recipient.firstName}}</td>
               <td>{{recipient.email}}</td>
               <td>{{recipient.phone}}</td>
               <td>
                 <button class="btn btn-primary" ng-click="editRecipient(recipient._id)">Edit</button>
               <td>
-                <button class="btn btn-danger" ng-click="deleteRecipient(recipient._id)">Delete</button>
+                <button class="btn btn-danger" ng-click="removeRecipient(recipient)">Delete</button>
               </td>
             </tr>
           </tbody>

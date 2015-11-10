@@ -11,7 +11,7 @@
       <li ng-class="{active: showSingle}">
         <a href="" ng-click="showSingleRecipient()">Send to Individual</a>
       </li>
-      <li ng-repeat="list in lists" ng-class="{active: selected.listName == list.listName}">
+      <li ng-repeat="list in lists" ng-class="{active: selected._id == list._id}">
         <a href="" ng-click="selectList(list)">{{list.listName}}</a>
       </li>
     </ul>

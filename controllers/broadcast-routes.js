@@ -3,14 +3,15 @@ var mongoose = require( 'mongoose' );
 var async = require('async');
 //var incoming = require('../controllers/inbound-message');
 var jwt = require('jsonwebtoken');
-var ObjectId = require('mongoose').Types.ObjectId; 
+var utils = require('./utils');
+var config = require('../config/config');
 
 //Set in env
-if (!process.env) {
+if (!process.env.TWILIO_ACCOUNT_SID) {
 
-	var TWILIO_ACCOUNT_SID = 'ACb196d10158ca8e11fb1503c7c7c78f1e'; 
-	var TWILIO_AUTH_TOKEN = '00c4b99ad4770a8167f79e5c4458c8f3'; 
-	var TWILIO_NUMBER = '+14153001549';
+	var TWILIO_ACCOUNT_SID = config.TWILIO_ACCOUNT_SID;
+	var TWILIO_AUTH_TOKEN = config.TWILIO_AUTH_TOKEN;
+	var TWILIO_NUMBER = config.TWILIO_NUMBER;
 
 }
 else {
@@ -27,6 +28,7 @@ var Broadcast = mongoose.model('Broadcast');
 var BroadcastThread = mongoose.model('BroadcastThread');
 var Response = mongoose.model('Response');
 var List = mongoose.model('List');
+var Recipient = mongoose.model('Recipient');
 
 var router =  express.Router();
 
@@ -36,11 +38,11 @@ var router =  express.Router();
 //Put incoming in a function
 //Put outgoing in a function
 //Put all functions here in Modules or Controllers!!
-//Make a LOCAL module and require it
-//send req and res to sendTwilio()
+//send req and res to sendTwilio()?
 //clean up all errors to make user friendly
 //create Owner class with respond() method
 //create Recipient class with respond() method
+
 
 /*//LOCAL currently returns data for testing
 function sendTwilio (phone, msg, callback) {
@@ -74,13 +76,16 @@ function sendTwilio(phone, msg, callback) {
 
 
 //create Broadcast
-function createBroadcast (broadcast_data, callback) {
+function createBroadcast (broadcast_data, user_id, callback) {
+
+	console.log('USERID ', user_id);
 
 	var data = {};
 	console.log('broadcast_data ', broadcast_data);
 	var broadcast = new Broadcast();
 
-	//set broadcast properties
+	//set broadcast 
+	broadcast.user_ids = [user_id];
 	broadcast.title = broadcast_data.title;
 	broadcast.body = broadcast_data.body;
 	broadcast.numPositions = broadcast_data.numPositions;
@@ -126,45 +131,20 @@ function prepareBroadcastThreads(broadcast, callback) {
 
 	if (broadcast.listID) {
 
-		List.findById(broadcast.listID, function(err, list) {
+		Recipient.find({list_ids: broadcast.listID, user_ids: broadcast.user_ids[0]}, function(err, recipients) {	
 
 			if (err) {
-				console.log('err at finding list preparing threads ' + err);
+				console.log('err at finding recipients preparing threads ' + err);
 				callback(err);
 				//return 'err at finding list preparing threads ' + err;
 			}
 			else {
 
-				console.log('list: ', list);
+				console.log('recipients: ', recipients);
 
-				async.each(list.listItems, function(val, eachCallback) {
-
-					var recipient = {
-
-						name: val.firstName,
-						phone: val.phone
-
-					};
-
-					recipients.push(recipient);
-					console.log('broadcast.recipients ', recipients);
-					eachCallback();
-
-				}, function(err) {
-
-					if (err) {
-						console.log('err at prepare threads create recipient array ' + err);
-						//return 'err at prepare threads create recipient array ' + err;
-						callback('err at prepare threads create recipient array ' + err);
-					}
-					else {
-						broadcast.recipients = recipients;
-						callback(null, broadcast);
-						//return broadcast;
-					}
-
-				});
-
+				broadcast.recipients = recipients;
+				callback(null, broadcast);
+			
 			}
 		
 		});
@@ -179,7 +159,7 @@ function prepareBroadcastThreads(broadcast, callback) {
 
 					var recipient = {
 
-						name: 'Single',
+						firstName: 'Single',
 						phone: broadcast.phone
 
 					};
@@ -224,7 +204,7 @@ function createBroadcastThreads(broadcast, callback) {
 		//add '+1' to all numbers for Twilio
 		thread.phone = '+1' + recipient.phone;
 		thread.broadcast_id = broadcast.broadcast_id;
-		thread.firstName = recipient.name;
+		thread.firstName = recipient.firstName;
 
 		console.log('thread: ', thread);
 		console.log('recipient ', recipient);
@@ -345,7 +325,7 @@ function updateThreadStatus (req, res, thread, response) {
 			function(thread, waterfallCallback) {
 
 				//parse response returns the appropriate message
-				parseResponse(req, res, response, thread, waterfallCallback);
+				parseOwnerResponse(req, res, response, thread, waterfallCallback);
 
 			},
 			function(msg, waterfallCallback) {
@@ -370,7 +350,7 @@ function updateThreadStatus (req, res, thread, response) {
 
 
 //parse response from Owner and return msg
-function parseResponse(req, res, response, thread, callback) {
+function parseOwnerResponse(req, res, response, thread, callback) {
 
 	var msg;
 
@@ -544,6 +524,7 @@ function checkForNewOpenPosition (msg, thread, callback) {
 
 
 // Twilio SMS webhook route
+//TODO this needs to be moved into a non-protected route!
 router.route('/incoming')
 	
 	.post(function(req, res) {
@@ -558,7 +539,10 @@ router.route('/incoming')
 	    var msg = req.body.Body || '';
         msg = msg.toLowerCase().trim();
         console.log('msg: ', msg);
+
         //get broadcast_id from msg
+        //TODO make cleaner parse so that there isn't a chance of joining an actual broadcast id
+        //maybe find "yes#" or "no#" and then match \d 
 		broadcast_id = msg.match(/\d/g);
 		broadcast_id = broadcast_id.join('');
 		broadcast_id = broadcast_id.trim();
@@ -934,14 +918,19 @@ router.route('/')
 
 		//TODO save broadcast under specific user object
 
-		
+		//get user_id
+		var user_id = utils.convertToObj(req.user._id);
+		console.log('USERID from pre waterfall ', user_id);
+
 		async.waterfall([
 				
 				//create Broadcast
 				function(callback) {
 					console.log('req.body ', req.body);
+					console.log('req.user ', req.user);
 					//returns saved broadcast
-					createBroadcast(req.body, callback);
+					//TODO add add user_id field 
+					createBroadcast(req.body, user_id, callback);
 					//console.log('data: ', data);
 					//callback(null, data);
 				},				
@@ -959,6 +948,10 @@ router.route('/')
 				},
 				
 			], function(err, results) {
+					if (err) {
+						console.log('create broadcast and broadcast threads err: ', err);
+						return res.status(500).send(err);
+					}
 					console.log('success message: ', results);
 					return res.json(results);
 				});
@@ -980,9 +973,12 @@ router.route('/open/all')
 
 	.get(function(req, res) {
 
-		//get all Broadcasts where openPositions != 0
+		//get user_id
+		var user_id = utils.convertToObj(req.user._id);
 
-		Broadcast.find({ openPositions: {$gt: 0} }, { body: false, __v: false }, function(err, data){
+		//get all Broadcasts where openPositions != 0
+		//TODO add add user_id field to show only User's Broadcasts
+		Broadcast.find({ openPositions: {$gt: 0}, user_ids: user_id }, { body: false, __v: false }, function(err, data){
 
 			if (err) {
 				console.log('failed to get open broadcasts', err);
@@ -1061,9 +1057,12 @@ router.route('/filled/all')
 
 	.get(function(req, res) {
 
-		//get all Broadcasts where openPositions != 0
+		//get user_id
+		var user_id = utils.convertToObj(req.user._id);
 
-		Broadcast.find({ openPositions: 0}, { body: false, __v: false }, function(err, data){
+		//get all Broadcasts where openPositions != 0
+		//TODO add add user_id field to show only User's Broadcasts
+		Broadcast.find({ openPositions: 0, user_ids: user_id}, { body: false, __v: false }, function(err, data){
 
 			if (err) {
 				console.log('failed to get filled broadcasts', err);

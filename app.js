@@ -13,7 +13,7 @@ var mongoose = require('mongoose');
 //initialze models - used by 
 //recipient-routes.js
 //broadcast-routes.js
-require('./models/models.js');
+require('./models');
 
 //var index = require('./routes/index');
 //var auth = require('./auth');

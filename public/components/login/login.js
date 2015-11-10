@@ -13,24 +13,25 @@ angular.module('login', [
 	});
 
 })
-.controller('loginCtrl', function LoginController ($scope, $http, $state, store) {
+.controller('loginCtrl', function LoginController ($rootScope, $scope, $http, $state, store) {
 
 	$scope.user = {};
 
 	$scope.login = function() {
 		$http({
 
-			url: 'http://localhost:3000/sessions/create',
+			url: 'users/sessions/create',
 			data: $scope.user,
 			method: 'POST'
 
 		}).then(function(response) {
 
 			store.set('jwt', response.data.id_token);
-			$state.go('home');
+			$rootScope.current_user = response.data.username;
+			$state.go('main');
 
-		}, function() {
-			alert(response.data);
+		}, function(error) {
+			alert(error.data);
 		});
 	};
 
