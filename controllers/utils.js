@@ -1,6 +1,10 @@
 //utilities used by multiple modules
 var _ = require('lodash');
 var mongoose = require('mongoose');
+var config = require('../config/config');
+
+//twilio
+var client = require('twilio')(config.TWILIO_ACCOUNT_SID, config.TWILIO_AUTH_TOKEN);
 
 exports.belongsToUser = function(model, query, user_id) {
 
@@ -31,3 +35,33 @@ exports.convertToObj = function(val) {
 	return converted;
 
 };
+
+/*//LOCAL currently returns data for testing
+exports.sendTwilio = function(phone, msg, callback) {
+	var data = 'sentTwilio to phone: ' + phone + ', msg: ' + msg;
+	console.log('from sentTwilio: ', data);
+	callback();
+}*/
+//LIVE
+exports.sendTwilio = function (phone, msg, callback) {
+
+	//TWILIO SEND
+	client.messages.create({
+		to: phone,
+	    from: config.TWILIO_NUMBER,
+	    body: msg
+	    //mediaUrl: "http://www.example.com/hearts.png"
+	}, function(err, message) {
+		if (err) {
+			console.log('error at Twilio ', err);
+			//return res.status(500).send(err);
+			callback(err);
+			return;
+		}
+	    console.log('message ', message);
+	    callback();
+	    //return;
+	    //process.stdout.write(message.sid);
+	});
+
+}

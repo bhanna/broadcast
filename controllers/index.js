@@ -6,6 +6,7 @@ var router = express.Router();
 //TODO add user
 
 //Define routes
+router.use('/incoming', require('./incoming'));
 router.use(require('./protected-routes'));
 router.use('/users', require('./user-routes'));
 router.use('/api/protected/lists', require('./list-routes'));
