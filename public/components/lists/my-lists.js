@@ -68,6 +68,18 @@ angular.module('my-lists', [
 	//disable/enable
 	var disabled = true;
 
+	//validate phone number
+	var validPhone = function(phone) {
+
+		regex = /\d{10}/;
+
+		if (regex.test(phone)) {
+			return true;
+		}
+		return false;
+
+	};
+
 	//refresh list 
 	var refreshList = function (id) {
 
@@ -148,27 +160,44 @@ angular.module('my-lists', [
 	//Create and add Recipient
 	$scope.addRecipient = function () {
 
-		$http.post('/api/protected/recipients/lists/add/' + $scope.selected._id, $scope.recipient).success(function(data){
+		if (!validPhone($scope.recipient.phone)) {
 
-			$scope.recipient_message = data.message;
-			$scope.recipient = '';
-			refreshList($scope.selected._id);
-			
+			alert('Please enter a valid phone number, i.e. 5555555555');
 
-		});
+		}
+		else {
+
+			$http.post('/api/protected/recipients/lists/add/' + $scope.selected._id, $scope.recipient).success(function(data){
+
+				$scope.recipient_message = data.message;
+				$scope.recipient = '';
+				refreshList($scope.selected._id);
+				
+
+			});
+
+		}	
 
 	};
 
 	//edit Recipient
 	$scope.editRecipient = function (id) {
 
-		$http.get('/api/protected/recipients/' + id).success(function(data) {
+		if (!validPhone($scope.recipient.phone)) {
 
-			$scope.recipient = data;
-			console.log('recipient ', $scope.recipient);
-			setDisabled(false);
+			alert('Please enter a valid phone number, i.e. 5555555555');
 
-		});
+		}
+		else {
+
+			$http.get('/api/protected/recipients/' + id).success(function(data) {
+
+				$scope.recipient = data;
+				console.log('recipient ', $scope.recipient);
+				setDisabled(false);
+
+			});
+		}
 
 	};
 

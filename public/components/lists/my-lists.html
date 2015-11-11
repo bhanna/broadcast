@@ -66,7 +66,7 @@
                 <input class="form-control" required placeholder="Email" ng-model="recipient.email" />
               </td>
               <td>
-                <input class="form-control" required placeholder="Phone Number" ng-model="recipient.phone" />
+                <input class="form-control" maxlength="10" required placeholder="Phone Number" ng-model="recipient.phone" />
               </td>
               <td>
                 <button class="btn btn-primary" ng-disabled="!isDisabled()" ng-click="addRecipient()">Add</button>
