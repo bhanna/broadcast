@@ -201,7 +201,14 @@ angular.module('main', ['ngResource'])
 			.then(function(data) {
 				$scope.openBroadcasts = getOpenBroadcasts.query();
 				$scope.filledBroadcasts = getFilledBroadcasts.query();
-				manageBroadcasts.get(data)
+				if (data.message) {
+					alert(data.message);
+					id = data.broadcast_id;
+				}
+				else {
+					id = data;
+				}
+				manageBroadcasts.get(id)
 					.then(function(data) {
 
 						console.log('threads recieved in View: ', data);

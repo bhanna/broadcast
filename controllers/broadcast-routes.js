@@ -243,14 +243,14 @@ function updateBroadcastThread(req, res, thread, update) {
 	//return 'No more open positions'
 	//TODO TEST
 	//this needs to send back broadcast_id
-	Broadcast.find({broadcast_id: thread.broadcast_id}, function(err, broadcast) {
+	Broadcast.findOne({broadcast_id: thread.broadcast_id, user_ids: req.user._id}, function(err, broadcast) {
 
 		if (err) return res.status(500).send(err);
 
-		if (broadcast.openPositions === 0) {
+		if (broadcast.openPositions === 0 && (update.status === 'Reopened' || update.status === 'Accepted')) {
 
 			var data = {};
-			data.message = 'There are no more positions available';
+			data.message = 'Sorry! This position cannot be ' + update.status.toLowerCase() + ' because there are no more positions available';
 			data.broadcast_id = broadcast.broadcast_id;
 			return res.json(data);
 

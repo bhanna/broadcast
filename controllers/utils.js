@@ -36,13 +36,14 @@ exports.convertToObj = function(val) {
 
 };
 
-/*//LOCAL currently returns data for testing
+//LOCAL currently returns data for testing
 exports.sendTwilio = function(phone, msg, callback) {
 	var data = 'sentTwilio to phone: ' + phone + ', msg: ' + msg;
 	console.log('from sentTwilio: ', data);
 	callback();
-}*/
-//LIVE
+};
+
+/*//LIVE
 exports.sendTwilio = function (phone, msg, callback) {
 
 	//TWILIO SEND
@@ -64,4 +65,4 @@ exports.sendTwilio = function (phone, msg, callback) {
 	    //process.stdout.write(message.sid);
 	});
 
-}
+};*/
