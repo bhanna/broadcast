@@ -3,10 +3,14 @@ var mongoose = require( 'mongoose' );
 var jwt = require('jsonwebtoken');
 var _ = require('lodash');
 var utils = require('./utils');
+var async = require('async');
+
 var List = mongoose.model('List');
 var Recipient = mongoose.model('Recipient');
 
 var router =  express.Router();
+
+//TODO user friendly error handling
 
 router.route('/')
 
@@ -119,18 +123,63 @@ router.route('/:id')
 
 		var data = {}; 
 
-		List.remove({
-			_id: req.params.id
-		}, function(err) {
+		//find recipients associated with list
+		Recipient.find({list_ids: req.params.id}, function(err, recipients) {
 
-			if (err) {
-				return res.status(500).send(err);
-			}
+			if (err) return res.status(500).send(err);
 
-			data.message = 'List removed!';
-			data.message_class = 'alert-success';
-	        return res.json(data);
+			console.log('recipients in list ', recipients);
 
+			//save recipients
+			async.each(recipients, function(r, callback) {
+
+				var new_ids = [];
+
+				for (var i = 0, l = r.list_ids.length; i < l; i++) {
+				  	if (r.list_ids[i] != req.params.id) {
+					    new_ids.push(r.list_ids[i]);	
+				  	}
+				}
+
+				console.log('new ids: ', new_ids);
+
+				r.list_ids = new_ids;
+
+				console.log('recipient ', r);
+				
+				r.save(function(err) {
+
+					if (err) return res.status(500).send(err);
+
+					console.log('saved recipient and removed list id ', req.params.id);
+					callback();
+
+				});
+
+
+			}, function(err) {
+
+				if (err) return res.status(500).send(err);
+
+				//delete list
+				//FUTURE if users share lists this should only remove the user_id from list.user_ids
+				List.remove({
+					_id: req.params.id
+				}, function(err) {
+
+					if (err) {
+						return res.status(500).send(err);
+					}
+
+					data.message = 'List removed!';
+					data.message_class = 'alert-success';
+			        return res.json(data);
+
+				});
+
+			});
+
+		
 		});
 
 	});
