@@ -16,18 +16,20 @@ var router =  express.Router();
 
 // Set Content-Type response header and render XML (TwiML) response in a 
 // Jade template - sends a text message back to user
-function respond(message) {
-    console.log('redirecting to twiml to respond with: ', message);
-    res.type('text/xml');
-    res.render('twiml', {
-        message: message
-    });
-}
+
 
 // Twilio SMS webhook route
 router.route('/')
 	
 	.post(function(req, res) {
+
+		function respond(message) {
+		    console.log('redirecting to twiml to respond with: ', message);
+		    res.type('text/xml');
+		    res.render('twiml', {
+		        message: message
+		    });
+		}
 
 		//get phone number
 		var phone = req.body.From;
