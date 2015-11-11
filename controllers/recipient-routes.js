@@ -170,12 +170,15 @@ router.route('/lists/remove/:id')
 
 				//var new_ids = _.without(recipient.list_ids, req.params.id); //TODO WHY DOESN'T THIS WORK??
 
+				console.log('params id ', req.params.id);
 				for (var i = 0, l = recipient.list_ids.length; i < l; i++) {
-				  	if (new_ids[i] === req.params.id) {
-					    new_ids.splice(i, 1);
-					    return;
+				  	if (recipient.list_ids[i] != req.params.id) {
+					    new_ids.push(recipient.list_ids[i]);	
 				  	}
 				}
+				
+
+				console.log('new ids: ', new_ids);
 
 				recipient.list_ids = new_ids;
 
