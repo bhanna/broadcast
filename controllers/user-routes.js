@@ -29,6 +29,11 @@ router.route('/')
 		if (!req.body.username || !req.body.password) {
 		  	return res.status(400).send('You must send the username and the password');
 		}
+
+		//beta password
+		if (req.body.beta_password !== config.beta_password) {
+			return res.status(400).send('Oh snap! You must use the correct beta password');
+		}
 		//if (_.find(users, {username: req.body.username})) {
 		User.find({username: req.body.username}, function(err, user) {
 

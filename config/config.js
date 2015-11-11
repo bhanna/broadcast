@@ -2,9 +2,6 @@
 
 exports = module.exports = {};
 
-//database connection
-exports.secret = 'aAEmc(#-)CK_)KcSLdc_-0-0283';
-
 //Set in env
 if (!process.env.TWILIO_ACCOUNT_SID) {
 
@@ -22,6 +19,13 @@ else {
 }
 
 
+//database connection
+exports.secret = 'aAEmc(#-)CK_)KcSLdc_-0-0283';
+
+//beta password
+exports.beta_password = 'whistlewhileyouwork';
+
+//Twilio vars
 exports.TWILIO_ACCOUNT_SID = TWILIO_ACCOUNT_SID; 
 exports.TWILIO_AUTH_TOKEN = TWILIO_AUTH_TOKEN; 
 exports.TWILIO_NUMBER = TWILIO_NUMBER;
