@@ -47,6 +47,8 @@ router.route('/')
         //maybe find "yes#" or "no#" and then match \d 
 		broadcast_id = msg.match(/\d/g);
 
+		console.log('BROADCAST ID ', broadcast_id);
+
 		//no numbers
 		if (typeof broadcast_id === 'undefined') {
 
