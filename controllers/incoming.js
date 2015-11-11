@@ -50,7 +50,7 @@ router.route('/')
 		console.log('BROADCAST ID ', broadcast_id);
 
 		//no numbers
-		if (typeof broadcast_id === 'undefined') {
+		if (!broadcast_id) {
 
 			console.log('no broadcast_id');
 			respond('Whoops - that is not a response I recognize. Perhaps you entered the wrong offer ID? Please check your response and try again.');
