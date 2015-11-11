@@ -239,8 +239,31 @@ function updateBroadcastThread(req, res, thread, update) {
 	//TODO determine update type
 	//currently update only contains {status: status}
 
+	//TODO if response === Reopen or Accept and openPositions === 0 
+	//return 'No more open positions'
+	//TODO TEST
 	//this needs to send back broadcast_id
-	updateThreadStatus(req, res, thread, update.status);
+	Broadcast.find({broadcast_id: thread.broadcast_id}, function(err, broadcast) {
+
+		if (err) return res.status(500).send(err);
+
+		if (broadcast.openPositions === 0) {
+
+			var data = {};
+			data.message = 'There are no more positions available';
+			data.broadcast_id = broadcast.broadcast_id;
+			return res.json(data);
+
+		}
+		else {
+
+			//this needs to send back broadcast_id
+			updateThreadStatus(req, res, thread, update.status);
+
+		}
+
+	});
+
 	
 }
 
@@ -249,7 +272,7 @@ function updateThreadStatus (req, res, thread, response) {
 	
 	BroadcastThread.findById(thread._id, function(err, thread) {
 
-	//TODO set this message somewhere cleaner!
+	//TODO update status thread after sendTwilio
 	console.log('status: ', response);
 
 	async.waterfall([

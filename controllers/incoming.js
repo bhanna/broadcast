@@ -35,6 +35,15 @@ router.route('/')
         //TODO make cleaner parse so that there isn't a chance of joining an actual broadcast id
         //maybe find "yes#" or "no#" and then match \d 
 		broadcast_id = msg.match(/\d/g);
+
+		//no numbers
+		if (broadcast_id === '') {
+
+			console.log('no broadcast_id');
+			respond('Whoops - that is not a response I recognize. Perhaps you entered the wrong offer ID? Please check your response and try again.');
+
+		}
+
 		broadcast_id = broadcast_id.join('');
 		broadcast_id = broadcast_id.trim();
 
