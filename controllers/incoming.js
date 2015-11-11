@@ -14,6 +14,15 @@ var Recipient = mongoose.model('Recipient');
 
 var router =  express.Router();
 
+// Set Content-Type response header and render XML (TwiML) response in a 
+// Jade template - sends a text message back to user
+function respond(message) {
+    console.log('redirecting to twiml to respond with: ', message);
+    res.type('text/xml');
+    res.render('twiml', {
+        message: message
+    });
+}
 
 // Twilio SMS webhook route
 router.route('/')
@@ -37,7 +46,7 @@ router.route('/')
 		broadcast_id = msg.match(/\d/g);
 
 		//no numbers
-		if (broadcast_id === '') {
+		if (typeof broadcast_id === 'undefined') {
 
 			console.log('no broadcast_id');
 			respond('Whoops - that is not a response I recognize. Perhaps you entered the wrong offer ID? Please check your response and try again.');
@@ -63,15 +72,6 @@ router.route('/')
 		response = new Response();
 		response.body = msg;
 
-		// Set Content-Type response header and render XML (TwiML) response in a 
-	    // Jade template - sends a text message back to user
-	    function respond(message) {
-	        console.log('redirecting to twiml to respond with: ', message);
-	        res.type('text/xml');
-	        res.render('twiml', {
-	            message: message
-	        });
-	    }
 
 	    processMessage();
 
