@@ -23,13 +23,6 @@ router.route('/')
 	
 	.post(function(req, res) {
 
-		function respond(message) {
-		    console.log('redirecting to twiml to respond with: ', message);
-		    res.type('text/xml');
-		    res.render('twiml', {
-		        message: message
-		    });
-		}
 
 		//get phone number
 		var phone = req.body.From;
@@ -405,6 +398,13 @@ router.route('/')
 
 	    	});
 	    	
+		}
+		function respond(message) {
+		    console.log('redirecting to twiml to respond with: ', message);
+		    res.type('text/xml');
+		    res.render('twiml', {
+		        message: message
+		    });
 		}
 	});
 
