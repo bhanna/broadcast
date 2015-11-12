@@ -52,7 +52,7 @@
             <li ng-hide="authenticated"><a ui-sref="login">Login</a></li>
             <li ng-hide="authenticated"><a ui-sref="signup">Register</a></li>
             <li ng-show="authenticated"><a ui-sref="login" ng-click="signout()">Logout</a></li>
-            <p ng-show="authenticated" class="navbar-text navbar-right">Signed in as <a href="#" class="navbar-link">{{current_user}}</a></p>
+            <p ng-show="authenticated" class="navbar-text">Signed in as <a href="#" class="navbar-link">{{current_user}}</a></p>
           </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
