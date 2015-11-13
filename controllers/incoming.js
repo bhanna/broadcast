@@ -74,7 +74,7 @@ router.route('/')
 		    processMessage();
 
 		    //TODO tie all error messages to an error handler
-
+		   }
 		    // Process any message the user sent to us
 		    function processMessage() {
 
@@ -401,8 +401,6 @@ router.route('/')
 		    	
 			}
 
-			
-		}
 
 		
 		function respond(message) {
