@@ -657,7 +657,7 @@ router.route('/filled/all')
 
 		//get all Broadcasts where openPositions != 0
 		//TODO add add user_id field to show only User's Broadcasts
-		Broadcast.find({ openPositions: 0, user_ids: user_id}, { body: false, __v: false }, function(err, data){
+		Broadcast.find({ openPositions: 0, user_ids: user_id}, { __v: false }, function(err, data){
 
 			if (err) {
 				console.log('failed to get filled broadcasts', err);
