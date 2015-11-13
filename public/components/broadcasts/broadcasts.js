@@ -3,7 +3,7 @@ angular.module('broadcasts', [
 	'angular-storage'
 
 ])
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider) {
 
 	$stateProvider
 		.state('broadcasts', {
@@ -64,7 +64,7 @@ angular.module('broadcasts', [
 	return b;
 
 })
-.controller('broadcastsCtrl', function BroadcastsController ($scope, $http, $state, $q, getAllLists, List, broadcast) {
+.controller('broadcastsCtrl', function BroadcastsController ($scope, $http, $location, $q, getAllLists, List, broadcast) {
 
 
 	$scope.init = function() {
@@ -130,11 +130,14 @@ angular.module('broadcasts', [
 			.then(function(data) {
 
 				//TODO clear loading screen when done sending
-				$scope.broadcast_message = data.message;
-				$scope.broadcast_message_class = data.messageClass;
+				//$scope.broadcast_message = data.message;
+				//$scope.broadcast_message_class = data.messageClass;
 				
 				//enable submit buttons
 				$scope.isProcessing = false;
+
+				//re-route to dashboard
+				$location.path('/main');
 
 			}, function(err) {
 
@@ -166,11 +169,14 @@ angular.module('broadcasts', [
 		broadcast.create($scope.broadcast_multi)
 			.then(function(data) {
 
-				$scope.broadcast_message = data.message;
-				$scope.broadcast_message_class = data.messageClass;
+				//$scope.broadcast_message = data.message;
+				//$scope.broadcast_message_class = data.messageClass;
 
 				//enable submit buttons
 				$scope.isProcessing = false;
+
+				//re-route to dashboard
+				$location.path('/main');
 				
 			}, function(err) {
 
