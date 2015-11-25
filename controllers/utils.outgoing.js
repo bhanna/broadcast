@@ -7,6 +7,7 @@
 var _ = require('lodash');
 var mongoose = require('mongoose');
 var config = require('../config/config');
+var utils = require('./utils');
 
 //Models
 var User = mongoose.model('User');
@@ -249,7 +250,7 @@ exports.updateBroadcastThread = function(req, res, thread, update) {
 		else {
 
 			//this needs to send back broadcast_id
-			updateThreadStatus(req, res, thread, update.status);
+			module.exports.updateThreadStatus(req, res, thread, update.status);
 
 		}
 
