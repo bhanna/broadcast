@@ -2,6 +2,7 @@
 angular.module('broadcastApp', [
 
 	'signup',
+	'admin_signup',
 	'login',
 	'main',
 	'my-lists',

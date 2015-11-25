@@ -3,6 +3,9 @@ var _ = require('lodash');
 var mongoose = require('mongoose');
 var config = require('../config/config');
 
+//Models
+var User = mongoose.model('User');
+
 //twilio
 var client = require('twilio')(config.TWILIO_ACCOUNT_SID, config.TWILIO_AUTH_TOKEN);
 
@@ -63,6 +66,25 @@ exports.sendTwilio = function (phone, msg, callback) {
 	    callback();
 	    //return;
 	    //process.stdout.write(message.sid);
+	});
+
+};
+
+//check if Admin
+//not in use yet
+exports.isAdmin = function (id) {
+
+	//turn into object
+	id = convertToObj(id);
+
+	User.findById(id, function(err, user) {
+
+		if (err) return err;
+		if (user.role === 'admin') {
+			return true;
+		}
+		return false;
+
 	});
 
 };

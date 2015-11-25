@@ -30,9 +30,26 @@ router.route('/')
 		  	return res.status(400).send('You must send the username and the password');
 		}
 
-		//beta password
-		if (req.body.beta_password !== config.beta_password) {
-			return res.status(400).send('Oh snap! You must use the correct beta password');
+		//role of signup
+		var role;
+
+		//admin
+		if (req.body.admin_secret) {
+			if (req.body.admin_secret !== config.admin_secret) {
+				return res.status(400).send('Oh snap! You\'re definitely not ready to be an admin...');
+			}
+			else {
+				role = 'admin';
+			}
+		}
+		//beta password for users
+		else if(req.body.beta_password) {
+			if(req.body.beta_password !== config.beta_password) {
+				return res.status(400).send('Oh snap! You must use the correct beta password');
+			}
+			else {
+				role = 'user';
+			}
 		}
 		//if (_.find(users, {username: req.body.username})) {
 		User.find({username: req.body.username}, function(err, user) {
@@ -51,6 +68,9 @@ router.route('/')
 
             newUser.username = req.body.username;
             newUser.password = createHash(req.body.password);
+
+            //admin or user
+            newUser.role = role;
 
             newUser.save(function(err, user){
 

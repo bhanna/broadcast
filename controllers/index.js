@@ -9,6 +9,7 @@ var router = express.Router();
 router.use('/incoming', require('./incoming'));
 router.use(require('./protected-routes'));
 router.use('/users', require('./user-routes'));
+router.use('/admin', require('./admin-routes'));
 router.use('/api/protected/lists', require('./list-routes'));
 router.use('/api/protected/recipients', require('./recipient-routes'));
 router.use('/api/protected/broadcasts', require('./broadcast-routes'));

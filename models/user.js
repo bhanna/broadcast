@@ -7,11 +7,10 @@ var userSchema = new mongoose.Schema({
     username: {type: String, required: true},
     password: {type: String, required: true}, 
     created_at: {type: Date, default: Date.now},
-    //role: {type: String, required: true},
+    role: {type: String, required: true},
   	//lists: [{ type : mongoose.Schema.Types.ObjectId, ref: 'List' }],
   	//broadcasts: [{ type : mongoose.Schema.Types.ObjectId, ref: 'Broadcast' }]
 
-  	//TODO add role for user vs admin
 });
 
 //create new Counter each User

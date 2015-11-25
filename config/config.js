@@ -25,6 +25,10 @@ exports.secret = 'aAEmc(#-)CK_)KcSLdc_-0-0283';
 //beta password
 exports.beta_password = 'whistlewhileyouwork';
 
+
+//admin secret
+exports.admin_secret = 'AOIC-09sdcalk2m30r9mca0';
+
 //Twilio vars
 exports.TWILIO_ACCOUNT_SID = TWILIO_ACCOUNT_SID; 
 exports.TWILIO_AUTH_TOKEN = TWILIO_AUTH_TOKEN; 
