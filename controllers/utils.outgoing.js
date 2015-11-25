@@ -293,7 +293,7 @@ exports.updateThreadStatus = function(req, res, thread, response) {
 			function(thread, waterfallCallback) {
 
 				//parse response returns the appropriate message
-				parseOwnerResponse(req, res, response, thread, waterfallCallback);
+				module.exports.parseOwnerResponse(req, res, response, thread, waterfallCallback);
 
 			},
 			function(msg, waterfallCallback) {
@@ -334,7 +334,7 @@ exports.parseOwnerResponse = function(req, res, response, thread, callback) {
 	else if (response === 'Owner Cancelled') {
 
 		msg = 'Oh no, the creator of this job has cancelled it.  We\'re sorry for any inconvenience.';
-		checkForNewOpenPosition(msg, thread, callback);
+		module.exports.checkForNewOpenPosition(msg, thread, callback);
 		console.log('reached response === Owner Cancelled');
 
 		
