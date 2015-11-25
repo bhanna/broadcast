@@ -1,0 +1,50 @@
+<div class="col-md-6 col-md-offset-2">
+  	<h2>Customize Your Responses</h2>
+	<br/>
+	<form ng-Submit="saveCustomResponses()">
+
+	    <label>When you accept a recipient they will see this message...</label>
+	    <textarea required ng-model="responses.accept" type="text" rows="4" class="form-control" maxlength="140" placeholder="What do you want to say when you accept a recipient?" value="{{responses.accept}}"></textarea>
+	    <span class="form-help">{{140 - responses.accept.length}}         
+	    Characters left</span>
+	    <br/><br/>
+
+	    <label>When you decline a recipient they will see this message...</label>
+	    <textarea required ng-model="responses.decline" type="text" rows="4" class="form-control" maxlength="140" placeholder="What do you want to say when you decline a recipient?" value="{{responses.decline}}"></textarea>
+	    <span class="form-help">{{140 - responses.decline.length}}         
+	    Characters left</span>
+	    <br/><br/>
+
+	    <label>When you cancel a confirmed recipient they will see this message...</label>
+	    <textarea required ng-model="responses.cancel" type="text" rows="4" class="form-control" maxlength="140" placeholder="What do you want to say when you cancel a recipient?" value="{{responses.cancel}}"></textarea>
+	    <!--counter-->
+	    <span class="form-help">{{140 - responses.cancel.length}}         
+	    Characters left</span>
+	    <br/><br/>
+
+	    <label>When you reopen a position from a cancelled recipient they will see this message...</label>
+	    <textarea required ng-model="responses.reopen" type="text" rows="4" class="form-control" maxlength="140" placeholder="What do you want to say when you reopen a position for a recipient?" value="{{responses.reopen}}"></textarea>
+	    <!--counter-->
+	    <span class="form-help">{{140 - responses.reopen.length}}         
+	    Characters left</span>
+	    <br/><br/>
+
+	    <label>When you cancel a confirmed recipient and a new position opens all available or accepted recipients will see this message...</label>
+	    <textarea required ng-model="responses.newPosition" type="text" rows="4" class="form-control" maxlength="140" placeholder="What do you want to say when a new position opens up for all available or accepted recipients?" value="{{responses.newPosition}}"></textarea>
+	    <!--counter-->
+	    <span class="form-help">{{140 - responses.newPosition.length}}         
+	    Characters left</span>
+	    <br/><br/>
+
+	    <label>When you all positions have been filled all available or accepted recipients will see this message...</label>
+	    <textarea required ng-model="responses.filled" type="text" rows="4" class="form-control" maxlength="140" placeholder="What do you want to say all all available or accepted recipients when all positions have been filled?" value="{{responses.filled}}"></textarea>
+	    <!--counter-->
+	    <span class="form-help">{{140 - responses.filled.length}}         
+	    Characters left</span>
+	    <br/>
+
+	    <br/>
+	    <input ng-disabled="isProcessing" class="btn submit-btn pull-right" type="submit" value="Send!" />
+	</form>
+
+</div>

@@ -6,6 +6,7 @@ var config = require('../config/config');
 //Models
 var User = mongoose.model('User');
 
+
 //twilio
 var client = require('twilio')(config.TWILIO_ACCOUNT_SID, config.TWILIO_AUTH_TOKEN);
 
@@ -30,6 +31,8 @@ exports.belongsToUser = function(model, query, user_id) {
 
 };
 
+
+//convert to object
 exports.convertToObj = function(val) {
 
 	//cast user_id as object to interact with db

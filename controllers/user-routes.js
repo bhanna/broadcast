@@ -79,6 +79,9 @@ router.route('/')
                     return res.status(400).send('unable to save new user, ', err);
                 }
                 console.log('new profile ', newUser);
+
+                //TODO create default responseVars
+                
 				res.status(201).send({
 				    id_token: createToken(newUser)
 				});
