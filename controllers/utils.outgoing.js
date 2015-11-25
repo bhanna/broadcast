@@ -8,6 +8,7 @@ var _ = require('lodash');
 var mongoose = require('mongoose');
 var config = require('../config/config');
 var utils = require('./utils');
+var async = require('async');
 
 //Models
 var User = mongoose.model('User');
