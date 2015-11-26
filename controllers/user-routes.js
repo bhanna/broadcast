@@ -4,6 +4,7 @@ var jwt = require('jsonwebtoken');
 var _ = require('lodash');
 var config = require('../config/config.js');
 var bCrypt = require('bcrypt-nodejs');
+var utils = require('./utils');
 
 var User = mongoose.model('User');
 
@@ -80,8 +81,9 @@ router.route('/')
                 }
                 console.log('new profile ', newUser);
 
-                //TODO create default responseVars
-                
+                //create default responseVars
+                utils.createDefaultResponseVars(user._id);
+
 				res.status(201).send({
 				    id_token: createToken(newUser)
 				});

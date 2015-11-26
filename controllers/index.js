@@ -13,7 +13,7 @@ router.use('/admin', require('./admin-routes'));
 router.use('/api/protected/lists', require('./list-routes'));
 router.use('/api/protected/recipients', require('./recipient-routes'));
 router.use('/api/protected/broadcasts', require('./broadcast-routes'));
-router.use('/api/protected/responses', require('./responses-routes'));
+router.use('/api/protected/customResponses', require('./customResponses-routes'));
 
 
 /* GET home page. */

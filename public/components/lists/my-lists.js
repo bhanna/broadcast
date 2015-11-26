@@ -183,13 +183,7 @@ angular.module('my-lists', [
 	//edit Recipient
 	$scope.editRecipient = function (id) {
 
-		if (!validPhone($scope.recipient.phone)) {
-
-			alert('Please enter a valid phone number, i.e. 5555555555');
-
-		}
-		else {
-
+		
 			$http.get('/api/protected/recipients/' + id).success(function(data) {
 
 				$scope.recipient = data;
@@ -197,20 +191,28 @@ angular.module('my-lists', [
 				setDisabled(false);
 
 			});
-		}
 
 	};
 
 	//update after editing Recipient
 	$scope.updateRecipient = function (id) {
 
-		$http.put('/api/protected/recipients/' + id, $scope.recipient).success(function(data) {
+		if (!validPhone($scope.recipient.phone)) {
 
-			$scope.recipient_message = data.message;
-			refreshList($scope.selected._id);
-			setDisabled(true);
+			alert('Please enter a valid phone number, i.e. 5555555555');
 
-		});
+		}
+		else {
+
+			$http.put('/api/protected/recipients/' + id, $scope.recipient).success(function(data) {
+
+				$scope.recipient_message = data.message;
+				refreshList($scope.selected._id);
+				setDisabled(true);
+
+			});
+
+		}
 
 	};
 

@@ -33,3 +33,15 @@ exports.admin_secret = 'AOIC-09sdcalk2m30r9mca0';
 exports.TWILIO_ACCOUNT_SID = TWILIO_ACCOUNT_SID; 
 exports.TWILIO_AUTH_TOKEN = TWILIO_AUTH_TOKEN; 
 exports.TWILIO_NUMBER = TWILIO_NUMBER;
+
+//response variables
+exports.responses = [
+
+		'Owner Declined',
+		'Owner Cancelled',
+		'Accepted',
+		'Reopened',
+		'newPosition',
+		'filled'
+
+	];
