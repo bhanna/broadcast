@@ -44,7 +44,7 @@ router.route('/')
 		//TODO save broadcast under specific user object
 
 		//get user_id
-		var user_id = utils.convertToObj(req.user._id);
+		var user_id = utils.convertToObjId(req.user._id);
 		console.log('USERID from pre waterfall ', user_id);
 
 		async.waterfall([
@@ -101,7 +101,7 @@ router.route('/open/all')
 	.get(function(req, res) {
 
 		//get user_id
-		var user_id = utils.convertToObj(req.user._id);
+		var user_id = utils.convertToObjId(req.user._id);
 
 		//get all Broadcasts where openPositions != 0
 		//TODO add add user_id field to show only User's Broadcasts
@@ -185,7 +185,7 @@ router.route('/filled/all')
 	.get(function(req, res) {
 
 		//get user_id
-		var user_id = utils.convertToObj(req.user._id);
+		var user_id = utils.convertToObjId(req.user._id);
 
 		//get all Broadcasts where openPositions != 0
 		//TODO add add user_id field to show only User's Broadcasts
