@@ -21,7 +21,7 @@ var users = [{
 
 
 function createToken(user) {
-  return jwt.sign(_.omit(user, 'password'), config.secret, { expiresIn: 60*5 });
+  return jwt.sign(_.omit(user, 'password'), config.secret, { expiresIn: 60*5 }, { role: user.role });
 }
 
 router.route('/')
@@ -79,13 +79,10 @@ router.route('/')
                     console.log('save error', err);
                     return res.status(400).send('unable to save new user, ', err);
                 }
-                console.log('new profile ', newUser);
-
-                //create default responseVars
-                utils.createDefaultResponseVars(user._id);
+                console.log('new profile ', user);
 
 				res.status(201).send({
-				    id_token: createToken(newUser)
+				    id_token: createToken(user)
 				});
           
             });

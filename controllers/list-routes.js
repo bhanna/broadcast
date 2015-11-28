@@ -19,7 +19,7 @@ router.route('/')
 
 		var data = {};
 
-		var user_id = utils.convertToObj(req.user._id);
+		var user_id = utils.convertToObjId(req.user._id);
 
 		var list = new List();
 		list.user_ids = [user_id];
@@ -48,7 +48,7 @@ router.route('/all')
 	//return all lists for specific user
 	.get(function(req, res){
 
-		var user_id = utils.convertToObj(req.user._id);
+		var user_id = utils.convertToObjId(req.user._id);
 
 		List.find({ user_ids : user_id }, function(err, data){
 			if (err) {

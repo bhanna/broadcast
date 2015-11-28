@@ -63,7 +63,7 @@ router.route('/lists/add/:id')
 
 				console.log('recipient found ', recipient);
 
-				var user_id = utils.convertToObj(req.user._id);
+				var user_id = utils.convertToObjId(req.user._id);
 				
 				//recipient exists
 				if (recipient) {

@@ -8,6 +8,7 @@ angular.module('broadcastApp', [
 	'my-lists',
 	'broadcasts',
 	'customResponses',
+	'broadcastApp.admin.defaultResponses',
 	'angular-jwt',
 	'angular-storage'
 
@@ -26,24 +27,42 @@ angular.module('broadcastApp', [
 .run( function($rootScope, $state, store, jwtHelper) {
 	$rootScope.authenticated = false;
 	$rootScope.current_user = '';
+	$rootScope.role = false;
 
 	$rootScope.$on('$stateChangeStart', function(e, to) {
 
-		if (to.data && to.data.requiresLogin) {
+		if (to.data) {
 
-			if (!store.get('jwt') || jwtHelper.isTokenExpired(store.get('jwt'))) {
+			if (to.data.requiresLogin || to.data.requiresAdmin) {
 
-				e.preventDefault();
-				$state.go('login');
+				if (!store.get('jwt') || jwtHelper.isTokenExpired(store.get('jwt'))) {
 
+					e.preventDefault();
+					$state.go('login');
+
+				}
+				else {
+					
+					var current_user = jwtHelper.decodeToken(store.get('jwt'));
+					if (to.data.requiresAdmin && current_user.role !== 'admin') {
+
+						e.preventDefault();
+						$state.go('main');
+
+					}
+					else {
+
+						$rootScope.authenticated = true;
+						$rootScope.current_user = current_user.username;
+						$rootScope.role = current_user.role;
+					
+					}
+					
+
+				}
 			}
-			else {
-				$rootScope.authenticated = true;
-				var current_user = jwtHelper.decodeToken(store.get('jwt'));
-				$rootScope.current_user = current_user.username;
-			}
-
 		}
+			
 
 	});
 

@@ -12,7 +12,7 @@ var utils = require('./utils');
 
 //models
 var User = mongoose.model('User');
-var ResponseVar = mongoose.model('ResponseVar');
+var CustomResponseVar = mongoose.model('CustomResponseVar');
 
 var router =  express.Router();
 
@@ -24,9 +24,9 @@ router.route('/all')
 		console.log('reached get responses');
 
 		//get user_id
-		var user_id = utils.convertToObj(req.user._id);
+		var user_id = utils.convertToObjId(req.user._id);
 
-		ResponseVar.find({ user_id : user_id }, function(err, responses){
+		CustomResponseVar.find({ user_id : user_id }, function(err, responses){
 			if (err) {
 				console.log('failed to get all responses', err);
 				return res.status(500).send(err);
@@ -44,10 +44,10 @@ router.route('/:id')
 	.put(function(req,res) {
 
 		//get user_id
-		var user_id = utils.convertToObj(req.user._id);
+		var user_id = utils.convertToObjId(req.user._id);
 
 		console.log(req.body);
-		ResponseVar.findOne({user_id: user_id, _id: req.params.id}, function(err, response) {
+		CustomResponseVar.findOne({user_id: user_id, _id: req.params.id}, function(err, response) {
 
 			if (err) return res.status(500).send(err);
 

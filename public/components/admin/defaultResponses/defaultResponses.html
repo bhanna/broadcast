@@ -1,0 +1,17 @@
+<div class="col-md-6 col-md-offset-2">
+  	<h2>Customize Your Responses</h2>
+	<br/>
+	<div ng-repeat="response in responses">
+
+		<div>
+			<label>{{response.responseStatus}}</label>
+			<textarea ng-model="response.body" required type="text" rows="4" class="form-control" maxlength="140" placeholder="Customize your response here...">{{response.body}}</textarea>
+			<span class="form-help">{{140 - response.body.length}} Characters left</span>
+			<button class="btn btn-primary pull-right" ng-click="saveDefaultResponse(response)">Save</button>
+	    </div>
+	    
+	   
+		<br/><br/>
+	</div>
+
+</div>
