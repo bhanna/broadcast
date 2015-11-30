@@ -32,12 +32,14 @@ router.route('/all')
 
 		var data = [];
 
+		//check for user custom variables 
 		CustomResponseVar.find({ user_id : user_id }, function(err, responses){
 			if (err) {
 				console.log('failed to get all responses', err);
 				return res.status(500).send(err);
 			}
 
+			//if no custom variables have been set
 			if (_.isEmpty(responses)) {
 
 				DefaultResponseVar.find({}, {_id: false, __v: false}, function(err, defaults) {
@@ -51,8 +53,10 @@ router.route('/all')
 				});	
 
 			}
+			//if custom variables have been set
 			else {
 
+				//loop through possible responses from config
 				async.each(config.responses, function(responseStatus, eachCallback) {
 
 					console.log('reached ', responseStatus);
@@ -61,32 +65,24 @@ router.route('/all')
 
 							function(callback) {
 
-								//var r = {};
-
+								//check all custom variables against responseStatus
 								async.each(responses, function(response, checkCallback) {
 
+									//custom response exists
 									if (responseStatus === response.responseStatus) {
 										
-										//r.responseStatus = response.responseStatus;
-										//r.body = response.body;
-										//r._id = response._id;
-										
-										//if (response.broadcast_id) {
-										//	r.broadcast_id = response.broadcast_id;
-										//}
-
 										console.log('responsStatus: ', responseStatus);
-										//data.push(r);
 										callback(null, response);
 										
 									}
+									//custom variable does not match responseStatus
 									else {
 										checkCallback();
 									}
-									
-								
+															
 								}, function(err) {
 
+									//no custom variable for responseStatus 
 									console.log('reached empty response callback');
 
 									if (err) return res.status(500).send(err);
@@ -98,8 +94,11 @@ router.route('/all')
 							function(response, callback) {
 
 								console.log('reached second waterfall function and have r: ', response);
+
+								//no custom variable for responseStatus
 								if (_.isEmpty(response)) {	
 
+									//find default response variable for responseStatus
 									DefaultResponseVar.findOne({responseStatus: responseStatus}, function(err, re) {
 										
 										var r = {};
@@ -115,13 +114,15 @@ router.route('/all')
 									});
 				
 								}
-								else {
+								//custom variable exists for responseStatus
+								else {								
 									callback(null, response);
 								}		
 
 							},
 							function(r, callback) {
 
+								//add custom or default response variable to data
 								data.push(r);
 
 								console.log('reached third waterfall function and have data: ', data);
@@ -146,7 +147,7 @@ router.route('/all')
 					if (err) return res.status(500).send(err);
 					console.log('retrieved all responses ', data);
 
-					//sort
+					//sort alphabetically
 					var sorted = data.sort(utils.compareResponseVars); 
 
 					console.log('sorted data: ', sorted);
