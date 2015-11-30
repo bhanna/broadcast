@@ -41,7 +41,7 @@ exports.responses = [
 		'Owner Cancelled',
 		'Accepted',
 		'Reopened',
-		'newPosition',
-		'filled'
+		'New Position',
+		'Filled'
 
 	];

@@ -16,16 +16,16 @@ angular.module('customResponses', [
 	});
 
 })
-.factory('getResponses', function($resource){
+.factory('getCustomResponses', function($resource){
 
 	return $resource('/api/protected/customResponses/all');
 
 })
-.controller('customResponsesCtrl', function CustomResponsesController($http, $scope, getResponses) {
+.controller('customResponsesCtrl', function CustomResponsesController($http, $scope, getCustomResponses) {
 
 	$scope.init = function () {
 
-		$scope.responses = getResponses.query();
+		$scope.responses = getCustomResponses.query();
 
 	};
 
@@ -33,7 +33,7 @@ angular.module('customResponses', [
 	$scope.saveCustomResponse = function(response) {
 
 		//console.log(response.body);
-		$http.put('/api/protected/customResponses/' + response._id, response).success(function(data) {
+		$http.post('/api/protected/customResponses/', response).success(function(data) {
 
 			console.log(data);
 

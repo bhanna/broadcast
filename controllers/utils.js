@@ -76,6 +76,18 @@ exports.sendTwilio = function (phone, msg, callback) {
 
 };
 
+//compare for sorting response variables for display
+exports.compareResponseVars = function(a, b) {
+	console.log('a: ', a);
+	console.log('b: ', b);
+	if (a.responseStatus < b.responseStatus)
+	    return -1;
+	if (a.responseStatus > b.responseStatus)
+	    return 1;
+	return 0;
+
+};
+
 
 /* -- User Utils -- */
 

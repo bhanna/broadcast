@@ -90,47 +90,6 @@ router.route('/defaultResponses/all')
 
 				console.log('data: ', data);
 
-				/*
-				async.each(responses, function(response) {
-
-					//TODO create loop that checks which variables have been set and which are empty
-					//then send back object with all response types, each type containing either the created content
-					//or the type name
-					async.each(config.responses, function(responseStatus) {
-
-						var r;
-
-						if (response.responseStatus === responseStatus) {
-
-							r = {
-
-								'responseStatus' : responseStatus,
-								'body' : response.body,
-								'_id' : response._id
-
-							};
-
-							data.push(r);
-
-						}
-						else {
-
-							r = {
-
-								'responseStatus' : responseStatus,
-								'body' : ''
-
-							};
-
-							data.push(r);
-
-						}
-
-					});
-					
-
-				});
-				*/
 			}
 			
 			console.log('default responses ', data);
