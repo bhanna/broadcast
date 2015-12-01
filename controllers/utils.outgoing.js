@@ -17,6 +17,8 @@ var BroadcastThread = mongoose.model('BroadcastThread');
 var Response = mongoose.model('Response');
 var List = mongoose.model('List');
 var Recipient = mongoose.model('Recipient');
+var CustomResponseVar = mongoose.model('CustomResponseVar');
+var DefaultResponseVar = mongoose.model('DefaultResponseVar');
 
 /* -- broadcast outgoing --*/
 
@@ -319,7 +321,62 @@ exports.updateThreadStatus = function(req, res, thread, response) {
 
 //parse response from Owner and return msg
 exports.parseOwnerResponse = function(req, res, response, thread, callback) {
+	
 
+	/* //getting variables from db
+	//TODO TEST LIVE
+	//NOTE currently any custom response variable needs to have + YesID or NoID added
+	//and default variables need the following additions: 
+	//Accepted: +ID;
+	//Reopened: +ID;
+	//New Position: + YesID or NoID?
+
+	//get user_id
+	var user_id = utils.convertToObjId(req.user._id);
+	
+	//check for custom variable
+	CustomResponseVar.findOne({user_id: user_id, responseStatus: response}, function(err, r) {
+
+		if (err) return res.status(500).send(err);
+
+		var msg; 
+
+		//if no custom variable check for default variable 
+		if (!r) {
+
+			DefaultResponseVar.findOne({responseStatus: response}, function(err, re) {
+
+				if (err) return res.status(500).send(err);
+
+				//TODO add broadcast_id to any message that requires it
+
+				if (response === 'Accepted' || response === 'Reopened') {
+					msg = re.body + thread.broadcast_id;
+				}
+				else if (response === 'New Position') {
+					msg = re.body + ' Yes' + thread.broadcast_id + ' or No' + thread.broadcast_id;
+				}	
+
+				msg = re.body;
+
+			});
+
+		}
+		//if custom variable exists
+		else {
+
+			//TODO add broadcast_id to any message that requires it
+
+			msg = r.body;
+			callback(null, msg);
+			return;
+
+		}
+
+
+	});
+	*/
+	
 	var msg;
 
 	//Owner Declined or Cancelled
