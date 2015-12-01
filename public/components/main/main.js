@@ -148,6 +148,16 @@ angular.module('main', ['ngResource'])
 
 
 	};
+
+
+	//socket io for live status updates
+	var socket = io.connect();
+
+	socket.on('statusUpdate', function(data) {
+
+		alert(data.status);
+
+	});
 	
 
 
