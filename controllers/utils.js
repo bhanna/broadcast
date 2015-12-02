@@ -48,7 +48,7 @@ exports.convertToObjId = function(val) {
 /*//LOCAL currently returns data for testing
 exports.sendTwilio = function(phone, msg, callback) {
 	var data = 'sentTwilio to phone: ' + phone + ', msg: ' + msg;
-	console.log('from sentTwilio: ', data);
+	console.log('from sentTwilio LOCAL: ', data);
 	callback();
 };*/
 
