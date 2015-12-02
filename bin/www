@@ -34,7 +34,7 @@ server.on('listening', onListening);
  */
 
 //var io = require('socket.io').listen(server);
-var io = require('../sockets/base').listen(app);
+var io = require('../sockets/base').listen(server);
 
 /**
  * Normalize a port into a number, string, or false.
