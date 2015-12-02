@@ -155,6 +155,7 @@ angular.module('main', ['ngResource'])
 
 	socket.on('statusUpdate', function(data) {
 
+		console.log(data.status);
 		alert(data.status);
 
 	});

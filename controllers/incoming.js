@@ -3,7 +3,9 @@ var mongoose = require( 'mongoose' );
 var async = require('async');
 var config = require('../config/config');
 var utils = require('./utils');
-var io = require('socket.io')();
+
+var app = express();
+var io = require('socket.io')(app.get('port'));
 
 
 var Broadcast = mongoose.model('Broadcast');
