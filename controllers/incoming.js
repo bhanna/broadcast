@@ -274,7 +274,12 @@ router.route('/')
 							            		console.log('error at saving Thread ', err);
 							            	}
 
-							            	io.sockets.emit('statusUpdate', thread);
+							            	io.on('connection', function(socket) {
+
+							            		console.log('attempted socket from thread save 1');
+							            		sockets.emit('statusUpdate', thread);
+
+							            	});
 
 							            	console.log('saved new Thread! ', thread);
 
@@ -372,8 +377,13 @@ router.route('/')
 						            		console.log('error at saving Thread ', err);
 						            	}
 
-						            	io.sockets.emit('statusUpdate', thread);
-						            	
+						            	io.on('connection', function(socket) {
+
+						            		console.log('attempted socket from thread save 2');
+						            		sockets.emit('statusUpdate', thread);
+
+						            	});
+
 						            	console.log('saved new Thread! ', thread);
 
 						            });
