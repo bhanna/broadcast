@@ -5,7 +5,7 @@ var config = require('../config/config');
 var utils = require('./utils');
 
 //var app = express();
-var io = require('socket.io')();
+//var io = require('socket.io')();
 
 
 var Broadcast = mongoose.model('Broadcast');
@@ -276,13 +276,6 @@ router.route('/')
 							            		console.log('error at saving Thread ', err);
 							            	}
 
-							            	//io.on('connection', function(socket) {
-
-							            		console.log('attempted socket from thread save 1');
-							            		io.sockets.emit('statusUpdate', thread);
-
-							            	//});
-
 							            	console.log('saved new Thread! ', thread);
 
 							            });
@@ -378,13 +371,6 @@ router.route('/')
 						            	if (err) {
 						            		console.log('error at saving Thread ', err);
 						            	}
-
-						            	//io.on('connection', function(socket) {
-
-						            		console.log('attempted socket from thread save 2');
-						            		io.sockets.emit('statusUpdate', thread);
-
-						            	//});
 
 						            	console.log('saved new Thread! ', thread);
 
