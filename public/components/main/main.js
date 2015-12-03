@@ -156,6 +156,8 @@ angular.module('main', ['ngResource'])
 	socket.on('statusUpdate', function(data) {
 
 		console.log('DATA: ', data);
+		console.log('from SOCKET scope.selected: ', $scope.selected);
+		console.log('from SOCKET scope.openBroadcasts: ', $scope.openBroadcasts);
 
 		if (data.broadcst_id === $scope.selected.broadcast.broadcast_id) {
 
