@@ -10,6 +10,19 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 
+var server = require('./bin/www');
+
+
+/**
+ * Socket IO
+ */
+
+//var io = require('socket.io').listen(server);
+var io = require('../sockets/base').listen(server);
+
+var inc = require('./controllers/incoming');
+
+
 //initialze models - used by 
 //recipient-routes.js
 //broadcast-routes.js
@@ -64,6 +77,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(require('./controllers'));
 
+app.post('/incoming', inc.incoming(io));
 //app.use('/', index);
 //app.use('/auth', auth);
 //app.use('/lists', lists);
