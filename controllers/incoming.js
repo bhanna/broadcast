@@ -70,7 +70,7 @@ router.route('/')
 			console.log('msg4: ', msg);
 
 
-		    incoming.processMessage(msg, broadcast_id);
+		    incoming.processMessage(phone, msg, broadcast_id);
 
 		    //TODO tie all error messages to an error handler
 		   }
