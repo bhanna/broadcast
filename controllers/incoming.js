@@ -4,6 +4,8 @@ var async = require('async');
 var config = require('../config/config');
 var utils = require('./utils');
 
+var io = require('../app').io; 
+
 
 var incoming = require('./utils.incoming');
 
@@ -15,7 +17,7 @@ var List = mongoose.model('List');
 var Recipient = mongoose.model('Recipient');
 
 
-//var router =  express.Router();
+var router =  express.Router();
 
 // Set Content-Type response header and render XML (TwiML) response in a 
 // Jade template - sends a text message back to user
@@ -23,9 +25,10 @@ var Recipient = mongoose.model('Recipient');
 
 // Twilio SMS webhook route
 
-exports.incoming = function(io) {
+//exports.incoming = function(io) {
 
-	return function(req, res) {
+router.route('/')
+	.post(function(req, res) {
 
 
 			//get phone number
@@ -44,6 +47,12 @@ exports.incoming = function(io) {
 			broadcast_id = msg.match(/\d/g);
 
 			console.log('BROADCAST ID ', broadcast_id);
+
+			io.on('connection', function(socket) {
+
+				console.log('SOCKET REACHED');
+
+			});
 
 			//no numbers
 			if (!broadcast_id) {
@@ -76,9 +85,9 @@ exports.incoming = function(io) {
 			    //TODO tie all error messages to an error handler
 			   }
 			    
-		};
+		});
 
-};
+//};
 
 
-//module.exports = router;
+module.exports = router;

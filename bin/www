@@ -33,14 +33,16 @@ server.on('listening', onListening);
  * Socket IO
  */
 
+var io = app.io;
+io.attach(server);
 //var io = require('socket.io').listen(server);
-var io = require('../sockets/base').listen(server);
+//var io = require('../sockets/base').listen(server);
 
-var inc = require('../controllers/incoming');
+//var inc = require('../controllers/incoming');
 
-var express = require('express');
-var router = express.Router();
-router.post('/incoming', inc.incoming(io));
+//var express = require('express');
+//var router = express.Router();
+//router.post('/incoming', inc.incoming(io));
 
 /**
  * Normalize a port into a number, string, or false.

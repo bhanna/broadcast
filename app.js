@@ -19,7 +19,7 @@ require('./models');
 /**
  * Socket IO
  */
-
+var socket_io = require('socket.io');
 //var io = require('socket.io').listen(server);
 //var io = require('./sockets/base').listen(server);
 
@@ -50,6 +50,9 @@ else {
 
 
 var app = express();
+
+app.io = socket_io();
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
