@@ -25,7 +25,7 @@ var router =  express.Router();
 
 // Twilio SMS webhook route
 
-//exports.incoming = function(io) {
+module.exports = function(io) {
 
 router.route('/')
 	.post(function(req, res) {
@@ -50,7 +50,7 @@ router.route('/')
 
 			app.io.on('connection', function(socket) {
 
-				console.log('SOCKET REACHED');
+				console.log('SOCKET REACHED INCOMING');
 
 			});
 
@@ -87,7 +87,9 @@ router.route('/')
 			    
 		});
 
-//};
+	return router;
+
+};
 
 
-module.exports = router;
+//module.exports = router;

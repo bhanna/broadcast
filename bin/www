@@ -35,6 +35,7 @@ server.on('listening', onListening);
 
 var io = app.io;
 io.attach(server);
+
 //var io = require('socket.io').listen(server);
 //var io = require('../sockets/base').listen(server);
 

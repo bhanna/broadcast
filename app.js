@@ -51,7 +51,16 @@ else {
 
 var app = express();
 
-app.io = socket_io();
+var io = socket_io();
+
+app.io = io;
+
+
+io.on('connection', function(socket) {
+
+  console.log('SOCKET FROM APPJS');
+
+});
 
 
 // view engine setup
@@ -78,16 +87,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 //app.use(passport.initialize());
 //app.use(passport.session());
 
-app.use(require('./controllers'));
+//app.use(require('./controllers'));
 
-//app.post('/incoming', inc.incoming(io));
-//app.use('/', index);
-//app.use('/auth', auth);
-//app.use('/lists', lists);
-//app.use('/recipients', recipients);
-//app.use('/broadcasts', broadcasts);
-//app.use('/auth', authenticate);
-//app.use('/api', api);
+app.use('/incoming', require('./controllers/incoming')(io));
+app.use(require('./controllers/protected-routes'));
+app.use('/users', require('./controllers/user-routes'));
+app.use('/admin', require('./controllers/admin-routes'));
+app.use('/api/protected/lists', require('./controllers/list-routes'));
+app.use('/api/protected/recipients', require('./controllers/recipient-routes'));
+app.use('/api/protected/broadcasts', require('./controllers/broadcast-routes')(io));
+app.use('/api/protected/customResponses', require('./controllers/customResponses-routes'));
 
 
 // Mount middleware to notify Twilio of errors

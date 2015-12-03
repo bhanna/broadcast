@@ -6,7 +6,8 @@ var utils = require('./utils');
 var outgoing = require('./utils.outgoing');
 var config = require('../config/config');
 
-
+var app = require('../app');
+var io = app.io;
 
 var Broadcast = mongoose.model('Broadcast');
 var BroadcastThread = mongoose.model('BroadcastThread');
@@ -26,7 +27,7 @@ var router =  express.Router();
 //create Recipient class with respond() method
 
 
-
+module.exports = function (io) {
 
 
 router.route('/')
@@ -99,6 +100,13 @@ router.route('/outgoing')
 router.route('/open/all')
 
 	.get(function(req, res) {
+
+		//console.log('io: ', io);
+		io.on('connection', function(socket) {
+
+			console.log('SOCKET FROM BROADCASTS');
+
+		});
 
 		//get user_id
 		var user_id = utils.convertToObjId(req.user._id);
@@ -203,4 +211,6 @@ router.route('/filled/all')
 
 	});
 
-module.exports = router;
+	return router;
+};
+//module.exports = router;
