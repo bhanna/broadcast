@@ -29,7 +29,7 @@ exports.unknownResponse = function() {
 
 
 // Process any message the user sent to us
-exports.processMessage = function(phone, msg, broadcast_id) {
+exports.processMessage = function(req, res, phone, msg, broadcast_id) {
 
 	response = new Response();
 	response.body = msg;
