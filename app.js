@@ -12,6 +12,8 @@ var mongoose = require('mongoose');
 
 var server = require('./bin/www');
 
+//initialze models
+require('./models');
 
 /**
  * Socket IO
@@ -23,10 +25,7 @@ var io = require('./sockets/base').listen(server);
 var inc = require('./controllers/incoming');
 
 
-//initialze models - used by 
-//recipient-routes.js
-//broadcast-routes.js
-require('./models');
+
 
 //var index = require('./routes/index');
 //var auth = require('./auth');
