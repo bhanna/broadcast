@@ -2,11 +2,8 @@ var express = require('express');
 var router = express.Router();
 
 
-//TODO add auth
-//TODO add user
-
 //Define routes
-router.use('/incoming', require('./incoming'));
+//router.use('/incoming', require('./incoming'));
 router.use(require('./protected-routes'));
 router.use('/users', require('./user-routes'));
 router.use('/admin', require('./admin-routes'));

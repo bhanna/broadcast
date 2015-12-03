@@ -36,6 +36,10 @@ server.on('listening', onListening);
 //var io = require('socket.io').listen(server);
 var io = require('../sockets/base').listen(server);
 
+var incoming = require('../controllers/incoming');
+
+incoming(app, io);
+
 /**
  * Normalize a port into a number, string, or false.
  */

@@ -29,7 +29,7 @@ exports.unknownResponse = function() {
 
 
 // Process any message the user sent to us
-exports.processMessage = function(req, res, phone, msg, broadcast_id) {
+exports.processMessage = function(req, res, io, phone, msg, broadcast_id) {
 
 	response = new Response();
 	response.body = msg;
@@ -212,6 +212,8 @@ exports.processMessage = function(req, res, phone, msg, broadcast_id) {
 			            		console.log('error at saving Thread ', err);
 			            	}
 
+			            	io.sockets.emit('statusUpdate', thread);
+
 			            	console.log('saved new Thread! ', thread);
 
 			            });
@@ -308,6 +310,7 @@ exports.processMessage = function(req, res, phone, msg, broadcast_id) {
 			            		console.log('error at saving Thread ', err);
 			            	}
 
+			            	io.sockets.emit('statusUpdate', thread);
 			            	console.log('saved new Thread! ', thread);
 
 			            });
