@@ -23,9 +23,9 @@ var Recipient = mongoose.model('Recipient');
 
 // Twilio SMS webhook route
 
-module.exports = function(app, io) {
+exports.incoming = function(io) {
 
-	app.post('/incoming', function(req, res) {
+	return function(req, res) {
 
 
 			//get phone number
@@ -76,7 +76,7 @@ module.exports = function(app, io) {
 			    //TODO tie all error messages to an error handler
 			   }
 			    
-		});
+		};
 
 };
 
