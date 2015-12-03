@@ -39,8 +39,8 @@ var io = require('../sockets/base').listen(server);
 var inc = require('../controllers/incoming');
 
 var express = require('express');
-var shmaou = express();
-shmaou.post('/incoming', inc.incoming(io));
+var router = express.Router();
+router.post('/incoming', inc.incoming(io));
 
 /**
  * Normalize a port into a number, string, or false.
