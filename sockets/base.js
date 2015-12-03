@@ -2,13 +2,13 @@
 
 var socketio = require('socket.io');
 
-module.exports.listen = function(app){
-    io = socketio.listen(app);
+module.exports.listen = function(server){
+    io = socketio.listen(server);
 
     incoming = io.of('/incoming');
     incoming.on('connection', function(socket){
        	
-       	console.log('received incoming text and logged SOCKET');
+       	console.log('*** RECEIVED SOCKET ***');
     	//socket.emit('statusUpdate', thread);
 
     });
