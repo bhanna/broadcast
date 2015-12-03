@@ -144,10 +144,37 @@ angular.module('main', ['ngResource'])
 
 		console.log($scope.filledBroadcasts);
 
-		$scope.selected = null;
+		//$scope.selected = null;
 
 
 	};
+
+	//socket io for live status updates
+	var socket = io.connect();
+
+	socket.on('statusUpdate', function(data) {
+
+		console.log('DATA: ', data);
+		console.log('from SOCKET scope.selected: ', $scope.selected);  //comes back null... why??
+		console.log('from SOCKET scope.openBroadcasts: ', $scope.openBroadcasts);  //writes out
+
+		if (data.broadcst_id === $scope.selected.broadcast.broadcast_id) {
+
+			if (data.firstName === 'Single') {
+
+				$scope.selected.threads[0].status = data.status;
+
+			}
+			else {
+
+				//where t.phone === data.phone
+				//set t.status = data.status 
+
+			}
+
+		}
+
+	});
 
 
 	//select open broadcast
@@ -254,33 +281,6 @@ angular.module('main', ['ngResource'])
 			});
 
 	};
-
-	//socket io for live status updates
-	var socket = io.connect();
-
-	socket.on('statusUpdate', function(data) {
-
-		console.log('DATA: ', data);
-		console.log('from SOCKET scope.selected: ', $scope.selected);  //comes back null... why??
-		console.log('from SOCKET scope.openBroadcasts: ', $scope.openBroadcasts);  //writes out
-
-		if (data.broadcst_id === $scope.selected.broadcast.broadcast_id) {
-
-			if (data.firstName === 'Single') {
-
-				$scope.selected.threads[0].status = data.status;
-
-			}
-			else {
-
-				//where t.phone === data.phone
-				//set t.status = data.status 
-
-			}
-
-		}
-
-	});
 
 
 	$scope.init();
