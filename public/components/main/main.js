@@ -157,6 +157,22 @@ angular.module('main', ['ngResource'])
 
 		console.log('DATA: ', data);
 
+		if (data.broadcst_id === $scope.selected.broadcast.broadcast_id) {
+
+			if (data.firstName === 'Single') {
+
+				$scope.selected.threads[0].status = data.status;
+
+			}
+			else {
+
+				//where t.phone === data.phone
+				//set t.status = data.status 
+
+			}
+
+		}
+
 	});
 	
 
