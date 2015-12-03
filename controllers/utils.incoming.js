@@ -41,11 +41,11 @@ exports.processMessage = function(req, res, phone, msg, broadcast_id) {
 
 		if (err) {
 			console.log('error at find Broadcast to verify openPositions ', err);
-			return module.exports.respond(incoming.unknownResponse);
+			return module.exports.respond(res, incoming.unknownResponse);
 		}
 		if (!broadcast) {
 			console.log('could not find broadcast ');
-			return module.exports.respond(incoming.unknownResponse);
+			return module.exports.respond(res, incoming.unknownResponse);
 		}
 		else {
 			
@@ -57,11 +57,11 @@ exports.processMessage = function(req, res, phone, msg, broadcast_id) {
 
 		        if (err) {
 					console.log('error at finding Thread ', err);
-					return module.exports.respond(incoming.unknownResponse);
+					return module.exports.respond(res, incoming.unknownResponse);
 				}
 		        if (!thread) {
 		        	console.log('could not find thread ');
-					return module.exports.respond(incoming.unknownResponse);
+					return module.exports.respond(res, incoming.unknownResponse);
 		        }
 		        console.log('Thread found: ', thread);
 
@@ -215,7 +215,7 @@ exports.processMessage = function(req, res, phone, msg, broadcast_id) {
 			            	console.log('saved new Thread! ', thread);
 
 			            });
-			            module.exports.respond(responseMessage);
+			            module.exports.respond(res, responseMessage);
         				console.log('attempting to respond with: ', responseMessage);
 
 			        } 
@@ -224,12 +224,12 @@ exports.processMessage = function(req, res, phone, msg, broadcast_id) {
 		            	if (thread.status === 'Accepted') {			            		
 		            		responseMessage = 'Please respond "Confirm' +broadcast_id+'"';
 		            		console.log('reached unknown response at Accepted.  msg ', responseMessage);
-		            		respond(responseMessage);
+		            		module.exports.respond(res, responseMessage);
 		            	}
 		            	else if (thread.status === 'Pending') {
 		            		responseMessage = 'Please respond "Yes' +broadcast_id+'" or No'+broadcast_id+'"';
 		            		console.log('reached unknown response at Pending.  msg ', responseMessage);
-		            		respond(responseMessage);
+		            		module.exports.respond(res, responseMessage);
 		            	}
 		            	
 		            }
@@ -316,14 +316,14 @@ exports.processMessage = function(req, res, phone, msg, broadcast_id) {
 
 
 
-    					module.exports.respond(responseMessage);
+    					module.exports.respond(res, responseMessage);
 	        			console.log('attempting to respond with: ', responseMessage);
 
     				}
     				else {
 
     					responseMessage = 'All positions have been filled';
-	    				module.exports.respond(responseMessage);
+	    				module.exports.respond(res, responseMessage);
 			        	console.log('attempting to respond with: ', responseMessage);
 
     				}	
@@ -342,7 +342,7 @@ exports.processMessage = function(req, res, phone, msg, broadcast_id) {
 
 
 		
-exports.respond = function(message) {
+exports.respond = function(res, message) {
 	console.log('redirecting to twiml to respond with: ', message);
 	res.type('text/xml');
 	res.render('twiml', {
