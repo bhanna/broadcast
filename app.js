@@ -18,7 +18,7 @@ var server = require('./bin/www');
  */
 
 //var io = require('socket.io').listen(server);
-var io = require('../sockets/base').listen(server);
+var io = require('./sockets/base').listen(server);
 
 var inc = require('./controllers/incoming');
 
