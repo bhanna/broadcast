@@ -4,9 +4,6 @@ var async = require('async');
 var config = require('../config/config');
 var utils = require('./utils');
 
-var app = require('../app'); 
-
-
 var incoming = require('./utils.incoming');
 
 
@@ -48,7 +45,7 @@ router.route('/')
 
 			console.log('BROADCAST ID ', broadcast_id);
 
-			app.io.on('connection', function(socket) {
+			io.on('connection', function(socket) {
 
 				console.log('SOCKET REACHED INCOMING');
 
