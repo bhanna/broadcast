@@ -131,7 +131,8 @@ angular.module('main', ['ngResource'])
 })
 .controller('mainCtrl', function MainController ($scope, $http, getOpenBroadcasts, getFilledBroadcasts, manageBroadcasts) {
 
-	$scope.init = function() {
+	//NOTE can't use init function because it is called whenever socket runs and it clears $scope.selected
+	//$scope.init = function() {
 
 		//set username
 		$scope.welcome_message = 'Welcome to Broadcast';
@@ -144,10 +145,10 @@ angular.module('main', ['ngResource'])
 
 		console.log($scope.filledBroadcasts);
 
-		$scope.selected = 'hello';
+		//$scope.selected = 'hello';
 
 
-	};
+	//};
 
 	//socket io for live status updates
 	var socket = io.connect();
@@ -283,6 +284,6 @@ angular.module('main', ['ngResource'])
 	};
 
 
-	$scope.init();
+	//$scope.init();
 
 });
