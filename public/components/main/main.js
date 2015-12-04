@@ -170,9 +170,14 @@ angular.module('main', ['ngResource'])
 			if (data.firstName === 'Single') {
 
 				console.log('threads[0]: ', threads[0]);
-				$scope.selected.broadcast = selectedBroadcast;
-				$scope.selected.threads = threads;
-				$scope.selected.threads[0].status = data.status;
+				$scope.$apply(function() {
+
+					$scope.selected.broadcast = selectedBroadcast;
+					$scope.selected.threads = threads;
+					$scope.selected.threads[0].status = data.status;
+
+				});
+				
 				console.log('from SOCKET scope.selected: ', $scope.selected);
 
 			}
