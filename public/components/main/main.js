@@ -168,7 +168,7 @@ angular.module('main', ['ngResource'])
 			if (data.firstName === 'Single') {
 
 				console.log('threads[0]: ', threads[0]);
-				$scope.welcome_message = data.status;
+				$scope.selected.broadcast.title = data.status;
 
 			}
 			else {
