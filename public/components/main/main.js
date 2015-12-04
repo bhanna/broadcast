@@ -162,11 +162,12 @@ angular.module('main', ['ngResource'])
 		console.log('from SOCKET selectedBroadcast: ', selectedBroadcast);
 		console.log('from SOCKET scope.openBroadcasts: ', $scope.openBroadcasts);  //writes out
 
-		if (data.broadcst_id === $scope.selected.broadcast.broadcast_id) {
+		if (data.broadcst_id === selectedBroadcast.broadcast_id) {
 
 			if (data.firstName === 'Single') {
 
-				$scope.selected.threads[0].status = data.status;
+				console.log('threads[0]: ', threads[0]);
+				threads[0].status = data.status;
 
 			}
 			else {
