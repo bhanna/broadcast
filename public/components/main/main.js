@@ -200,10 +200,10 @@ angular.module('main', ['ngResource'])
 
 					}	
 
-					//TODO get openPositions and respond accordingly
-					$scope.filledBroadcasts = getFilledBroadcasts.query();
-					$scope.openBroadcasts = getOpenBroadcasts.query();
 				}
+				//TODO get openPositions and respond accordingly
+				$scope.filledBroadcasts = getFilledBroadcasts.query();
+				$scope.openBroadcasts = getOpenBroadcasts.query();
 			});
 			
 			console.log('from SOCKET scope.selected: ', $scope.selected);			
