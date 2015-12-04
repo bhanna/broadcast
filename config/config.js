@@ -45,3 +45,6 @@ exports.responses = [
 		'Filled'
 
 	];
+
+exports.unknownResponse = 'Whoops - that is not a response I recognize. Perhaps you entered the wrong offer ID? Please check your response and try again.';
+

@@ -55,7 +55,7 @@ router.route('/')
 			if (!broadcast_id) {
 
 				console.log('no broadcast_id');
-				incoming.respond(res, incoming.unknownResponse);
+				incoming.respond(res, config.unknownResponse);
 
 			}
 			else {

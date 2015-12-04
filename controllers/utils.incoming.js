@@ -20,14 +20,6 @@ var List = mongoose.model('List');
 var Recipient = mongoose.model('Recipient');
 
 
-exports.unknownResponse = function() {
-
-	var unknownResponse = 'Whoops - that is not a response I recognize. Perhaps you entered the wrong offer ID? Please check your response and try again.';
-	return unknownResponse;
-
-};
-
-
 // Process any message the user sent to us
 exports.processMessage = function(req, res, io, phone, msg, broadcast_id) {
 
@@ -41,11 +33,11 @@ exports.processMessage = function(req, res, io, phone, msg, broadcast_id) {
 
 		if (err) {
 			console.log('error at find Broadcast to verify openPositions ', err);
-			return module.exports.respond(res, incoming.unknownResponse);
+			return module.exports.respond(res, config.unknownResponse);
 		}
 		if (!broadcast) {
 			console.log('could not find broadcast ');
-			return module.exports.respond(res, incoming.unknownResponse);
+			return module.exports.respond(res, config.unknownResponse);
 		}
 		else {
 			
@@ -57,11 +49,11 @@ exports.processMessage = function(req, res, io, phone, msg, broadcast_id) {
 
 		        if (err) {
 					console.log('error at finding Thread ', err);
-					return module.exports.respond(res, incoming.unknownResponse);
+					return module.exports.respond(res, config.unknownResponse);
 				}
 		        if (!thread) {
 		        	console.log('could not find thread ');
-					return module.exports.respond(res, incoming.unknownResponse);
+					return module.exports.respond(res, config.unknownResponse);
 		        }
 		        console.log('Thread found: ', thread);
 
