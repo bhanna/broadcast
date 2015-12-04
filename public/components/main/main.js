@@ -157,6 +157,7 @@ angular.module('main', ['ngResource'])
 
 
 	//TODO if selectedBroadcast moves from Open to Filled or vice-versa, socket should make that change
+	//update DOM with text from /incoming
 	socket.on('statusUpdate', function(data) {
 
 		console.log('DATA: ', data);
@@ -183,8 +184,26 @@ angular.module('main', ['ngResource'])
 			}
 			else {
 
-				//where t.phone === data.phone
-				//set t.status = data.status 
+				//TODO TEST!
+				$scope.$apply(function() {
+
+					$scope.selected.broadcast = selectedBroadcast;
+					$scope.selected.threads = threads;
+					
+					//TODO forEach loop in threads to find correct recipient to update
+					for (var i = 0; i < $scope.selected.threads.length; i++) {
+
+						if ($scope.selected.threads[i].phone === data.phone) {
+
+							$scope.selected.threads[i].status = data.status;
+
+						}
+
+					}				
+
+				});
+				
+				console.log('from SOCKET scope.selected: ', $scope.selected);
 
 			}
 
