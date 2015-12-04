@@ -155,14 +155,15 @@ angular.module('main', ['ngResource'])
 	//socket io for live status updates
 	var socket = io.connect();
 
+
+	//TODO if selectedBroadcast moves from Open to Filled or vice-versa, socket should make that change
 	socket.on('statusUpdate', function(data) {
 
 		console.log('DATA: ', data);
-		console.log('from SOCKET threads: ', threads);  //comes back null... why??
+		console.log('from SOCKET threads: ', threads);  
 		console.log('from SOCKET selectedBroadcast: ', selectedBroadcast);
-		console.log('from SOCKET scope.openBroadcasts: ', $scope.openBroadcasts);  //writes out
 
-		if (data.broadcst_id === selectedBroadcast.broadcast_id) {
+		if (data.broadcast_id === selectedBroadcast.broadcast_id) {
 
 			if (data.firstName === 'Single') {
 
