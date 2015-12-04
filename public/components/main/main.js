@@ -157,7 +157,7 @@ angular.module('main', ['ngResource'])
 
 
 	//TODO if selectedBroadcast moves from Open to Filled or vice-versa, socket should make that change
-	//OR highligh openPositions when it changes from n - 0 or vice-versa to avoid appearing to refresh
+	//TODO need a way to get selected broadcast without appearing to refresh
 	//update DOM with text from /incoming
 	socket.on('statusUpdate', function(data) {
 
@@ -169,31 +169,27 @@ angular.module('main', ['ngResource'])
 
 			$scope.selected = {};
 
-			if (data.firstName === 'Single') {
+			console.log('threads[0]: ', threads[0]);
+			$scope.$apply(function() {
 
-				console.log('threads[0]: ', threads[0]);
-				$scope.$apply(function() {
+				$scope.selected.broadcast = selectedBroadcast;
+				$scope.selected.threads = threads;
 
-					$scope.selected.broadcast = selectedBroadcast;
-					$scope.selected.threads = threads;
+				manageBroadcasts.refreshPositions(selectedBroadcast._id)
+					.then(function(data) {
+
+						$scope.selected.broadcast.openPositions = data;
+
+					});
+
+				if (data.firstName === 'Single') {
 					$scope.selected.threads[0].status = data.status;
-					$scope.selected.broadcast.openPositions = selectedBroadcast.openPositions;
 
-				});
-				
-				console.log('from SOCKET scope.selected: ', $scope.selected);
+					//TODO get openPositions and respond accordingly
+				}	
+				else {
 
-			}
-			else {
-
-				//TODO TEST!
-				$scope.$apply(function() {
-
-					$scope.selected.broadcast = selectedBroadcast;
-					$scope.selected.threads = threads;
-					$scope.selected.broadcast.openPositions = selectedBroadcast.openPositions;
-					
-					//TODO forEach loop in threads to find correct recipient to update
+					//loop in threads to find correct recipient to update
 					for (var i = 0; i < $scope.selected.threads.length; i++) {
 
 						if ($scope.selected.threads[i].phone === data.phone) {
@@ -202,13 +198,15 @@ angular.module('main', ['ngResource'])
 
 						}
 
-					}				
+					}	
 
-				});
-				
-				console.log('from SOCKET scope.selected: ', $scope.selected);
-
-			}
+					//TODO get openPositions and respond accordingly
+					$scope.filledBroadcasts = getFilledBroadcasts.query();
+					$scope.openBroadcasts = getOpenBroadcasts.query();
+				}
+			});
+			
+			console.log('from SOCKET scope.selected: ', $scope.selected);			
 
 		}
 

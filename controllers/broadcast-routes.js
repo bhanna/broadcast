@@ -161,6 +161,8 @@ router.route('/open/:id')
 
 		var query;
 
+		console.log('query to broadcasts/open/:id ', req.query.openPositions);
+
 		if (req.query.openPositions) {
 			query = 'openPositions';
 		}
