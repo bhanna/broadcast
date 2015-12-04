@@ -131,8 +131,7 @@ angular.module('main', ['ngResource'])
 })
 .controller('mainCtrl', function MainController ($scope, $http, getOpenBroadcasts, getFilledBroadcasts, manageBroadcasts) {
 
-	//NOTE can't use init function because it is called whenever socket runs and it clears $scope.selected
-	//$scope.init = function() {
+	$scope.init = function() {
 
 		//set username
 		$scope.welcome_message = 'Welcome to Broadcast';
@@ -145,10 +144,13 @@ angular.module('main', ['ngResource'])
 
 		console.log($scope.filledBroadcasts);
 
-		//$scope.selected = 'hello';
+		$scope.selected = null;
 
+		var threads;
 
-	//};
+		var selectedBroadcast;
+
+	};
 
 	//socket io for live status updates
 	var socket = io.connect();
@@ -156,7 +158,8 @@ angular.module('main', ['ngResource'])
 	socket.on('statusUpdate', function(data) {
 
 		console.log('DATA: ', data);
-		console.log('from SOCKET scope.selected: ', $scope.selected);  //comes back null... why??
+		console.log('from SOCKET threads: ', threads);  //comes back null... why??
+		console.log('from SOCKET selectedBroadcast: ', selectedBroadcast);
 		console.log('from SOCKET scope.openBroadcasts: ', $scope.openBroadcasts);  //writes out
 
 		if (data.broadcst_id === $scope.selected.broadcast.broadcast_id) {
@@ -186,6 +189,8 @@ angular.module('main', ['ngResource'])
 
 		//set selected to the Open Broadcast
 		$scope.selected.broadcast = broadcast;
+
+		selectedBroadcast = broadcast;
 		
 		manageBroadcasts.get(broadcast.broadcast_id)
 			.then(function(data) {
@@ -208,6 +213,7 @@ angular.module('main', ['ngResource'])
 				//TODO get action from data.conversaions
 				//TODO add last action date
 				
+				threads = $scope.selected.threads;
 
 			}, function(err) {
 
@@ -284,6 +290,6 @@ angular.module('main', ['ngResource'])
 	};
 
 
-	//$scope.init();
+	$scope.init();
 
 });
