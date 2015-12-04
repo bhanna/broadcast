@@ -144,7 +144,7 @@ angular.module('main', ['ngResource'])
 
 		console.log($scope.filledBroadcasts);
 
-		//$scope.selected = null;
+		$scope.selected = 'hello';
 
 
 	};
