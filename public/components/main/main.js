@@ -157,6 +157,7 @@ angular.module('main', ['ngResource'])
 
 
 	//TODO if selectedBroadcast moves from Open to Filled or vice-versa, socket should make that change
+	//OR highligh openPositions when it changes from n - 0 or vice-versa to avoid appearing to refresh
 	//update DOM with text from /incoming
 	socket.on('statusUpdate', function(data) {
 
@@ -176,6 +177,7 @@ angular.module('main', ['ngResource'])
 					$scope.selected.broadcast = selectedBroadcast;
 					$scope.selected.threads = threads;
 					$scope.selected.threads[0].status = data.status;
+					$scope.selected.broadcast.openPositions = selectedBroadcast.openPositions;
 
 				});
 				
@@ -189,6 +191,7 @@ angular.module('main', ['ngResource'])
 
 					$scope.selected.broadcast = selectedBroadcast;
 					$scope.selected.threads = threads;
+					$scope.selected.broadcast.openPositions = selectedBroadcast.openPositions;
 					
 					//TODO forEach loop in threads to find correct recipient to update
 					for (var i = 0; i < $scope.selected.threads.length; i++) {
