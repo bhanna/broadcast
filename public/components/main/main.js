@@ -193,12 +193,14 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 
 					toaster.pop({
 
-			        	type: 'warning', 
+			        	type: 'info', 
 			        	title: $scope.selected.threads[0].firstName,
-			        	body: 'update status to ' + data.status,
+			        	body: 'from Broadcast ' + selectedBroadcast.title + ' updated status to ' + data.status,
 			        	showCloseButton: true
 
 			        });
+
+			        console.log('SOCKET SINGLE');
 
 				}	
 				else {
@@ -211,12 +213,14 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 							$scope.selected.threads[i].status = data.status;
 							toaster.pop({
 
-					        	type: 'warning', 
+					        	type: 'info', 
 					        	title: $scope.selected.threads[i].firstName,
-					        	body: 'update status to ' + data.status,
+					        	body: 'from Broadcast ' + selectedBroadcast.title + ' updated status to ' + data.status,
 					        	showCloseButton: true
 
 					        });
+
+					        console.log('SOCKET MULTI');
 
 						}
 
