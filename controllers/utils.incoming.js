@@ -204,7 +204,7 @@ exports.processMessage = function(req, res, io, phone, msg, broadcast_id) {
 			            		console.log('error at saving Thread ', err);
 			            	}
 
-			            	//io.sockets.emit('statusUpdate', thread);
+			            	io.sockets.emit('statusUpdate', thread);
 
 			            	console.log('saved new Thread! ', thread);
 
