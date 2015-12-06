@@ -1,4 +1,4 @@
-angular.module('main', ['ngResource'])
+angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 .config(function($stateProvider, $urlRouterProvider) {
 
 	$stateProvider
@@ -129,7 +129,7 @@ angular.module('main', ['ngResource'])
 	};
 	
 })
-.controller('mainCtrl', function MainController ($scope, $http, getOpenBroadcasts, getFilledBroadcasts, manageBroadcasts) {
+.controller('mainCtrl', function MainController ($scope, $http, getOpenBroadcasts, getFilledBroadcasts, manageBroadcasts, toaster) {
 
 	$scope.init = function() {
 
@@ -156,8 +156,7 @@ angular.module('main', ['ngResource'])
 	var socket = io.connect();
 
 
-	//TODO if selectedBroadcast moves from Open to Filled or vice-versa, socket should make that change
-	//TODO need a way to get selected broadcast without appearing to refresh
+	//TODO notify user with toastr of any statusUpdates or Filled or Open broadcast changes to avoid appearing to refresh
 	//update DOM with text from /incoming
 	socket.on('statusUpdate', function(data) {
 
@@ -180,12 +179,27 @@ angular.module('main', ['ngResource'])
 
 						$scope.selected.broadcast.openPositions = data;
 
+						//TODO if openPositions changed from n - 0 or vice versa notify user
+
+						//get openPositions and respond accordingly
+						$scope.filledBroadcasts = getFilledBroadcasts.query();
+						$scope.openBroadcasts = getOpenBroadcasts.query();
+
 					});
 
 				if (data.firstName === 'Single') {
+
 					$scope.selected.threads[0].status = data.status;
 
-					//TODO get openPositions and respond accordingly
+					toaster.pop({
+
+			        	type: 'warning', 
+			        	title: $scope.selected.threads[0].firstName,
+			        	body: 'update status to ' + data.status,
+			        	showCloseButton: true
+
+			        });
+
 				}	
 				else {
 
@@ -195,15 +209,21 @@ angular.module('main', ['ngResource'])
 						if ($scope.selected.threads[i].phone === data.phone) {
 
 							$scope.selected.threads[i].status = data.status;
+							toaster.pop({
+
+					        	type: 'warning', 
+					        	title: $scope.selected.threads[i].firstName,
+					        	body: 'update status to ' + data.status,
+					        	showCloseButton: true
+
+					        });
 
 						}
 
 					}	
 
 				}
-				//TODO get openPositions and respond accordingly
-				$scope.filledBroadcasts = getFilledBroadcasts.query();
-				$scope.openBroadcasts = getOpenBroadcasts.query();
+				
 			});
 			
 			console.log('from SOCKET scope.selected: ', $scope.selected);			
@@ -211,6 +231,7 @@ angular.module('main', ['ngResource'])
 		}
 
 	});
+
 
 
 	//select open broadcast
