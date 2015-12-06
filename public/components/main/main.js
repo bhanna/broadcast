@@ -157,6 +157,7 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 
 
 	//TODO notify user with toastr of any statusUpdates or Filled or Open broadcast changes to avoid appearing to refresh
+	//TODO why is this firing twice?
 	//update DOM with text from /incoming
 	socket.on('statusUpdate', function(data) {
 
