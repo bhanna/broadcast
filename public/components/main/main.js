@@ -24,11 +24,6 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 	return $resource('/api/protected/broadcasts/filled/all');
 
 })
-.factory('List', function($resource){
-
-	return $resource('/api/protected/lists/:id');
-
-})
 .service('manageBroadcasts', function manageBroadcasts ($http, $q) {
 
 	var mb = this;

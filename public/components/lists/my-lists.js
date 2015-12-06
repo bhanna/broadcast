@@ -2,7 +2,6 @@ angular.module('my-lists', [
 		'ngResource', 
 		'ui.router',
 		'angular-storage',
-		'ngAnimate'
 	])
 .config(function($stateProvider, $urlRouterProvider) {
 
