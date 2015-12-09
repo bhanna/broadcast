@@ -5,6 +5,8 @@ var _ = require('lodash');
 var config = require('../config/config.js');
 var bCrypt = require('bcrypt-nodejs');
 var utils = require('./utils');
+var nodemailer = require('nodemailer');
+var randomstring = require("randomstring");
 
 var User = mongoose.model('User');
 
@@ -138,6 +140,66 @@ router.route('/sessions/create')
 	    	id_token: createToken(user)
 	  	});
 	  	*/
+	});
+
+router.route('/forgot-password')
+	
+	.post(function(req, res) {
+
+		console.log(req.body.email);
+		res.json({'message': 'Received ' + req.body.email + ', awaiting address for nodemailer!'});
+
+		//TODO find user with this email
+		/*
+	
+		User.findOne({ email: req.body.email}, function(err, user) {
+	
+			if (err) return res.status(500).send(err);
+
+			if (!user) {
+	
+				res.send('Uh oh! That email did not match our records...');
+
+			}
+			
+			var new_password = randomstring.generate(12);
+
+			user.password = createHash(new_password);
+
+			user.save(function(err, user) {
+		
+				if (err) return res.status(500).send(err);
+
+				// setup e-mail data with unicode symbols 
+				var mailOptions = {
+				    from: 'Fred Foo ✔ <foo@blurdybloop.com>', // sender address 
+				    to: 'bar@blurdybloop.com, baz@blurdybloop.com', // list of receivers 
+				    subject: 'Hello ✔', // Subject line 
+				    text: 'Hello world ✔', // plaintext body 
+				    html: '<b>Hello world ✔</b>' // html body 
+				};
+
+				// send mail with defined transport object 
+				config.transporter.sendMail(mailOptions, function(error, info){
+				    if(error) return res.status(500).send(err);
+
+				    console.log('Message sent: ' + info.response);
+
+				    res.send('A new password has been sent to ', user.email);
+				 
+				});
+
+			});
+
+		});
+
+		*/
+		//if no user is found return error message
+		//if user is found create new password
+		//send new password to user
+		//createHash and save new password to the user object
+		//return success message
+
 	});
 
 

@@ -4,10 +4,11 @@ angular.module('broadcastApp', [
 	'signup',
 	'admin_signup',
 	'login',
+	'forgot-password',
 	'main',
 	'my-lists',
 	'broadcasts',
-	'customResponses',
+	'custom-responses',
 	'broadcastApp.admin.defaultResponses',
 	'angular-jwt',
 	'angular-storage'

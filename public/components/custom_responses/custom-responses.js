@@ -1,4 +1,4 @@
-angular.module('customResponses', [
+angular.module('custom-responses', [
 	'ui.router',
 	'angular-storage'
 
@@ -6,10 +6,10 @@ angular.module('customResponses', [
 .config(function($stateProvider) {
 
 	$stateProvider
-		.state('customResponses', {
-			url: '/customResponses',
+		.state('custom-responses', {
+			url: '/custom-responses',
 			controller: 'customResponsesCtrl',
-			templateUrl: 'components/customResponses/customResponses.html',
+			templateUrl: 'components/custom_responses/custom-responses.html',
 			data: {
 				requiresLogin: true
 			}
@@ -18,6 +18,7 @@ angular.module('customResponses', [
 })
 .factory('getCustomResponses', function($resource){
 
+	//TODO change this route to custom-responses
 	return $resource('/api/protected/customResponses/all');
 
 })
@@ -33,6 +34,7 @@ angular.module('customResponses', [
 	$scope.saveCustomResponse = function(response) {
 
 		//console.log(response.body);
+		//TODO change this route to custom-responses
 		$http.post('/api/protected/customResponses/', response).success(function(data) {
 
 			console.log(data);

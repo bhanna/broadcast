@@ -16,10 +16,11 @@
     <script src="components/signup/signup.js"></script>
     <script src="components/admin/signup/admin_signup.js"></script>
     <script src="components/login/login.js"></script>
+    <script src="components/forgot_password/forgot-password.js"></script>
     <script src="components/main/main.js"></script>
     <script src="components/lists/my-lists.js"></script>
     <script src="components/broadcasts/broadcasts.js"></script>
-    <script src="components/customResponses/customResponses.js"></script>
+    <script src="components/custom_responses/custom-responses.js"></script>
     <script src="components/admin/defaultResponses/defaultResponses.js"></script>
     <script src="assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
@@ -46,8 +47,8 @@
           <ul class="nav navbar-nav">
             <li role="presentation" ui-sref-active="active"><a ui-sref="main">Dashboard</a></li>
             <li role="presentation" ui-sref-active="active"><a ui-sref="broadcasts">Send Broadcast</a></li>
-            <li role="presentation" ui-sref-active="active"><a ui-sref="myLists">My Lists</a></li>
-            <!-- <li ng-hide="role === 'admin'" role="presentation" ui-sref-active="active"><a ui-sref="customResponses">Custom Response</a></li>-->
+            <li role="presentation" ui-sref-active="active"><a ui-sref="my-lists">My Lists</a></li>
+            <!-- <li ng-hide="role === 'admin'" role="presentation" ui-sref-active="active"><a ui-sref="custom-responses">Custom Response</a></li>-->
             <li ng-show="role === 'admin'" role="presentation" ui-sref-active="active"><a ui-sref="defaultResponses">Default Response</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">

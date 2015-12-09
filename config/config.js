@@ -1,4 +1,5 @@
 //config file
+var nodemailer = require('nodemailer');
 
 exports = module.exports = {};
 
@@ -52,4 +53,17 @@ exports.responses = [
 	];
 
 exports.unknownResponse = 'Whoops - that is not a response I recognize. Perhaps you entered the wrong offer ID? Please check your response and try again.';
+
+
+exports.transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+        user: 'gmail.user@gmail.com',
+        pass: 'userpass'
+    }
+});
+
+
+
+
 

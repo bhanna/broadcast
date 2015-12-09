@@ -6,7 +6,7 @@ angular.module('my-lists', [
 .config(function($stateProvider, $urlRouterProvider) {
 
 	$stateProvider
-		.state('myLists', {
+		.state('my-lists', {
 			url: '/my-lists',
 			controller: 'listCtrl',
 			templateUrl: 'components/lists/my-lists.html',
