@@ -146,6 +146,7 @@ router.route('/forgot-password')
 	
 	.post(function(req, res) {
 
+		/*
 		console.log(req.body.email);
 		var mailOptions = {
 		    from: 'Broadcast <hello@broadcast.agency>', // sender address 
@@ -161,11 +162,10 @@ router.route('/forgot-password')
 			res.json({'message' : 'success'});
 
 		});
-		//res.json({'message' : 'Received ' + req.body.email + ', awaiting address for nodemailer!'});
-
-		//TODO find user with this email
-		/*
-	
+		*/
+		
+		
+		//find user by email
 		User.findOne({ email: req.body.email}, function(err, user) {
 	
 			if (err) return res.status(500).send(err);
@@ -186,11 +186,11 @@ router.route('/forgot-password')
 
 				// setup e-mail data with unicode symbols 
 				var mailOptions = {
-				    from: 'Fred Foo ✔ <foo@blurdybloop.com>', // sender address 
-				    to: 'bar@blurdybloop.com, baz@blurdybloop.com', // list of receivers 
-				    subject: 'Hello ✔', // Subject line 
-				    text: 'Hello world ✔', // plaintext body 
-				    html: '<b>Hello world ✔</b>' // html body 
+				    from: 'Broadcast <hello@broadcast.agency>', // sender address 
+				    to: req.body.email, // list of receivers 
+				    subject: 'Password Reset from Broadcast', // Subject line 
+				    text: 'Here is your new password: ' + new_password + '.  Thank you for using Broadcast!', // plaintext body 
+				    html: '<p>Hello!</p><p>Here is your new password: ' + new_password + '</p><p>Thank you for using Broadcast!</p>' // html body 
 				};
 
 				// send mail with defined transport object 
@@ -198,16 +198,15 @@ router.route('/forgot-password')
 				    if(error) return res.status(500).send(err);
 
 				    console.log('Message sent: ' + info.response);
-
-				    res.send('A new password has been sent to ', user.email);
-				 
+					res.json({'message' : 'Your new password has been sent!'});
+				    
 				});
 
 			});
 
 		});
 
-		*/
+		
 		//if no user is found return error message
 		//if user is found create new password
 		//send new password to user
