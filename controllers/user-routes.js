@@ -16,7 +16,7 @@ var router = express.Router();
 /*// XXX: This should be a database of users :).
 var users = [{
   id: 1,
-  username: 'meow',
+  email: 'meow@meow.com',
   password: '1234'
 }];
 */
@@ -29,8 +29,8 @@ function createToken(user) {
 router.route('/')
 	//signup
 	.post(function(req, res) {
-		if (!req.body.username || !req.body.password) {
-		  	return res.status(400).send('You must send the username and the password');
+		if (!req.body.email || !req.body.password) {
+		  	return res.status(400).send('You must send the email and the password');
 		}
 
 		//role of signup
@@ -54,22 +54,22 @@ router.route('/')
 				role = 'user';
 			}
 		}
-		//if (_.find(users, {username: req.body.username})) {
-		User.find({username: req.body.username}, function(err, user) {
+		//if (_.find(users, {email: req.body.email})) {
+		User.find({email: req.body.email}, function(err, user) {
 
 			if (err) return res.status(400).send(err);
 			console.log('user ', user);
-			if (_.find(user, {username: req.body.username})) {
-				return res.status(400).send('A user with that username already exists');
+			if (_.find(user, {email: req.body.email})) {
+				return res.status(400).send('A user with that email already exists');
 			}
 			
-			//var profile = _.pick(req.body, 'username', 'password');
+			//var profile = _.pick(req.body, 'email', 'password');
 			//profile.id = _.max(users, 'id').id + 1;
 
 			//users.push(profile);
 			var newUser = new User();
 
-            newUser.username = req.body.username;
+            newUser.email = req.body.email;
             newUser.password = createHash(req.body.password);
 
             //admin or user
@@ -97,28 +97,28 @@ router.route('/')
 router.route('/sessions/create')
 	//login
 	.post(function(req, res) {
-	  	if (!req.body.username || !req.body.password) {
-	    	return res.status(400).send('You must send the username and the password');
+	  	if (!req.body.email || !req.body.password) {
+	    	return res.status(400).send('You must send the email and the password');
 	  	}
 
-	  	User.findOne({username: req.body.username}, function(err, user) {
+	  	User.findOne({email: req.body.email}, function(err, user) {
 
 	  		if (err) return res.status(400).send(err);
 
 	  		else if (!user) {
-	    		return res.status(401).send('This username does not match our records!');
+	    		return res.status(401).send('This email does not match our records!');
 	  		}
 	  		else if (!isValidPassword(user, req.body.password)) {
                 console.log('incorrect password');
                 return res.status(401).send('This password does not match our records!');
             }
 	  		//if (user.password !== req.body.password) {
-	    	//	return res.status(401).send("The username or password don't match");
+	    	//	return res.status(401).send("The email or password don't match");
 	  		//}	
 	  		else {
 	  			res.status(201).send({
 	    			id_token: createToken(user),
-	    			username: user.username
+	    			email: user.email
 	  			});
 	  		}
 	  		
@@ -127,13 +127,13 @@ router.route('/sessions/create')
 	  	});
 
 		/*//In memory test
-	  	var user = _.find(users, {username: req.body.username});
+	  	var user = _.find(users, {email: req.body.email});
 		if (!user) {
-		    return res.status(401).send("The username or password don't match");
+		    return res.status(401).send("The email or password don't match");
 		}
 
 		if (user.password !== req.body.password) {
-		    return res.status(401).send("The username or password don't match");
+		    return res.status(401).send("The email or password don't match");
 		}
 		
 	  	res.status(201).send({

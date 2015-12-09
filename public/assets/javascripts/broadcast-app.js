@@ -54,7 +54,7 @@ angular.module('broadcastApp', [
 					else {
 
 						$rootScope.authenticated = true;
-						$rootScope.current_user = current_user.username;
+						$rootScope.current_user = current_user.email;
 						$rootScope.role = current_user.role;
 					
 					}

@@ -27,7 +27,7 @@ angular.module('login', [
 		}).then(function(response) {
 
 			store.set('jwt', response.data.id_token);
-			$rootScope.current_user = response.data.username;
+			$rootScope.current_user = response.data.email;
 			$state.go('main');
 
 		}, function(error) {

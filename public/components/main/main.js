@@ -148,7 +148,7 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 
 	$scope.init = function() {
 
-		//set username
+		//set a welcome
 		$scope.welcome_message = 'Welcome to Broadcast';
 		//get all open broadcasts
 		$scope.openBroadcasts = getOpenBroadcasts.query();
