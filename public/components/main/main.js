@@ -176,7 +176,7 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 	socket.on('statusUpdate', function(data) {
 
 		console.log('DATA: ', data);
-		console.log('from SOCKET threads: ', threads);  
+		//console.log('from SOCKET threads: ', threads);  //this will appear undefined if no thread is selected
 		console.log('from SOCKET selectedBroadcast: ', selectedBroadcast);
 
 		//TODO get correct broadcast name if statusUpdate is not from selectedBroadcast
