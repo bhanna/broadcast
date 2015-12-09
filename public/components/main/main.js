@@ -183,7 +183,25 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 		//From cached broadcasts?
 
 		//if broadcast is selected
-		if (selectedBroadcast) {
+		if (!selectedBroadcast) {
+			manageBroadcasts.getTitle(data.broadcast_id) 
+				.then(function(data) {
+
+					var title = data;
+					toaster.pop({
+
+			        	type			: 'info', 
+			        	title			: 'From Broadcast: ' + title,
+			        	body    		: data.firstName + ' updated status to ' + data.status,
+			        	showCloseButton : true
+
+			        });
+
+				});
+		}
+		//if no broadcast is selected
+		else {
+			
 			var title = selectedBroadcast.title;
 
 			toaster.pop({
@@ -248,23 +266,6 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 				console.log('from SOCKET scope.selected: ', $scope.selected);			
 
 			}
-		}
-		//if no broadcast is selected
-		else {
-			manageBroadcasts.getTitle(data.broadcast_id) 
-				.then(function(data) {
-
-					var title = data;
-					toaster.pop({
-
-			        	type			: 'info', 
-			        	title			: 'From Broadcast: ' + title,
-			        	body    		: data.firstName + ' updated status to ' + data.status,
-			        	showCloseButton : true
-
-			        });
-
-				});
 		}
 
 	});
