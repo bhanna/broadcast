@@ -190,7 +190,7 @@ router.route('/forgot-password')
 				    to: req.body.email, // list of receivers 
 				    subject: 'Password Reset from Broadcast', // Subject line 
 				    text: 'Here is your new password: ' + new_password + '.  Thank you for using Broadcast!', // plaintext body 
-				    html: '<p>Hello!</p><p>Here is your new password: ' + new_password + '</p><p>Thank you for using Broadcast!</p>' // html body 
+				    html: '<p>Hello There,</p><p>Here is your new password: ' + new_password + '</p><p>Thank you for using Broadcast!</p>' // html body 
 				};
 
 				// send mail with defined transport object 
