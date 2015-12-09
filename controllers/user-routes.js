@@ -147,7 +147,21 @@ router.route('/forgot-password')
 	.post(function(req, res) {
 
 		console.log(req.body.email);
-		res.json({'message': 'Received ' + req.body.email + ', awaiting address for nodemailer!'});
+		var mailOptions = {
+		    from: 'Broadcast <hello@broadcast.agency>', // sender address 
+		    to: req.body.email, // list of receivers 
+		    subject: 'Password Reset from Broadcast', // Subject line 
+		    text: 'Forgot Password', // plaintext body 
+		    html: '<b>Forgot password</b>' // html body 
+		};
+		config.transporter.sendMail(mailOptions, function(err, info) {
+
+			if (err) return res.status(500).send(err);
+			console.log('nodemailer INFO: ', info);
+			res.json({'message' : 'success'});
+
+		});
+		res.json({'message' : 'Received ' + req.body.email + ', awaiting address for nodemailer!'});
 
 		//TODO find user with this email
 		/*

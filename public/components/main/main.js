@@ -183,7 +183,7 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 		//From cached broadcasts?
 
 		//if broadcast is selected
-		if (!selectedBroadcast) {
+		if (typeof selectedBroadcast === 'undefined') {
 			manageBroadcasts.getTitle(data.broadcast_id) 
 				.then(function(data) {
 

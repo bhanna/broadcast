@@ -56,10 +56,10 @@ exports.unknownResponse = 'Whoops - that is not a response I recognize. Perhaps 
 
 
 exports.transporter = nodemailer.createTransport({
-    service: 'Gmail',
+    host: 'rsyz-xr5j.accessdomain.com',
     auth: {
-        user: 'gmail.user@gmail.com',
-        pass: 'userpass'
+        user: 'hello@broadcast.agency',
+        pass: '6iA}E5jvj{}'
     }
 });
 
