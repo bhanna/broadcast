@@ -161,7 +161,7 @@ router.route('/forgot-password')
 			res.json({'message' : 'success'});
 
 		});
-		res.json({'message' : 'Received ' + req.body.email + ', awaiting address for nodemailer!'});
+		//res.json({'message' : 'Received ' + req.body.email + ', awaiting address for nodemailer!'});
 
 		//TODO find user with this email
 		/*
