@@ -177,83 +177,94 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 
 		console.log('DATA: ', data);
 		//console.log('from SOCKET threads: ', threads);  //this will appear undefined if no thread is selected
-		console.log('from SOCKET selectedBroadcast: ', selectedBroadcast);
+		//console.log('from SOCKET selectedBroadcast: ', selectedBroadcast); //this will appear undefined if no thread is selected
 
 		//TODO get correct broadcast name if statusUpdate is not from selectedBroadcast
 		//From cached broadcasts?
-		var title;
-		if (data.broadcast_id === selectedBroadcast.broadcast_id) {
-			title = selectedBroadcast.title;
+
+		//if broadcast is selected
+		if (selectedBroadcast) {
+			var title = selectedBroadcast.title;
+
+			toaster.pop({
+
+	        	type			: 'info', 
+	        	title			: 'From Broadcast: ' + title,
+	        	body    		: data.firstName + ' updated status to ' + data.status,
+	        	showCloseButton : true
+
+	        });
+
+			//if selected broadcast is the same as updateStatus broadcast
+			if (data.broadcast_id === selectedBroadcast.broadcast_id) {
+
+				$scope.selected = {};
+
+				console.log('threads[0]: ', threads[0]);
+				$scope.$apply(function() {
+
+					$scope.selected.broadcast = selectedBroadcast;
+					$scope.selected.threads = threads;
+
+					manageBroadcasts.getOpenPositions(selectedBroadcast._id)
+						.then(function(data) {
+
+							$scope.selected.broadcast.openPositions = data;
+
+							//TODO if openPositions changed from n - 0 or vice versa notify user
+
+							//get openPositions and respond accordingly
+							$scope.filledBroadcasts = getFilledBroadcasts.query();
+							$scope.openBroadcasts = getOpenBroadcasts.query();
+
+						});
+
+					if (data.firstName === 'Single') {
+
+						$scope.selected.threads[0].status = data.status;
+
+				        console.log('SOCKET SINGLE');
+
+					}	
+					else {
+
+						//loop in threads to find correct recipient to update
+						for (var i = 0; i < $scope.selected.threads.length; i++) {
+
+							if ($scope.selected.threads[i].phone === data.phone) {
+
+								$scope.selected.threads[i].status = data.status;
+
+						        console.log('SOCKET MULTI');
+
+							}
+
+						}	
+
+					}
+					
+				});
+				
+				console.log('from SOCKET scope.selected: ', $scope.selected);			
+
+			}
 		}
+		//if no broadcast is selected
 		else {
 			manageBroadcasts.getTitle(data.broadcast_id) 
 				.then(function(data) {
 
-					title = data;
+					var title = data;
+					toaster.pop({
+
+			        	type			: 'info', 
+			        	title			: 'From Broadcast: ' + title,
+			        	body    		: data.firstName + ' updated status to ' + data.status,
+			        	showCloseButton : true
+
+			        });
 
 				});
-		}
-
-		toaster.pop({
-
-        	type			: 'info', 
-        	title			: 'From Broadcast: ' + title,
-        	body    		: data.firstName + ' updated status to ' + data.status,
-        	showCloseButton : true
-
-        });
-
-		if (data.broadcast_id === selectedBroadcast.broadcast_id) {
-
-			$scope.selected = {};
-
-			console.log('threads[0]: ', threads[0]);
-			$scope.$apply(function() {
-
-				$scope.selected.broadcast = selectedBroadcast;
-				$scope.selected.threads = threads;
-
-				manageBroadcasts.getOpenPositions(selectedBroadcast._id)
-					.then(function(data) {
-
-						$scope.selected.broadcast.openPositions = data;
-
-						//TODO if openPositions changed from n - 0 or vice versa notify user
-
-						//get openPositions and respond accordingly
-						$scope.filledBroadcasts = getFilledBroadcasts.query();
-						$scope.openBroadcasts = getOpenBroadcasts.query();
-
-					});
-
-				if (data.firstName === 'Single') {
-
-					$scope.selected.threads[0].status = data.status;
-
-			        console.log('SOCKET SINGLE');
-
-				}	
-				else {
-
-					//loop in threads to find correct recipient to update
-					for (var i = 0; i < $scope.selected.threads.length; i++) {
-
-						if ($scope.selected.threads[i].phone === data.phone) {
-
-							$scope.selected.threads[i].status = data.status;
-
-					        console.log('SOCKET MULTI');
-
-						}
-
-					}	
-
-				}
-				
-			});
-			
-			console.log('from SOCKET scope.selected: ', $scope.selected);			
-
 		}
 
 	});
