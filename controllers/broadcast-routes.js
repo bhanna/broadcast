@@ -31,13 +31,6 @@ module.exports = function (io) {
 
 
 router.route('/')
-	
-	//get all broadcasts
-	.get(function(req, res) {
-
-		//TODO get all broadcasts
-
-	})
 
 	//create broadcast and broadcastThreads
 	.post(function(req, res) {
@@ -84,6 +77,52 @@ router.route('/')
 					return res.json(results);
 				});
 
+
+	});
+
+
+router.route('/:id')
+
+	.get(function(req, res) {
+
+		//set return variable
+		var data = {};
+
+		var query;
+
+		console.log('query to broadcasts/open/:id ', req.query.openPositions);
+
+		if (req.query.openPositions) {
+			query = 'openPositions';
+		}
+		else if (req.query.title) {
+			query = 'title';
+		}
+
+		//TODO get open Broadcast by ID
+		//TODO make this a flexible query according to req.query values
+		//Can we do a { query: true } return?
+		Broadcast.findById(req.params.id, function(err, broadcast) {
+
+			if (err) {
+				console.log('faled to get broadcast');
+				return res.status(500).send(err);
+			}
+
+			if (query == 'openPositions') {
+				data = broadcast.openPositions;
+			}
+			else if (query === 'title') {
+				data = broadcast.title;
+			}
+			else {
+				data = broadcast;
+			}
+		
+			console.log('broadcast from open/id data ', data);
+			return res.json(data);
+
+		});
 
 	});
 
@@ -145,46 +184,6 @@ router.route('/threads/:id')
 
 			console.log('got threads with id ' + req.params.id + ': ' + threads);
 			return res.json(threads);
-
-		});
-
-	});
-
-//currently used for refreshPositions...
-//TODO make this more flexible using req.query for db queries
-router.route('/open/:id')
-
-	.get(function(req, res) {
-
-		//set return variable
-		var data = {};
-
-		var query;
-
-		console.log('query to broadcasts/open/:id ', req.query.openPositions);
-
-		if (req.query.openPositions) {
-			query = 'openPositions';
-		}
-
-		//TODO get open Broadcast by ID
-		//TODO make this a flexible query according to req.query values
-		Broadcast.findById(req.params.id, function(err, broadcast) {
-
-			if (err) {
-				console.log('faled to get broadcast');
-				return res.status(500).send(err);
-			}
-
-			if (query == 'openPositions') {
-				data = broadcast.openPositions;
-			}
-			else {
-				data = broadcast;
-			}
-		
-			console.log('broadcast from open/id data ', data);
-			return res.json(data);
 
 		});
 

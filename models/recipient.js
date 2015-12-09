@@ -8,6 +8,7 @@ var recipientSchema = new mongoose.Schema({
     firstName: {type: String, required: true},
     email: String,
     phone: {type: String, required: true},
+    type: [{type: String}],
     created_at: {type: Date, default: Date.now}
 
 });

@@ -103,14 +103,34 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 	};
 
 	//TODO make one clean refresh function
-	mb.refreshPositions = function(id) {
+	mb.getOpenPositions = function(id) {
 
 		var defer = $q.defer();
 		//get open positions from broadcast using scope.selected.id
-		$http.get('/api/protected/broadcasts/open/' + id + '?openPositions=true').success(function(data) {
+		$http.get('/api/protected/broadcasts/' + id + '?openPositions=true').success(function(data) {
 
 			defer.resolve(data);
-			console.log('openPositions from refresh ', data);
+			console.log('openPositions from getOpenPositions ', data);
+			
+
+		}).error(function(err, status) {
+
+			defer.reject(err);
+			
+		});
+
+		return defer.promise;
+
+	};
+
+	mb.getTitle = function(id) {
+
+		var defer = $q.defer();
+		//get open positions from broadcast using scope.selected.id
+		$http.get('/api/protected/broadcasts/' + id + '?title=true').success(function(data) {
+
+			defer.resolve(data);
+			console.log('title from getTitle ', data);
 			
 
 		}).error(function(err, status) {
@@ -152,13 +172,36 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 
 
 	//TODO notify user with toastr of any statusUpdates or Filled or Open broadcast changes to avoid appearing to refresh
-	//TODO why is this firing twice?
 	//update DOM with text from /incoming
 	socket.on('statusUpdate', function(data) {
 
 		console.log('DATA: ', data);
 		console.log('from SOCKET threads: ', threads);  
 		console.log('from SOCKET selectedBroadcast: ', selectedBroadcast);
+
+		//TODO get correct broadcast name if statusUpdate is not from selectedBroadcast
+		//From cached broadcasts?
+		var title;
+		if (data.broadcast_id === selectedBroadcast.broadcast_id) {
+			title = selectedBroadcast.title;
+		}
+		else {
+			manageBroadcasts.getTitle(data.broadcast_id) 
+				.then(function(data) {
+
+					title = data;
+
+				});
+		}
+
+		toaster.pop({
+
+        	type			: 'info', 
+        	title			: 'From Broadcast: ' + title,
+        	body    		: data.firstName + ' updated status to ' + data.status,
+        	showCloseButton : true
+
+        });
 
 		if (data.broadcast_id === selectedBroadcast.broadcast_id) {
 
@@ -170,7 +213,7 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 				$scope.selected.broadcast = selectedBroadcast;
 				$scope.selected.threads = threads;
 
-				manageBroadcasts.refreshPositions(selectedBroadcast._id)
+				manageBroadcasts.getOpenPositions(selectedBroadcast._id)
 					.then(function(data) {
 
 						$scope.selected.broadcast.openPositions = data;
@@ -187,15 +230,6 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 
 					$scope.selected.threads[0].status = data.status;
 
-					toaster.pop({
-
-			        	type: 'info', 
-			        	title: $scope.selected.threads[0].firstName,
-			        	body: 'from Broadcast ' + selectedBroadcast.title + ' updated status to ' + data.status,
-			        	showCloseButton: true
-
-			        });
-
 			        console.log('SOCKET SINGLE');
 
 				}	
@@ -207,14 +241,6 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 						if ($scope.selected.threads[i].phone === data.phone) {
 
 							$scope.selected.threads[i].status = data.status;
-							toaster.pop({
-
-					        	type: 'info', 
-					        	title: $scope.selected.threads[i].firstName,
-					        	body: 'from Broadcast ' + selectedBroadcast.title + ' updated status to ' + data.status,
-					        	showCloseButton: true
-
-					        });
 
 					        console.log('SOCKET MULTI');
 
@@ -314,7 +340,7 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 						//TODO get action from data.conversaions
 						//TODO add last action date
 						
-						manageBroadcasts.refreshPositions($scope.selected.broadcast._id)
+						manageBroadcasts.getOpenPositions($scope.selected.broadcast._id)
 							.then(function(data) {
 								$scope.selected.broadcast.openPositions = data;
 								console.log('scope openPositions: ', $scope.selected.broadcast.openPositions);
@@ -323,7 +349,7 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 
 							}, function(err) {
 
-								console.log('err at refreshPositions ', err);
+								console.log('err at getOpenPositions ', err);
 
 							});
 
