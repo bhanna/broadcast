@@ -160,35 +160,39 @@ router.route('/forgot-password')
 				res.json(data);
 
 			}
+			else {
+
+				var new_password = randomstring.generate(12);
+
+				user.password = createHash(new_password);
+
+				user.save(function(err, user) {
 			
-			var new_password = randomstring.generate(12);
+					if (err) return res.status(500).send(err);
 
-			user.password = createHash(new_password);
+					// setup e-mail data with unicode symbols 
+					var mailOptions = {
+					    from: 'Broadcast <hello@broadcast.agency>', // sender address 
+					    to: req.body.email, // list of receivers 
+					    subject: 'Password Reset from Broadcast', // Subject line 
+					    text: 'Here is your new password: ' + new_password + '.  Thank you for using Broadcast!', // plaintext body 
+					    html: '<p>Hello There,</p><p>Here is your new password: ' + new_password + '</p><p>Thank you for using Broadcast!</p>' // html body 
+					};
 
-			user.save(function(err, user) {
-		
-				if (err) return res.status(500).send(err);
+					// send mail with defined transport object 
+					config.transporter.sendMail(mailOptions, function(error, info){
+					    if(error) return res.status(500).send(err);
 
-				// setup e-mail data with unicode symbols 
-				var mailOptions = {
-				    from: 'Broadcast <hello@broadcast.agency>', // sender address 
-				    to: req.body.email, // list of receivers 
-				    subject: 'Password Reset from Broadcast', // Subject line 
-				    text: 'Here is your new password: ' + new_password + '.  Thank you for using Broadcast!', // plaintext body 
-				    html: '<p>Hello There,</p><p>Here is your new password: ' + new_password + '</p><p>Thank you for using Broadcast!</p>' // html body 
-				};
+					    console.log('Message sent: ' + info.response);
+					    data.message = 'Your new password has been sent!';
+						res.json(data);
+					    
+					});
 
-				// send mail with defined transport object 
-				config.transporter.sendMail(mailOptions, function(error, info){
-				    if(error) return res.status(500).send(err);
-
-				    console.log('Message sent: ' + info.response);
-				    data.message = 'Your new password has been sent!';
-					res.json(data);
-				    
 				});
 
-			});
+			}
+			
 
 		});
 
