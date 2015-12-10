@@ -90,8 +90,6 @@ router.route('/:id')
 
 		var query;
 
-		console.log('query to broadcasts/open/:id ', req.query.openPositions);
-
 		if (req.query.openPositions) {
 			query = 'openPositions';
 		}
@@ -102,7 +100,7 @@ router.route('/:id')
 		//TODO get open Broadcast by ID
 		//TODO make this a flexible query according to req.query values
 		//Can we do a { query: true } return?
-		Broadcast.findById(req.params.id, function(err, broadcast) {
+		Broadcast.findOne({broadcast_id: req.params.id}, function(err, broadcast) {
 
 			if (err) {
 				console.log('faled to get broadcast');

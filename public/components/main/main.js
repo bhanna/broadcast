@@ -229,7 +229,7 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 					$scope.selected.broadcast = selectedBroadcast;
 					$scope.selected.threads = threads;
 
-					manageBroadcasts.getOpenPositions(selectedBroadcast._id)
+					manageBroadcasts.getOpenPositions(selectedBroadcast.broadcast_id)
 						.then(function(data) {
 
 							$scope.selected.broadcast.openPositions = data;
@@ -379,7 +379,7 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 						//TODO get action from data.conversaions
 						//TODO add last action date
 						
-						manageBroadcasts.getOpenPositions($scope.selected.broadcast._id)
+						manageBroadcasts.getOpenPositions($scope.selected.broadcast.broadcast_id)
 							.then(function(data) {
 								$scope.selected.broadcast.openPositions = data;
 								console.log('scope openPositions: ', $scope.selected.broadcast.openPositions);
