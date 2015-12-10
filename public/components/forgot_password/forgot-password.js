@@ -33,9 +33,14 @@ angular.module('forgot-password', [
 
 			$scope.response = data.message;
 			console.log('data ', data);
-			$scope.sent = true;
-			//TODO add a class to response <p> if error
-			//hide the input once the password is reset correctly
+
+			if (!data.errors) {
+				$scope.sent = true;
+			}
+			else {
+				$scope.errors = true;
+			}
+			
 
 		}, function(err) {
 

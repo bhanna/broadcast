@@ -146,24 +146,7 @@ router.route('/forgot-password')
 	
 	.post(function(req, res) {
 
-		/*
-		console.log(req.body.email);
-		var mailOptions = {
-		    from: 'Broadcast <hello@broadcast.agency>', // sender address 
-		    to: req.body.email, // list of receivers 
-		    subject: 'Password Reset from Broadcast', // Subject line 
-		    text: 'Forgot Password', // plaintext body 
-		    html: '<b>Forgot password</b>' // html body 
-		};
-		config.transporter.sendMail(mailOptions, function(err, info) {
-
-			if (err) return res.status(500).send(err);
-			console.log('nodemailer INFO: ', info);
-			res.json({'message' : 'success'});
-
-		});
-		*/
-		
+		var data = {};		
 		
 		//find user by email
 		User.findOne({ email: req.body.email}, function(err, user) {
@@ -171,8 +154,10 @@ router.route('/forgot-password')
 			if (err) return res.status(500).send(err);
 
 			if (!user) {
-	
-				res.json({'message' :'Uh oh! That email did not match our records...'});
+			
+				data.message = 'Uh oh! That email did not match our records...';
+				data.errors = true;
+				res.json(data);
 
 			}
 			
@@ -198,7 +183,8 @@ router.route('/forgot-password')
 				    if(error) return res.status(500).send(err);
 
 				    console.log('Message sent: ' + info.response);
-					res.json({'message' : 'Your new password has been sent!'});
+				    data.message = 'Your new password has been sent!';
+					res.json(data);
 				    
 				});
 
