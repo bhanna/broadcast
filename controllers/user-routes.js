@@ -172,7 +172,7 @@ router.route('/forgot-password')
 
 			if (!user) {
 	
-				res.send('Uh oh! That email did not match our records...');
+				res.json({'message' :'Uh oh! That email did not match our records...'});
 
 			}
 			
