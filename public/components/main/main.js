@@ -171,30 +171,25 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 	var socket = io.connect();
 
 
-	//TODO notify user with toastr of any statusUpdates or Filled or Open broadcast changes to avoid appearing to refresh
+	//TODO cleaner notifications
+	//TODO avoid appearing to refresh
 	//update DOM with text from /incoming
 	socket.on('statusUpdate', function(data) {
 
 		console.log('DATA: ', data);
-		//console.log('from SOCKET threads: ', threads);  //this will appear undefined if no thread is selected
-		//console.log('from SOCKET selectedBroadcast: ', selectedBroadcast); //this will appear undefined if no thread is selected
-
-		//TODO get correct broadcast name if statusUpdate is not from selectedBroadcast
-		//From cached broadcasts?
-
-		//if broadcast is selected
+		
+		//TODO clean this mess up
+		//if broadcast is not selected
 		if (typeof selectedBroadcast === 'undefined') {
 			manageBroadcasts.getTitle(data.broadcast_id) 
-				.then(function(data) {
+				.then(function(broadcast_title) {
 
-					var title = data;
-
-					console.log('NO selectedBroadcast title: ', title);
+					console.log('NO selectedBroadcast title: ', broadcast_title);
 
 					toaster.pop({
 
 			        	type			: 'info', 
-			        	title			: 'From Broadcast: ' + title,
+			        	title			: 'From Broadcast: ' + broadcast_title,
 			        	body    		: data.firstName + ' updated status to ' + data.status,
 			        	showCloseButton : true
 
@@ -202,20 +197,18 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 
 				});
 		}
-		//if no broadcast is selected
+		//if broadcast is selected
 		else {
 
 			//if selected broadcast is the same as updateStatus broadcast
 			if (data.broadcast_id === selectedBroadcast.broadcast_id) {
-				
-				var title = selectedBroadcast.title;
 
-				console.log('selectedBroadcast title: ', title);
+				console.log('selectedBroadcast title: ', selectedBroadcast.title);
 
 				toaster.pop({
 
 		        	type			: 'info', 
-		        	title			: 'From Broadcast: ' + title,
+		        	title			: 'From Broadcast: ' + selectedBroadcast.title,
 		        	body    		: data.firstName + ' updated status to ' + data.status,
 		        	showCloseButton : true
 
@@ -230,9 +223,9 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 					$scope.selected.threads = threads;
 
 					manageBroadcasts.getOpenPositions(selectedBroadcast.broadcast_id)
-						.then(function(data) {
+						.then(function(openPositions) {
 
-							$scope.selected.broadcast.openPositions = data;
+							$scope.selected.broadcast.openPositions = openPositions;
 
 							//TODO if openPositions changed from n - 0 or vice versa notify user
 
@@ -275,16 +268,14 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 			else {
 
 				manageBroadcasts.getTitle(data.broadcast_id) 
-				.then(function(data) {
-
-					var title = data;
+				.then(function(broadcast_title) {
 
 					console.log('selectedBroadcast but NOT the same as statusUpdate broadcast title: ', title);
 
 					toaster.pop({
 
 			        	type			: 'info', 
-			        	title			: 'From Broadcast: ' + title,
+			        	title			: 'From Broadcast: ' + broadcast_title,
 			        	body    		: data.firstName + ' updated status to ' + data.status,
 			        	showCloseButton : true
 
