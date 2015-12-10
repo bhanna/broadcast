@@ -10,6 +10,7 @@ router.use('/admin', require('./admin-routes'));
 router.use('/api/protected/lists', require('./list-routes'));
 router.use('/api/protected/recipients', require('./recipient-routes'));
 router.use('/api/protected/broadcasts', require('./broadcast-routes'));
+router.use('/api/protected/user-account', require('./user-account-routes'));
 router.use('/api/protected/customResponses', require('./customResponses-routes'));
 
 

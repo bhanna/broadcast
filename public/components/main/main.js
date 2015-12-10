@@ -173,6 +173,7 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 
 	//TODO cleaner notifications
 	//TODO avoid appearing to refresh
+	//TODO consolidate this code
 	//update DOM with text from /incoming
 	socket.on('statusUpdate', function(data) {
 

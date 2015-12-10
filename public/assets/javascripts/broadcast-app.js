@@ -9,6 +9,7 @@ angular.module('broadcastApp', [
 	'my-lists',
 	'broadcasts',
 	'custom-responses',
+	'account-settings',
 	'broadcastApp.admin.defaultResponses',
 	'angular-jwt',
 	'angular-storage'
