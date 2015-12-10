@@ -188,6 +188,9 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 				.then(function(data) {
 
 					var title = data;
+
+					console.log('NO selectedBroadcast title: ', title);
+
 					toaster.pop({
 
 			        	type			: 'info', 
@@ -201,20 +204,22 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 		}
 		//if no broadcast is selected
 		else {
-			
-			var title = selectedBroadcast.title;
-
-			toaster.pop({
-
-	        	type			: 'info', 
-	        	title			: 'From Broadcast: ' + title,
-	        	body    		: data.firstName + ' updated status to ' + data.status,
-	        	showCloseButton : true
-
-	        });
 
 			//if selected broadcast is the same as updateStatus broadcast
 			if (data.broadcast_id === selectedBroadcast.broadcast_id) {
+				
+				var title = selectedBroadcast.title;
+
+				console.log('selectedBroadcast title: ', title);
+
+				toaster.pop({
+
+		        	type			: 'info', 
+		        	title			: 'From Broadcast: ' + title,
+		        	body    		: data.firstName + ' updated status to ' + data.status,
+		        	showCloseButton : true
+
+		        });
 
 				$scope.selected = {};
 
@@ -264,6 +269,28 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 				});
 				
 				console.log('from SOCKET scope.selected: ', $scope.selected);			
+
+			}
+			//if selectedBroadcast does not match the statusUpdate broadcast
+			else {
+
+				manageBroadcasts.getTitle(data.broadcast_id) 
+				.then(function(data) {
+
+					var title = data;
+
+					console.log('selectedBroadcast but NOT the same as statusUpdate broadcast title: ', title);
+
+					toaster.pop({
+
+			        	type			: 'info', 
+			        	title			: 'From Broadcast: ' + title,
+			        	body    		: data.firstName + ' updated status to ' + data.status,
+			        	showCloseButton : true
+
+			        });
+
+				});
 
 			}
 		}
