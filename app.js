@@ -96,6 +96,7 @@ app.use('/admin', require('./controllers/admin-routes'));
 app.use('/api/protected/lists', require('./controllers/list-routes'));
 app.use('/api/protected/recipients', require('./controllers/recipient-routes'));
 app.use('/api/protected/broadcasts', require('./controllers/broadcast-routes')(io));
+app.use('/api/protected/user-accounts', require('./controllers/user-account-routes'));
 app.use('/api/protected/customResponses', require('./controllers/customResponses-routes'));
 
 

@@ -30,7 +30,7 @@ angular.module('account-settings', [
 
 		$http({
 
-			url: '/users/update-password',
+			url: '/api/protected/user-accounts/update-password',
 			data: $scope.user,
 			method: 'POST'
 
