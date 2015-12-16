@@ -6,6 +6,7 @@
 
 var express = require('express');
 var mongoose = require( 'mongoose' );
+var utils = require('./utils');
 
 var router =  express.Router();
 
@@ -17,39 +18,57 @@ router.route('/update-password')
 
 		var data = {};
 
-		console.log('current password', req.body.current_password);
-		console.log('new password 1', req.body.new_password);
-		console.log('new password 2', req.body.new_password2);
-
 		var current_pass = req.body.current_password;
 		var new_pass = req.body.new_password;
 		var new_pass2 = req.body.new_password2;
 		if (current_pass !== '') {
 
-			//TODO find current pass to see if they match
+			User.findById(req.user._id, function(err, user) {
 
-			if (new_pass !== new_pass2) {
+				if (err) return res.status(500).send(err);
 
-				console.log('passwords do not match');
-				data.message = 'Those new passwords don\'t match!';
-				data.errors = 'match';
-				res.json(data);
+				//password is incorrect
+				else if (!utils.isValidPassword(user, current_pass)) {
+	            
+	                console.log('Incorect current password');
+					data.message = 'Incorect current password';
+					data.errors = 'current_pass';
+					return res.json(data);
+	            
+	            }
 
-			}
-			else {
+	            //new passwords don't match
+				else if (new_pass !== new_pass2) {
 
-				console.log('passwords match');
-				data.message = 'Those new passwords match!';
-				res.json(data);
+					console.log('passwords do not match');
+					data.message = 'Those new passwords don\'t match!';
+					data.errors = 'match';
+					res.json(data);
 
-			}
+				}
+
+				//all's well
+				else {
+
+					console.log('passwords match');
+					user.password = utils.createHash(new_pass);
+					user.save(function(err, user) {
+
+						if (err) return res.status(500).send(err);
+						
+						data.message = 'Password updated!';
+						res.json(data);
+
+					});
+					
+				}
+					
+
+			});
+
 			
-			//if they match check on if both new passes match
-			//if yes save new pass and send success msg
-			//if no send appropriate error msg
-			//if current pass does not match send error msg
-
 		}
+		//current_pass is empty
 		else {
 
 			console.log('no current pass');

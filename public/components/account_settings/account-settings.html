@@ -3,7 +3,7 @@
   <h2>Account Settings</h2>
 
   <h3>Update Password</h3>
-   	<p class="text" ng-class="{'text-danger': errors===true}">{{response}}</p>
+   	<p class="text" ng-class="{'text-danger': errors===true, 'text-success': errors!==true}">{{response}}</p>
 
 	<form class="form-auth" ng-submit="updatePassword()" name="update-password">
 		<p class="text">Current Password</p>

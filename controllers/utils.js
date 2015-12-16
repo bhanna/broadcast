@@ -2,6 +2,7 @@
 var _ = require('lodash');
 var mongoose = require('mongoose');
 var async = require('async');
+var bCrypt = require('bcrypt');
 var config = require('../config/config');
 
 //Models
@@ -158,5 +159,14 @@ exports.createDefaultResponseVars = function(data, res) {
 
 };
 
+// Generates hash using bCrypt
+exports.createHash = function(password){
+    return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
+};
+
+
+exports.isValidPassword = function(user, password){
+    return bCrypt.compareSync(password, user.password);
+};
 
 

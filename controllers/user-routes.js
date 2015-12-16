@@ -3,7 +3,6 @@ var mongoose = require( 'mongoose' );
 var jwt = require('jsonwebtoken');
 var _ = require('lodash');
 var config = require('../config/config.js');
-var bCrypt = require('bcrypt-nodejs');
 var utils = require('./utils');
 var nodemailer = require('nodemailer');
 var randomstring = require("randomstring");
@@ -70,7 +69,7 @@ router.route('/')
 			var newUser = new User();
 
             newUser.email = req.body.email;
-            newUser.password = createHash(req.body.password);
+            newUser.password = utils.createHash(req.body.password);
 
             //admin or user
             newUser.role = role;
@@ -108,7 +107,7 @@ router.route('/sessions/create')
 	  		else if (!user) {
 	    		return res.status(401).send('This email does not match our records!');
 	  		}
-	  		else if (!isValidPassword(user, req.body.password)) {
+	  		else if (!utils.isValidPassword(user, req.body.password)) {
                 console.log('incorrect password');
                 return res.status(401).send('This password does not match our records!');
             }
@@ -164,7 +163,7 @@ router.route('/forgot-password')
 
 				var new_password = randomstring.generate(12);
 
-				user.password = createHash(new_password);
+				user.password = utils.createHash(new_password);
 
 				user.save(function(err, user) {
 			
@@ -196,22 +195,7 @@ router.route('/forgot-password')
 
 		});
 
-		
-		//if no user is found return error message
-		//if user is found create new password
-		//send new password to user
-		//createHash and save new password to the user object
-		//return success message
-
 	});
 
-
-var isValidPassword = function(user, password){
-    return bCrypt.compareSync(password, user.password);
-};
-// Generates hash using bCrypt
-var createHash = function(password){
-    return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
-};
 
 module.exports = router;
