@@ -7,6 +7,7 @@ angular.module('broadcastApp', [
 	'forgot-password',
 	'main',
 	'my-lists',
+	'recipients',
 	'broadcasts',
 	'custom-responses',
 	'account-settings',

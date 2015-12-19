@@ -6,3 +6,18 @@ body {
 a {
   color: #00B7FF;
 }
+
+.pointer {
+	cursor: pointer;
+}
+
+.add-recipient-list {
+	height: 100px;
+	overflow-y: scroll;
+	background-color: #fff;
+}
+
+.close-box {
+	cursor: pointer;
+	float: right;
+}
