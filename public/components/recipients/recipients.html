@@ -9,7 +9,7 @@
     <div class="col-md-3" ng-controller="recipientListCtrl">
 
         <ul class="nav nav-pills nav-stacked">
-          <li ng-repeat="r in recipients" ng-class="{active: r._id == selected._id}"><a href="" ng-click="getRecipient(r._id)" >{{r.firstName}}</a></li>
+          <li ng-repeat="r in recipients" ui-sref-active="active"><a href="#/recipients/{{r._id}}" ui-sref="edit-recipient({id: r._id})" >{{r.firstName}}</a></li>
           <li ui-sref-active="active"><a ui-sref="recipients">+ Create Recipient</a></li>
         </ul>
 
