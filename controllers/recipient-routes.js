@@ -2,6 +2,7 @@ var express = require('express');
 var mongoose = require( 'mongoose' );
 var jwt = require('jsonwebtoken');
 var _ = require('lodash');
+var async = require('async');
 var config = require('../config/config');
 var utils = require('./utils');
 
@@ -24,18 +25,20 @@ router.route('/')
 
 	})
 	
-	//TODO return all recipients for specific user
+	//return all recipients for specific user
 	.get(function(req, res){
 
-		Recipient.find(function(err, data){
+		var user_id = utils.convertToObjId(req.user._id);
+		
+		Recipient.find({user_ids: user_id}, function(err, recipients){
 
 			if (err) {
 				console.log('failed to get all Recipients', err);
-				return res.send(500, err);
+				return res.status(500).send(err);
 			}
 
 			console.log('retrieved all Recipients');
-			return res.send(data);
+			return res.json(recipients);
 
 		});
 
@@ -89,20 +92,40 @@ router.route('/lists/add/:id')
 
 						}
 
-						recipient.list_ids.push(list._id);
-						console.log('recipient with new list_id ', recipient);
-						
-						recipient.save(function(err, recipient){
+						//check for new roles
+						async.each(req.body.roles, function(role, eachCallback) {
 
-							if (err) {
-								//TODO make err user friendly
-								console.log('err at recipient post', err);
-								return res.status(500).send(err);
+							if ( !_.some(recipient.roles, req.body.roles) ) {
+							
+								console.log('role NOT in array');
+								
+								//add role
+								recipient.roles.push(role);
+
+								console.log('added role: ', role);
+
 							}
 
-							console.log('recipient added to list');
-							data.message = 'Added ' + recipient.firstName;
-							return res.json(data);
+						}, function(err) {
+
+							if (err) return res.status(500).send(err);
+
+							recipient.list_ids.push(list._id);
+							console.log('recipient with new list_id ', recipient);
+							
+							recipient.save(function(err, recipient){
+
+								if (err) {
+									//TODO make err user friendly
+									console.log('err at recipient post', err);
+									return res.status(500).send(err);
+								}
+
+								console.log('recipient added to list');
+								data.message = 'Added ' + recipient.firstName;
+								return res.json(data);
+
+							});
 
 						});
 
@@ -120,6 +143,7 @@ router.route('/lists/add/:id')
 					r.firstName = req.body.firstName;
 					r.email = req.body.email;
 					r.phone = req.body.phone;
+					r.roles = [req.body.roles];
 
 					console.log('recipient', r);
 
@@ -206,13 +230,26 @@ router.route('/:id')
 	//get specified recipient
 	.get(function(req, res){
 
-		Recipient.findById(req.params.id, function(err, recipient) {
+		var data = {};
+
+		var id = utils.convertToObjId(req.params.id);
+
+		Recipient.findById(id, function(err, recipient){
 
 			if (err) {
+				console.log('failed to find Recipient', err);
 				return res.status(500).send(err);
 			}
+			if (!recipient) {
 
-			return res.json(recipient);
+				data.message = 'Unable to find recipient';
+				return res.json(data);
+			}
+
+			data = recipient;
+
+			console.log('retrieved Recipient');
+			return res.json(data);
 
 		});
 
@@ -268,5 +305,22 @@ router.route('/:id')
             
     });
 	*/
+
+
+router.route('/allButCurrentList/:id')
+
+	.get(function(req, res) {
+
+		var user_id = utils.convertToObjId(req.user._id);
+
+		Recipient.find({list_ids: {$ne: req.params.id}, user_ids: user_id}, function(err, recipients) {
+
+			if (err) return res.status(500).send(err);
+
+			return res.json(recipients);
+
+		});
+
+	});
 
 module.exports = router;

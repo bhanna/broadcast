@@ -2,14 +2,22 @@ angular.module('my-lists', [
 		'ngResource', 
 		'ui.router',
 		'angular-storage',
+		'factories.recipients'
 	])
 .config(function($stateProvider, $urlRouterProvider) {
 
 	$stateProvider
 		.state('my-lists', {
 			url: '/my-lists',
-			controller: 'listCtrl',
-			templateUrl: 'components/lists/my-lists.html',
+			views: {
+				'' : {
+					templateUrl: 'components/lists/my-lists.html',
+					controller: 'listCtrl',
+				},
+				'newRecipient@my-lists': {
+					templateUrl: 'components/shared-views/recipients/new-recipient-form.html' 
+				}
+			},
 			data: {
 				requiresLogin: true
 			}
@@ -21,12 +29,12 @@ angular.module('my-lists', [
 	return $resource('/api/protected/lists/all');
 
 })
-.factory('Recipient', function($resource){
+//.factory('Recipient', function($resource){
 
-	return $resource('/api/protected/recipients/:id');
+//	return $resource('/api/protected/recipients/:id');
 
-})
-.controller('listCtrl', function ListController ($scope, $http, $resource, $location, getAllLists, Recipient) {
+//})
+.controller('listCtrl', function ListController ($scope, $http, $resource, $location, getAllLists, recipients) {
 
 	$scope.init = function() {
 
@@ -57,9 +65,18 @@ angular.module('my-lists', [
 		//list action message
 		$scope.list_message = null;
 
-		
+		//show add recipient form
+		$scope.addRecipients = null;
+
+		//recipients exist
+		$scope.no_recipients = true;
+
+		//create new recipient form
+		$scope.createRecipientForm = false;
 
 	};
+
+//LISTS
 	
 	//list getter
 	var List = $resource('/api/protected/lists/:id', {}, {'get': {method: 'GET', isArray: false}});
@@ -67,6 +84,7 @@ angular.module('my-lists', [
 	//disable/enable
 	var disabled = true;
 
+	
 	//validate phone number
 	var validPhone = function(phone) {
 
@@ -78,7 +96,7 @@ angular.module('my-lists', [
 		return false;
 
 	};
-
+	
 	//refresh list 
 	var refreshList = function (id) {
 
@@ -155,22 +173,73 @@ angular.module('my-lists', [
 		
 	};
 
+//RECIPIENTS
 
-	//Create and add Recipient
-	$scope.addRecipient = function () {
+	//showCreateList
+	$scope.showAddRecipients = function () {
 
-		if (!validPhone($scope.recipient.phone)) {
+		$scope.addRecipients = true;
+
+		//show list of recipients NOT in current list
+		recipients.allButCurrentList($scope.selected._id, function(recipients) {
+
+			if (recipients.length !== 0) {
+				$scope.no_recipients = false;
+				$scope.recipient_list = recipients;
+				console.log('recipient list ', recipients);
+			}
+			else {
+
+				$scope.createRecipientForm = true;
+
+			}
+
+		});
+
+	};
+
+	$scope.showCreateRecipient = function() {
+
+		$scope.createRecipientForm = true;
+
+	};
+
+	$scope.closeBox = function() {
+
+		$scope.addRecipients = false;
+
+	};
+
+	//add recipient to list from current recipients
+	$scope.addRecipientToList = function (recipient) {
+
+		$http.post('/api/protected/recipients/lists/add/' + $scope.selected._id, recipient).success(function(data){
+
+			$scope.recipient_message = data.message;
+			$scope.recipient = '';
+			refreshList($scope.selected._id);
+			
+
+		});
+
+	};
+
+	//Create and add recipient to list
+	$scope.createRecipient = function(recipient) {
+
+		if (!validPhone(recipient.phone)) {
 
 			alert('Please enter a valid phone number, i.e. 5555555555');
 
 		}
 		else {
 
-			$http.post('/api/protected/recipients/lists/add/' + $scope.selected._id, $scope.recipient).success(function(data){
+			$http.post('/api/protected/recipients/lists/add/' + $scope.selected._id, recipient).success(function(data){
 
 				$scope.recipient_message = data.message;
 				$scope.recipient = '';
 				refreshList($scope.selected._id);
+				$scope.addRecipients = false;
 				
 
 			});
@@ -178,7 +247,7 @@ angular.module('my-lists', [
 		}	
 
 	};
-
+	/*
 	//edit Recipient
 	$scope.editRecipient = function (id) {
 
@@ -214,7 +283,7 @@ angular.module('my-lists', [
 		}
 
 	};
-
+	*/
 
 	//remove Recipient from List
 	$scope.removeRecipient = function(recipient) {

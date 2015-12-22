@@ -13,12 +13,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/0.4.16/toaster.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="assets/javascripts/broadcast-app.js"></script>
+    <script src="assets/javascripts/factories-recipients.js"></script>
+    <script src="assets/javascripts/directives-recipients.js"></script>
     <script src="components/signup/signup.js"></script>
     <script src="components/admin/signup/admin_signup.js"></script>
     <script src="components/login/login.js"></script>
     <script src="components/forgot_password/forgot-password.js"></script>
     <script src="components/main/main.js"></script>
     <script src="components/lists/my-lists.js"></script>
+    <script src="components/recipients/recipients.js"></script>
     <script src="components/broadcasts/broadcasts.js"></script>
     <script src="components/account_settings/account-settings.js"></script>
     <script src="components/custom_responses/custom-responses.js"></script>
@@ -46,9 +49,10 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
-            <li role="presentation" ui-sref-active="active"><a ui-sref="main">Dashboard</a></li>
-            <li role="presentation" ui-sref-active="active"><a ui-sref="broadcasts">Send Broadcast</a></li>
-            <li role="presentation" ui-sref-active="active"><a ui-sref="my-lists">My Lists</a></li>
+            <li ng-show="authenticated" role="presentation" ui-sref-active="active"><a ui-sref="main">Dashboard</a></li>
+            <li ng-show="authenticated" role="presentation" ui-sref-active="active"><a ui-sref="broadcasts">Send Broadcast</a></li>
+            <li ng-show="authenticated" role="presentation" ui-sref-active="active"><a ui-sref="my-lists">My Lists</a></li>
+            <li ng-show="authenticated" role="presentation" ui-sref-active="active"><a ui-sref="recipients">My Recipients</a></li>
             <!-- <li ng-hide="role === 'admin'" role="presentation" ui-sref-active="active"><a ui-sref="custom-responses">Custom Response</a></li>-->
             <li ng-show="role === 'admin'" role="presentation" ui-sref-active="active"><a ui-sref="defaultResponses">Default Response</a></li>
           </ul>
