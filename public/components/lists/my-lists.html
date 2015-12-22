@@ -59,15 +59,17 @@
           <!-- Close Box -->
           <div class="glyphicon glyphicon-remove close-box" ng-click="closeBox()"></div>
           <!-- Existing Recipients -->
-          <p ng-show="no_recipients" class="small">You currently have no recipients. Fill out the form below to create new recipients and add them to this list.</p>
+          <p ng-show="no_recipients" class="small">You currently have no recipients oustide this list. Fill out the form below to create a new recipient and add them to this list.</p>
           <div ng-hide="no_recipients" class="add-recipient-list">
             <ul> 
               <li ng-repeat="r in recipient_list" ng-click="addRecipientToList(r)">{{r.firstName}}</li>
             </ul>
           </div>
 
+          <button class="btn btn-primary" ng-click="showCreateRecipient()">Create New</button>
+
           <!-- Create and Add New Recipient -->
-          <div class="create-recipient-for-list" ui-view="newRecipient">
+          <div ng-show="createRecipientForm" class="create-recipient-for-list" ui-view="newRecipient">
             
           </div>
 

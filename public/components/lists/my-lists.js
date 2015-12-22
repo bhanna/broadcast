@@ -2,6 +2,7 @@ angular.module('my-lists', [
 		'ngResource', 
 		'ui.router',
 		'angular-storage',
+		'factories.recipients'
 	])
 .config(function($stateProvider, $urlRouterProvider) {
 
@@ -28,12 +29,12 @@ angular.module('my-lists', [
 	return $resource('/api/protected/lists/all');
 
 })
-.factory('Recipient', function($resource){
+//.factory('Recipient', function($resource){
 
-	return $resource('/api/protected/recipients/:id');
+//	return $resource('/api/protected/recipients/:id');
 
-})
-.controller('listCtrl', function ListController ($scope, $http, $resource, $location, getAllLists, Recipient) {
+//})
+.controller('listCtrl', function ListController ($scope, $http, $resource, $location, getAllLists, recipients) {
 
 	$scope.init = function() {
 
@@ -69,6 +70,9 @@ angular.module('my-lists', [
 
 		//recipients exist
 		$scope.no_recipients = true;
+
+		//create new recipient form
+		$scope.createRecipientForm = false;
 
 	};
 
@@ -175,6 +179,28 @@ angular.module('my-lists', [
 	$scope.showAddRecipients = function () {
 
 		$scope.addRecipients = true;
+
+		//show list of recipients NOT in current list
+		recipients.allButCurrentList($scope.selected._id, function(recipients) {
+
+			if (recipients.length !== 0) {
+				$scope.no_recipients = false;
+				$scope.recipient_list = recipients;
+				console.log('recipient list ', recipients);
+			}
+			else {
+
+				$scope.createRecipientForm = true;
+
+			}
+
+		});
+
+	};
+
+	$scope.showCreateRecipient = function() {
+
+		$scope.createRecipientForm = true;
 
 	};
 

@@ -44,7 +44,7 @@ angular.module('recipients', [
 .controller('recipientListCtrl', function RecipientListController ($scope, $http, recipients) {
 
 	//list recipients
-	recipients.list(function(recipients){
+	recipients.all(function(recipients){
 
 		$scope.recipients = recipients;
 
@@ -85,7 +85,7 @@ angular.module('recipients', [
 	var refreshList = function (id) {
 
 		//list recipients
-		recipients.list(function(recipients){
+		recipients.all(function(recipients){
 
 			$scope.recipients = recipients;
 

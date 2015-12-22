@@ -306,4 +306,21 @@ router.route('/:id')
     });
 	*/
 
+
+router.route('/allButCurrentList/:id')
+
+	.get(function(req, res) {
+
+		var user_id = utils.convertToObjId(req.user._id);
+
+		Recipient.find({list_ids: {$ne: req.params.id}, user_ids: user_id}, function(err, recipients) {
+
+			if (err) return res.status(500).send(err);
+
+			return res.json(recipients);
+
+		});
+
+	});
+
 module.exports = router;

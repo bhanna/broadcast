@@ -6,7 +6,7 @@ angular.module('factories.recipients', [
 
 	return {
 
-		list: function(callback) {
+		all: function(callback) {
 
 			$http({
 
@@ -23,6 +23,17 @@ angular.module('factories.recipients', [
 
 				method: 'GET',
 				url: '/api/protected/recipients/' + id,
+				cache: true
+
+			}).success(callback);
+
+		},
+		allButCurrentList: function(list_id, callback) {
+
+			$http({
+
+				method: 'GET',
+				url: '/api/protected/recipients/allButCurrentList/' + list_id,
 				cache: true
 
 			}).success(callback);
