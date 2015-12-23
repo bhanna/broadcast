@@ -18,7 +18,7 @@ angular.module('broadcastApp', [
 ])
 .config( function broadcastAppConfig ($urlRouterProvider, jwtInterceptorProvider, $httpProvider){
 
-	$urlRouterProvider.otherwise('/');
+	$urlRouterProvider.otherwise('/main');
 
 	jwtInterceptorProvider.tokenGetter = function(store) {
 	    return store.get('jwt');
