@@ -2,7 +2,8 @@ angular.module('my-lists', [
 		'ngResource', 
 		'ui.router',
 		'angular-storage',
-		'factories.recipients'
+		'factories.recipients',
+		'services.validators'
 	])
 .config(function($stateProvider, $urlRouterProvider) {
 
@@ -15,7 +16,7 @@ angular.module('my-lists', [
 					controller: 'listCtrl',
 				},
 				'newRecipient@my-lists': {
-					templateUrl: 'components/shared-views/recipients/new-recipient-form.html' 
+					templateUrl: 'components/shared-views/recipients/create-recipient-for-list-form.html' 
 				}
 			},
 			data: {
@@ -34,7 +35,7 @@ angular.module('my-lists', [
 //	return $resource('/api/protected/recipients/:id');
 
 //})
-.controller('listCtrl', function ListController ($scope, $http, $resource, $location, getAllLists, recipients) {
+.controller('listCtrl', function ListController ($scope, $http, $resource, $location, getAllLists, recipients, validate) {
 
 	$scope.init = function() {
 
@@ -74,6 +75,9 @@ angular.module('my-lists', [
 		//create new recipient form
 		$scope.createRecipientForm = false;
 
+		//new roles list
+		$scope.newRoles = [];
+
 	};
 
 //LISTS
@@ -84,7 +88,7 @@ angular.module('my-lists', [
 	//disable/enable
 	var disabled = true;
 
-	
+	/*
 	//validate phone number
 	var validPhone = function(phone) {
 
@@ -96,7 +100,7 @@ angular.module('my-lists', [
 		return false;
 
 	};
-	
+	*/
 	//refresh list 
 	var refreshList = function (id) {
 
@@ -173,8 +177,9 @@ angular.module('my-lists', [
 		
 	};
 
-//RECIPIENTS
 
+//RECIPIENTS
+	
 	//showCreateList
 	$scope.showAddRecipients = function () {
 
@@ -210,7 +215,11 @@ angular.module('my-lists', [
 
 	};
 
+
+//TODO figure out how to separate these functions into modules properly
+
 	//add recipient to list from current recipients
+	//TODO make this multiple recipients with an array of ids
 	$scope.addRecipientToList = function (recipient) {
 
 		$http.post('/api/protected/recipients/lists/add/' + $scope.selected._id, recipient).success(function(data){
@@ -225,28 +234,41 @@ angular.module('my-lists', [
 	};
 
 	//Create and add recipient to list
-	$scope.createRecipient = function(recipient) {
+	$scope.createRecipientForList = function(recipient, roles) {
 
-		if (!validPhone(recipient.phone)) {
+		var phone = recipient.phone1 + recipient.phone2 + recipient.phone3;
 
-			alert('Please enter a valid phone number, i.e. 5555555555');
+		if (!validate.phone(phone)) {
+
+			alert('Please enter a valid phone number, i.e. 555 555 5555');
 
 		}
 		else {
 
-			$http.post('/api/protected/recipients/lists/add/' + $scope.selected._id, recipient).success(function(data){
+			recipient.phone = phone;
+
+			console.log('recipient.roles before: ', roles);
+
+			recipient.roles = validate.removeEmptyRoles(roles);
+
+			console.log('recipient.roles: ', recipient.roles);
+
+			console.log('recipient: ', recipient);
+			
+			recipients.createRecipientForList(recipient, $scope.selected._id, function(data) {
 
 				$scope.recipient_message = data.message;
 				$scope.recipient = '';
 				refreshList($scope.selected._id);
 				$scope.addRecipients = false;
-				
 
 			});
-
+			
 		}	
 
 	};
+
+
 	/*
 	//edit Recipient
 	$scope.editRecipient = function (id) {
@@ -286,7 +308,7 @@ angular.module('my-lists', [
 	*/
 
 	//remove Recipient from List
-	$scope.removeRecipient = function(recipient) {
+	$scope.removeRecipientFromList = function(recipient) {
 
 		$http.post('/api/protected/recipients/lists/remove/' + $scope.selected._id, recipient).success(function(data) {
 

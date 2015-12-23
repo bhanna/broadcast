@@ -75,7 +75,7 @@ router.route('/lists/add/:id')
 					if ( _.some(recipient.list_ids, list._id) ) {
 
 						console.log('recipient already in list');
-						data.message = recipient.firstName + ' is already part of this list!';
+						data.message = '"' + recipient.firstName + '" has that phone number and is already part of this list!';
 						return res.json(data);
 
 					}
@@ -100,11 +100,16 @@ router.route('/lists/add/:id')
 								console.log('role NOT in array');
 								
 								//add role
-								recipient.roles.push(role);
+								if (role !== null || role !== '') {
 
-								console.log('added role: ', role);
+									recipient.roles.push(role);
+
+									console.log('added role: ', role);
+
+								}	
 
 							}
+							eachCallback();
 
 						}, function(err) {
 
@@ -143,11 +148,13 @@ router.route('/lists/add/:id')
 					r.firstName = req.body.firstName;
 					r.email = req.body.email;
 					r.phone = req.body.phone;
-					r.roles = [req.body.roles];
+					//check for new roles
+					r.roles = req.body.roles;
+					
 
 					console.log('recipient', r);
 
-					
+				
 					r.save(function(err, recipient){
 
 						if (err) {
@@ -160,7 +167,7 @@ router.route('/lists/add/:id')
 						data.message = 'Added ' + recipient.firstName;
 						return res.json(data);
 
-					});
+					});					
 
 				}
 

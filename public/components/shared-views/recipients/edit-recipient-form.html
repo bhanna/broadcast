@@ -4,23 +4,22 @@
 		<label>First Name</label>
 		<input type="text" class="form-control"  ng-model="recipient.firstName" required placeholder="First Name" />
 		<br />
-		<!-- <label>Last Name</label>
-		<input type="text" class="form-control"  ng-model="recipient.lastName" required placeholder="Last Name" />
-		<br />-->
 		<label>Phone Number</label>
-		<input class="form-control" ng-model="recipient.phone" required placeholder="i.e. 555-555-5555"/>
-		<br/>
+		<div>
+		    <input class="form-control phone1" placeholder="555" ng-model="recipient.phone1" required maxlength="3" /> - 
+		    <input class="form-control phone2" placeholder="555" ng-model="recipient.phone2" required maxlength="3" /> - 
+		    <input class="form-control phone3" placeholder="5555" ng-model="recipient.phone3" required maxlength="4" />
+		    <br/><br/>
+		</div>
 		<label>Email</label>
 		<input class="form-control" type="email" required ng-model="recipient.email" placeholder="Email"/>
 		<br/>
 		<label>Roles</label>
-		<div id="roles" ng-repeat="role in recipient.roles">
-		    <input class="form-control" ng-model="role" placeholder="i.e. Bar Tender"/>
+		<div ng-repeat="role in recipient.roles">
+		    <input class="form-control" ng-model="role.role" placeholder="i.e. Bar Tender"/>
 		    <br/>
 		</div>
-		<div ng-repeat="role in newRoles">
-			<div role-input role="role"></div>
-		</div>
+		<input class="form-control role" ng-repeat="role in newRoles" ng-model="role.role" placeholder="i.e. Bar Tender"/>
 		<div class="pointer" ng-click="addRole()"><span class="glyphicon glyphicon-plus"></span> Role</div>
 		<tt>{{newRoles}}</tt>
 		<input class="btn btn-primary pull-right" type="submit"  value="Update" ng-disabled="recipient-details.$invalid" />

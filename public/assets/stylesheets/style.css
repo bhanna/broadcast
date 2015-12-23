@@ -21,3 +21,23 @@ a {
 	cursor: pointer;
 	float: right;
 }
+
+input.phone1, input.phone2 {
+
+	display: inline-block;
+	width: 55px;
+
+}
+
+input.phone3 {
+
+	display: inline-block;
+	width: 61px;
+
+}
+
+input.role {
+
+	margin-bottom: 15px;
+
+}

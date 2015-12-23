@@ -66,7 +66,7 @@
             </ul>
           </div>
 
-          <button class="btn btn-primary" ng-click="showCreateRecipient()">Create New</button>
+          <button ng-hide="no_recipients" class="btn btn-primary" ng-click="showCreateRecipient()">Create New</button>
 
           <!-- Create and Add New Recipient -->
           <div ng-show="createRecipientForm" class="create-recipient-for-list" ui-view="newRecipient">
@@ -80,12 +80,14 @@
           <tr>
             <th>Name</th>
             <th>Roles</th>
+            <th>Remove</th>
           </tr>
           </thead>
           <tbody>
             <tr ng-repeat="recipient in selected.recipients | orderBy:'created_at':true">
               <td><a href="#/recipients/{{recipient._id}}" ui-sref="edit-recipient({id: recipient._id})" >{{recipient.firstName}}</a></td>
-              <td><span ng-repeat="role in recipient.roles">{{role}}</span></td>
+              <td><span ng-repeat="role in recipient.roles">{{role.role}}<br></span></td>
+              <td><button class="glyphicon glyphicon-remove" ng-click="removeRecipientFromList(recipient._id)"></button>
             </tr>
           </tbody>
 
