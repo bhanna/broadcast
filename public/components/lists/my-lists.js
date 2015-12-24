@@ -88,19 +88,6 @@ angular.module('my-lists', [
 	//disable/enable
 	var disabled = true;
 
-	/*
-	//validate phone number
-	var validPhone = function(phone) {
-
-		regex = /\d{10}/;
-
-		if (regex.test(phone)) {
-			return true;
-		}
-		return false;
-
-	};
-	*/
 	//refresh list 
 	var refreshList = function (id) {
 
@@ -219,15 +206,14 @@ angular.module('my-lists', [
 //TODO figure out how to separate these functions into modules properly
 
 	//add recipient to list from current recipients
-	//TODO make this multiple recipients with an array of ids
+	//TODO add a check mark when added or something
 	$scope.addRecipientToList = function (recipient) {
 
-		$http.post('/api/protected/recipients/lists/add/' + $scope.selected._id, recipient).success(function(data){
+		recipients.addRecipientToList(recipient, $scope.selected._id, function(data) {
 
 			$scope.recipient_message = data.message;
-			$scope.recipient = '';
+			$scope.recipient = {};
 			refreshList($scope.selected._id);
-			
 
 		});
 
@@ -258,7 +244,7 @@ angular.module('my-lists', [
 			recipients.createRecipientForList(recipient, $scope.selected._id, function(data) {
 
 				$scope.recipient_message = data.message;
-				$scope.recipient = '';
+				$scope.recipient = {};
 				refreshList($scope.selected._id);
 				$scope.addRecipients = false;
 
@@ -269,55 +255,16 @@ angular.module('my-lists', [
 	};
 
 
-	/*
-	//edit Recipient
-	$scope.editRecipient = function (id) {
-
-		
-			$http.get('/api/protected/recipients/' + id).success(function(data) {
-
-				$scope.recipient = data;
-				console.log('recipient ', $scope.recipient);
-				setDisabled(false);
-
-			});
-
-	};
-
-	//update after editing Recipient
-	$scope.updateRecipient = function (id) {
-
-		if (!validPhone($scope.recipient.phone)) {
-
-			alert('Please enter a valid phone number, i.e. 5555555555');
-
-		}
-		else {
-
-			$http.put('/api/protected/recipients/' + id, $scope.recipient).success(function(data) {
-
-				$scope.recipient_message = data.message;
-				refreshList($scope.selected._id);
-				setDisabled(true);
-
-			});
-
-		}
-
-	};
-	*/
-
 	//remove Recipient from List
 	$scope.removeRecipientFromList = function(recipient) {
 
-		$http.post('/api/protected/recipients/lists/remove/' + $scope.selected._id, recipient).success(function(data) {
+		recipients.removeRecipientFromList(recipient, $scope.selected._id, function(data) {
 
 			$scope.recipient_message = data.message;
 			refreshList($scope.selected._id);
 			setDisabled(true);
 
 		});
-
 	};
 
 	var setDisabled = function(val) {

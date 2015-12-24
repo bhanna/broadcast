@@ -43,7 +43,6 @@ angular.module('factories.recipients', [])
 				method: 'POST',
 				url: '/api/protected/recipients/',
 				data: recipient,
-				cache: true
 
 			}).success(callback);
 		},
@@ -54,7 +53,39 @@ angular.module('factories.recipients', [])
 				method: 'POST',
 				url: '/api/protected/recipients/lists/add/' + list_id,
 				data: recipient,
-				cache: true
+
+			}).success(callback);
+
+		},
+		addRecipientToList: function(recipient, list_id, callback) {
+
+			$http({
+
+				method: 'POST',
+				url: '/api/protected/recipients/lists/add/' + list_id,
+				data: recipient,
+
+			}).success(callback);
+
+		},
+		editRecipient: function(recipient, callback) {
+
+			$http({
+
+				method: 'PUT',
+				url: '/api/protected/recipients/' + recipient._id,
+				data: recipient,
+
+			}).success(callback);
+
+		},
+		removeRecipientFromList: function(recipient, list_id, callback) {
+
+			$http({
+
+				method: 'POST',
+				url: '/api/protected/recipients/lists/remove/' + list_id,
+				data: recipient,
 
 			}).success(callback);
 

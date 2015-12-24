@@ -58,11 +58,12 @@
 
           <!-- Close Box -->
           <div class="glyphicon glyphicon-remove close-box" ng-click="closeBox()"></div>
+          
           <!-- Existing Recipients -->
           <p ng-show="no_recipients" class="small">You currently have no recipients oustide this list. Fill out the form below to create a new recipient and add them to this list.</p>
           <div ng-hide="no_recipients" class="add-recipient-list">
-            <ul> 
-              <li ng-repeat="r in recipient_list" ng-click="addRecipientToList(r)">{{r.firstName}}</li>
+            <ul class="nav nav-pills nav-stacked"> 
+              <li ng-repeat="r in recipient_list"><a href="" ng-click="addRecipientToList(r)">{{r.firstName}}</a></li>
             </ul>
           </div>
 
@@ -87,7 +88,7 @@
             <tr ng-repeat="recipient in selected.recipients | orderBy:'created_at':true">
               <td><a href="#/recipients/{{recipient._id}}" ui-sref="edit-recipient({id: recipient._id})" >{{recipient.firstName}}</a></td>
               <td><span ng-repeat="role in recipient.roles">{{role.role}}<br></span></td>
-              <td><button class="glyphicon glyphicon-remove" ng-click="removeRecipientFromList(recipient._id)"></button>
+              <td><button class="glyphicon glyphicon-remove" ng-click="removeRecipientFromList(recipient)"></button>
             </tr>
           </tbody>
 

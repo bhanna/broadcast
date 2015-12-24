@@ -74,11 +74,9 @@ angular.module('controllers.recipients', [
 	};
 	*/
 	//create recipient
-	$scope.createRecipient = function (recipient) {
+	$scope.createRecipient = function (recipient, roles) {
 
 		var phone = recipient.phone1 + recipient.phone2 + recipient.phone3;
-
-		recipient.roles = validate.removeEmptyRoles($scope.newRoles);
 
 		if (!validate.phone(phone)) {
 
@@ -89,14 +87,15 @@ angular.module('controllers.recipients', [
 
 			recipient.phone = phone;
 
-			recipient.roles = $scope.newRoles;
+			recipient.roles = validate.removeEmptyRoles(roles);
 
 			//TODO still need to create endpoint
 			recipients.createRecipient(recipient, function(data) {
 
 				$scope.recipient_message = data.message;
-				$scope.recipient = '';
-				refreshRecipientList();
+				$scope.recipient = {};
+				$scope.newRoles = [];
+				//refreshRecipientList();
 
 			});
 
@@ -113,7 +112,7 @@ angular.module('controllers.recipients', [
 	};
 
 	//edit Recipient
-	$scope.editRecipient = function (recipient) {
+	$scope.editRecipient = function (recipient, roles) {
 
 		var phone = recipient.phone1 + recipient.phone2 + recipient.phone3;
 
@@ -125,11 +124,18 @@ angular.module('controllers.recipients', [
 		else {
 
 			recipient.phone = phone;
+
+			console.log('recipient.roles before: ', roles);
+
+			recipient.roles = validate.removeEmptyRoles(roles);
+
+			console.log('recipient.roles: ', recipient.roles);
 			
 			$http.put('/api/protected/recipients/' + recipient._id, recipient).success(function(data) {
 
 				$scope.recipient_message = data.message;
-				refreshList($scope.selected._id);
+				$scope.newRoles = [];
+				//refreshList($scope.selected._id);
 				setDisabled(true);
 
 			});

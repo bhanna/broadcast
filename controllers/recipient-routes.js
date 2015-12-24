@@ -20,6 +20,48 @@ router.route('/')
 	//create recipient
 	.post(function(req, res) {
 
+		var data = {};
+
+		Recipient.find({phone: req.body.phone}, function(err, recipient) {
+
+			if (err) return res.status(500).send(err);
+
+			if (recipient) {
+				data.message = 'That phone number already belongs to ' + recipient.firstName;
+			}
+			else {
+
+				//create recipient
+				var r = new Recipient();
+				
+				r.user_ids = [user_id];
+				r.firstName = req.body.firstName;
+				r.email = req.body.email;
+				r.phone = req.body.phone;
+				r.roles = req.body.roles;
+				
+
+				console.log('recipient', r);
+
+			
+				r.save(function(err, recipient){
+
+					if (err) {
+						//TODO make err user friendly
+						console.log('err at recipient post', err);
+						return res.status(500).send(err);
+					}
+
+					console.log('recipient added and persisted');
+					data.message = 'Added ' + recipient.firstName;
+					return res.json(data);
+
+				});	
+
+			}
+
+		});
+
 		//TODO add create Recipient for a my-recipients section
 		//TODO add user_id field so that my-recipients shows the User the correct recipients
 
@@ -95,7 +137,7 @@ router.route('/lists/add/:id')
 						//check for new roles
 						async.each(req.body.roles, function(role, eachCallback) {
 
-							if ( !_.some(recipient.roles, req.body.roles) ) {
+							if ( !_.some(recipient.roles, role) ) {
 							
 								console.log('role NOT in array');
 								
@@ -264,30 +306,49 @@ router.route('/:id')
 
 	.put(function(req, res) {
 
-		//console.log('listItems id: ', req.params.id);
 		var data = {};
 		Recipient.findById(req.params.id, function(err, recipient) {
 
-			if (err) {
-				//console.log('err at find List: ', err);
-				return res.status(500).send(err);
-			}
-
-			//TODO make this more efficient
+			if (err) return res.status(500).send(err);
 
 			recipient.firstName = req.body.firstName;
 			recipient.email = req.body.email;
 			recipient.phone = req.body.phone;
+			
+			//check for new roles
+			//TODO put this in a function
+			async.each(req.body.roles, function(role, eachCallback) {
 
-			recipient.save(function(err) {
+				console.log('ROLE: ', role);
+				if ( !_.some(recipient.roles, role) ) {
+				
+					console.log('role NOT in array');
+					
+					//add role
+					if (role !== null || role !== '') {
 
-	        	if (err) return res.status(500).send(err);
-	            
-	            //console.log('tried to save update!');
-	            data.message = 'Recipient updated!';
-	            return res.json(data);
+						recipient.roles.push(role);
 
-	        });
+						console.log('added role: ', role);
+
+					}	
+
+				}
+				eachCallback();
+
+			}, function(err) {
+
+				recipient.save(function(err) {
+
+		        	if (err) return res.status(500).send(err);
+		            
+		            //console.log('tried to save update!');
+		            data.message = 'Recipient updated!';
+		            return res.json(data);
+
+		        });
+
+		    });
 
 		});
 	

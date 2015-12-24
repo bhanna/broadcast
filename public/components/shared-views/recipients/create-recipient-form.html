@@ -1,6 +1,6 @@
 <div ng-controller="recipientsCtrl">
 	<h4>Create a Recipient</h4>
-	<form class="form-auth" ng-Submit="createRecipient(recipient)" name="recipient-details">
+	<form class="form-auth" ng-Submit="createRecipient(recipient, newRoles)" name="recipient-details">
 	    <label>First Name</label>
 	    <input type="text" class="form-control"  ng-model="recipient.firstName" required placeholder="First Name" />
 	    <br />
@@ -20,7 +20,6 @@
 	    <label>Roles</label>
 	    <input class="form-control role" ng-repeat="role in newRoles" ng-model="role.role" placeholder="i.e. Bar Tender"/>
 	    <div class="pointer" ng-click="addRole()"><span class="glyphicon glyphicon-plus"></span> Role</div>
-		<tt>{{newRoles}}</tt>
 	    <input class="btn btn-primary pull-right" type="submit"  value="Create!" ng-disabled="recipient-details.$invalid" />
 	</form>   
 </div>
