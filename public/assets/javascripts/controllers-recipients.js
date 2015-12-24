@@ -3,16 +3,11 @@ angular.module('controllers.recipients', [
 	'ui.router',
 	'services.validators'
 	])
-.controller('recipientListCtrl', function RecipientListController ($scope, $http, recipients) {
+//.controller('recipientListCtrl', function RecipientListController ($scope, $http, recipients) {
 
-	//list recipients
-	recipients.all(function(recipients){
+	
 
-		$scope.recipients = recipients;
-
-	});
-
-})
+//})
 .controller('recipientsCtrl', function RecipientsController ($scope, $http, recipients, validate) {
 
 	$scope.init = function() {
@@ -28,51 +23,27 @@ angular.module('controllers.recipients', [
 
 	};
 
+	//list recipients
+	$scope.recipients = recipients.all().query();
+
 	//disable/enable
 	var disabled = true;
 
 	/*
-	//validate phone number
-	var validPhone = function(phone) {
-
-		regex = /\d{10}/;
-
-		if (regex.test(phone)) {
-			return true;
-		}
-		return false;
-
-	};
-	*/
 	//refresh list 
 	var refreshRecipientList = function () {
 
+		console.log('reached refresh');
 		//list recipients
 		recipients.all(function(recipients){
 
 			$scope.recipients = recipients;
-
+		
 		});
-
-	};
-	/*
-	//remove empty roles from newRoles
-	var removeEmptyRoles = function(roles) {
-
-		var results = [];
-
-		for(var i=0; i < roles.length; i++) {
-
-			if (roles[i].role !== '') {
-				results.push(roles[i].role);
-			}
-
-		}
-
-		return results;
-
+		
 	};
 	*/
+
 	//create recipient
 	$scope.createRecipient = function (recipient, roles) {
 
@@ -89,13 +60,15 @@ angular.module('controllers.recipients', [
 
 			recipient.roles = validate.removeEmptyRoles(roles);
 
-			//TODO still need to create endpoint
+			//create new recipient
 			recipients.createRecipient(recipient, function(data) {
 
 				$scope.recipient_message = data.message;
 				$scope.recipient = {};
 				$scope.newRoles = [];
 				//refreshRecipientList();
+				$scope.recipients = recipients.all().query();
+				console.log('recipients refreshed: ', $scope.recipients);
 
 			});
 
@@ -103,9 +76,9 @@ angular.module('controllers.recipients', [
 
 	};
 
+	//add role input
 	$scope.addRole = function() {
 
-		//var newRoleNo = $scope.newRoles.length+1;
   		$scope.newRoles.push({role : ''});
 
 			console.log('newRoles: ', $scope.newRoles);
@@ -131,15 +104,14 @@ angular.module('controllers.recipients', [
 
 			console.log('recipient.roles: ', recipient.roles);
 			
-			$http.put('/api/protected/recipients/' + recipient._id, recipient).success(function(data) {
+			recipients.editRecipient(recipient, function(data) {
 
 				$scope.recipient_message = data.message;
 				$scope.newRoles = [];
-				//refreshList($scope.selected._id);
 				setDisabled(true);
 
 			});
-
+			
 		}
 
 	};
@@ -150,7 +122,8 @@ angular.module('controllers.recipients', [
 		$http.post('/api/protected/recipients/remove/', recipient).success(function(data) {
 
 			$scope.recipient_message = data.message;
-			refreshList($scope.selected._id);
+			$scope.recipients = recipients.all().query();
+			//refreshRecipientList();
 			setDisabled(true);
 
 		});

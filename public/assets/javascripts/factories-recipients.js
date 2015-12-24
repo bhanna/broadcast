@@ -3,15 +3,9 @@ angular.module('factories.recipients', [])
 
 	return {
 
-		all: function(callback) {
+		all: function() {
 
-			$http({
-
-				method: 'GET',
-				url: '/api/protected/recipients/',
-				cache: true
-
-			}).success(callback);
+			return $resource('/api/protected/recipients/');
 
 		},
 		find: function(id, callback) {

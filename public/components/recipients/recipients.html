@@ -6,7 +6,7 @@
       <p>{{recipient.message}}</p>
     </div>
 
-    <div class="col-md-3" ng-controller="recipientListCtrl">
+    <div class="col-md-3">
 
         <ul class="nav nav-pills nav-stacked">
           <li ng-repeat="r in recipients" ui-sref-active="active"><a href="#/recipients/{{r._id}}" ui-sref="edit-recipient({id: r._id})" >{{r.firstName}}</a></li>

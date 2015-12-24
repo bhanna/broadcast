@@ -22,12 +22,16 @@ router.route('/')
 
 		var data = {};
 
-		Recipient.find({phone: req.body.phone}, function(err, recipient) {
+		var user_id = utils.convertToObjId(req.user._id);
+
+		Recipient.findOne({phone: req.body.phone}, function(err, recipient) {
 
 			if (err) return res.status(500).send(err);
 
 			if (recipient) {
+				console.log('recipient found: ', recipient);
 				data.message = 'That phone number already belongs to ' + recipient.firstName;
+				return res.json(data);
 			}
 			else {
 
@@ -79,7 +83,7 @@ router.route('/')
 				return res.status(500).send(err);
 			}
 
-			console.log('retrieved all Recipients');
+			console.log('retrieved all Recipients, ', recipients);
 			return res.json(recipients);
 
 		});
