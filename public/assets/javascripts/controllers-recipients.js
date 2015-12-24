@@ -108,6 +108,7 @@ angular.module('controllers.recipients', [
 
 				$scope.recipient_message = data.message;
 				$scope.newRoles = [];
+				$scope.recipients = recipients.all().query();
 				setDisabled(true);
 
 			});
