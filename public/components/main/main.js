@@ -325,6 +325,8 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 				
 				threads = $scope.selected.threads;
 
+				console.log('threads after change: ', threads);
+
 			}, function(err) {
 
 				console.log('err at get ', err);

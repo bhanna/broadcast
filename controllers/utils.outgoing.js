@@ -78,6 +78,7 @@ exports.prepareBroadcastThreads = function(broadcast, callback) {
 
 	if (broadcast.listID) {
 
+		//TODO broadcast.user_ids[0] may not find the most recent user_id
 		Recipient.find({list_ids: broadcast.listID, user_ids: broadcast.user_ids[0]}, function(err, recipients) {	
 
 			if (err) {
@@ -152,6 +153,8 @@ exports.createBroadcastThreads = function(broadcast, callback) {
 		thread.phone = '+1' + recipient.phone;
 		thread.broadcast_id = broadcast.broadcast_id;
 		thread.firstName = recipient.firstName;
+		//TODO broadcast.user_ids[0] may not find the most recent user_id
+		thread.user_ids = [broadcast.user_ids[0]];
 
 		console.log('thread: ', thread);
 		console.log('recipient ', recipient);

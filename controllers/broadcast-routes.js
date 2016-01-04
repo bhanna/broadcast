@@ -88,6 +88,9 @@ router.route('/:id')
 		//set return variable
 		var data = {};
 
+		//get user_id
+		var user_id = utils.convertToObjId(req.user._id);
+
 		var query;
 
 		if (req.query.openPositions) {
@@ -100,7 +103,7 @@ router.route('/:id')
 		//TODO get open Broadcast by ID
 		//TODO make this a flexible query according to req.query values
 		//Can we do a { query: true } return?
-		Broadcast.findOne({broadcast_id: req.params.id}, function(err, broadcast) {
+		Broadcast.findOne({broadcast_id: req.params.id, user_ids: user_id}, function(err, broadcast) {
 
 			if (err) {
 				console.log('faled to get broadcast');
@@ -169,10 +172,15 @@ router.route('/threads/:id')
 
 	.get(function(req, res) {
 
+		//get user_id
+		var user_id = utils.convertToObjId(req.user._id);
+
+		console.log('user id: ', user_id);
+
 		//set return variable
 		var data = {};
 
-		BroadcastThread.find({broadcast_id: req.params.id}, function(err, threads) {
+		BroadcastThread.find({broadcast_id: req.params.id, user_ids: user_id}, function(err, threads) {
 
 			if (err) {
 
