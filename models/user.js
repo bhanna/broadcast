@@ -44,7 +44,7 @@ userSchema.pre('save', function(next) {
 
     var broadcastCounter = new BroadcastCounter();
 
-    broadcastCounter.user_id = doc._id;
+    broadcastCounter.user_id = doc.user_id;
     broadcastCounter.save(function(err) {
 
         if (err) return next(err);
