@@ -150,7 +150,7 @@ angular.module('my-lists', [
 	$scope.deleteList = function () {
 
 		if (confirm('This cannot be undone!  Would you like to delete this list?')) {
-
+			
 			$http.delete('/api/protected/lists/' + $scope.selected._id).success(function(data) {
 
 				$scope.list_message = data.message;
@@ -159,7 +159,7 @@ angular.module('my-lists', [
 				$scope.selected = null;
 
 			});
-		
+			
 		}
 		
 	};
