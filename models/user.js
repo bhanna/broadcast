@@ -38,19 +38,21 @@ userSchema.pre('save', function(next) {
 
         doc.user_id = user_id;
         console.log('user_id: ', doc.user_id);
+
+        var broadcastCounter = new BroadcastCounter();
+
+        broadcastCounter.user_id = doc.user_id;
+        broadcastCounter.save(function(err) {
+
+            if (err) return next(err);
+            return next();
+
+        });
         
     });
     
 
-    var broadcastCounter = new BroadcastCounter();
-
-    broadcastCounter.user_id = doc.user_id;
-    broadcastCounter.save(function(err) {
-
-        if (err) return next(err);
-        return next();
-
-    });
+    
 
 
     /*
