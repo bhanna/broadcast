@@ -290,11 +290,11 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 	});
 
 
-	$scope.filterStatuses = function(item, status) {
+	//$scope.filterStatuses = function(item, status) {
 
-		return item.threads.status === status;
+	//	return item.threads.status === status;
 
-	};
+	//};
 
 
 
