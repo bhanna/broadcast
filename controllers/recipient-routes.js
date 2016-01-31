@@ -291,7 +291,7 @@ router.route('/:id')
 		//var id = utils.convertToObjId(req.params.id);
 		var user_id = req.user.user_id;
 
-		Recipient.findById(id, function(err, recipient){
+		Recipient.findById(req.params.id, function(err, recipient){
 
 			if (err) {
 				console.log('failed to find Recipient', err);
