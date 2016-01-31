@@ -26,7 +26,7 @@ app.use('/admin/*', jwtCheck);
 	//turn into object
 	/*
 	id = utils.convertToObj(req.user._id);
-
+	var user_id = req.user.user_id;
 	User.findById(id, function(err, user) {
 
 		if (err) return res.status(500).send(err);

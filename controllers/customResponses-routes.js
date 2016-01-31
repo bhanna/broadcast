@@ -29,7 +29,7 @@ router.route('/all')
 
 		//get user_id
 		//var user_id = utils.convertToObjId(req.user._id);
-		var user_id = req.user_id;
+		var user_id = req.user.user_id;
 
 		var data = [];
 
@@ -169,7 +169,7 @@ router.route('/')
 
 		//get user_id
 		//var user_id = utils.convertToObjId(req.user._id);
-		var user_id = req.user_id;
+		var user_id = req.user.user_id;
 
 		console.log(req.body);
 		

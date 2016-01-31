@@ -18,9 +18,9 @@ router.route('/')
 	.post(function(req, res){
 
 		var data = {};
-
+		console.log('req.user ', req.user);
 		//var user_id = utils.convertToObjId(req.user._id);
-		var user_id = req.user_id;
+		var user_id = req.user.user_id;
 
 		var list = new List();
 		list.user_ids = [user_id];
@@ -50,7 +50,7 @@ router.route('/all')
 	.get(function(req, res){
 
 		//var user_id = utils.convertToObjId(req.user._id);
-		var user_id = req.user_id;
+		var user_id = req.user.user_id;
 		
 		List.find({ user_ids : user_id }, function(err, data){
 			if (err) {
