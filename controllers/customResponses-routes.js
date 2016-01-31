@@ -28,7 +28,8 @@ router.route('/all')
 		console.log('reached get responses');
 
 		//get user_id
-		var user_id = utils.convertToObjId(req.user._id);
+		//var user_id = utils.convertToObjId(req.user._id);
+		var user_id = req.user_id;
 
 		var data = [];
 
@@ -167,7 +168,8 @@ router.route('/')
 	.post(function(req,res) {
 
 		//get user_id
-		var user_id = utils.convertToObjId(req.user._id);
+		//var user_id = utils.convertToObjId(req.user._id);
+		var user_id = req.user_id;
 
 		console.log(req.body);
 		

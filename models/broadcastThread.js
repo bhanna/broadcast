@@ -18,7 +18,7 @@ var broadcastThreadSchema = new mongoose.Schema({
 	//use broadcast_id to associate with Broadcast
 	//use user_id FOR NOW, change to "from" with Twilio number later
 	broadcast_id: {type: Number, required: true},
-	user_ids: [{ type : mongoose.Schema.Types.ObjectId, ref: 'User', required: true }],
+	user_ids: [{ type : Number, ref: 'User', required: true }],
 	firstName: {type: String, required: true},
 	phone: {type: String, required: true},
 	status: {type: String, required: true, default: 'Pending'},

@@ -40,7 +40,7 @@
 			        </tr>
 		        </thead>
 		        <tbody>
-		            <tr ng-repeat="t in selected.threads | orderBy: 'firstName'">
+		            <tr ng-repeat="t in selected.threads | filter:filterStatuses(t, 'Confirmed')">
 			            <td>{{t.firstName}}</td>
 			            <td>{{t.status}}</td>
 			            <td>

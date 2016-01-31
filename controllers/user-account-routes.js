@@ -23,7 +23,7 @@ router.route('/update-password')
 		var new_pass2 = req.body.new_password2;
 		if (current_pass !== '') {
 
-			User.findById(req.user._id, function(err, user) {
+			User.findById(req.user_id, function(err, user) {
 
 				if (err) return res.status(500).send(err);
 

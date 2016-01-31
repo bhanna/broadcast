@@ -290,6 +290,13 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 	});
 
 
+	$scope.filterStatuses = function(item, status) {
+
+		return item.threads.status === status;
+
+	};
+
+
 
 	//select open broadcast
 	//clean this the fuck up

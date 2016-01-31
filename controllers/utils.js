@@ -9,6 +9,7 @@ var config = require('../config/config');
 var User = mongoose.model('User');
 var DefaultResponseVar = mongoose.model('DefaultResponseVar');
 var CustomResponseVar = mongoose.model('CustomResponseVar');
+var Counters = mongoose.model('Counters');
 
 
 //twilio
@@ -36,6 +37,7 @@ exports.belongsToUser = function(model, query, user_id) {
 };
 
 
+//NOT IN USE
 //convert to object
 exports.convertToObjId = function(val) {
 
@@ -45,6 +47,7 @@ exports.convertToObjId = function(val) {
 	return converted;
 
 };
+
 
 /*//LOCAL currently returns data for testing
 exports.sendTwilio = function(phone, msg, callback) {

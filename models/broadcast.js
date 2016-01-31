@@ -1,13 +1,13 @@
 var mongoose = require('mongoose');
 
 
-var Counter = mongoose.model('Counter');
+var BroadcastCounter = mongoose.model('BroadcastCounter');
 
 //broadcast (list for individual broadcast threads)
 var broadcastSchema = new mongoose.Schema({
 
 	//have array of user_ids in case users eventually want to share broadcasts
-	user_ids: [{ type : mongoose.Schema.Types.ObjectId, ref: 'User', required: true }],
+	user_ids: [{ type : Number, ref: 'User', required: true }],
 	broadcast_id: {type: Number},
 	title: {type: String, required: true},
 	body: {type: String, required: true},
@@ -30,7 +30,7 @@ broadcastSchema.pre('save', function(next) {
 	
     var doc = this;
     console.log('doc.user_ids[0] ', doc.user_ids[0]);
-    Counter.findOneAndUpdate({user_id: doc.user_ids[0]}, {$inc: { seq: 1}}, {'new': true}, function(error, counter)   {
+    BroadcastCounter.findOneAndUpdate({user_id: doc.user_ids[0]}, {$inc: { seq: 1}}, {'new': true}, function(error, counter)   {
         
         if(error) return next(error);
 

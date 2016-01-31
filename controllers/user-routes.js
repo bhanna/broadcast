@@ -77,7 +77,7 @@ router.route('/')
             newUser.save(function(err, user){
 
                 if (err) {
-                    console.log('save error', err);
+                    console.log('save user error', err);
                     return res.status(400).send('unable to save new user, ', err);
                 }
                 console.log('new profile ', user);

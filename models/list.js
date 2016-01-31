@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 //list
 var listSchema = new mongoose.Schema({
 
-	user_ids: [{ type : mongoose.Schema.Types.ObjectId, ref: 'User' }],
+	user_ids: [{ type : Number, ref: 'User' }],
 	listName: {type: String, required: true},
 	listDesc: String
 

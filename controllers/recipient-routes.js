@@ -22,7 +22,8 @@ router.route('/')
 
 		var data = {};
 
-		var user_id = utils.convertToObjId(req.user._id);
+		//var user_id = utils.convertToObjId(req.user._id);
+		var user_id = req.user_id;
 
 		Recipient.findOne({phone: req.body.phone}, function(err, recipient) {
 
@@ -74,7 +75,8 @@ router.route('/')
 	//return all recipients for specific user
 	.get(function(req, res){
 
-		var user_id = utils.convertToObjId(req.user._id);
+		//var user_id = utils.convertToObjId(req.user._id);
+		var user_id = req.user_id;
 		
 		Recipient.find({user_ids: user_id}, function(err, recipients){
 
@@ -112,7 +114,8 @@ router.route('/lists/add/:id')
 
 				console.log('recipient found ', recipient);
 
-				var user_id = utils.convertToObjId(req.user._id);
+				//var user_id = utils.convertToObjId(req.user._id);
+				var user_id = req.user_id;
 				
 				//recipient exists
 				if (recipient) {
@@ -285,7 +288,8 @@ router.route('/:id')
 
 		var data = {};
 
-		var id = utils.convertToObjId(req.params.id);
+		//var id = utils.convertToObjId(req.params.id);
+		var user_id = req.user_id;
 
 		Recipient.findById(id, function(err, recipient){
 
@@ -383,7 +387,8 @@ router.route('/allButCurrentList/:id')
 
 	.get(function(req, res) {
 
-		var user_id = utils.convertToObjId(req.user._id);
+		//var user_id = utils.convertToObjId(req.user._id);
+		var user_id = req.user_id;
 
 		Recipient.find({list_ids: {$ne: req.params.id}, user_ids: user_id}, function(err, recipients) {
 

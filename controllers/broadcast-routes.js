@@ -35,10 +35,9 @@ router.route('/')
 	//create broadcast and broadcastThreads
 	.post(function(req, res) {
 
-		//TODO save broadcast under specific user object
-
 		//get user_id
-		var user_id = utils.convertToObjId(req.user._id);
+		//var user_id = utils.convertToObjId(req.user._id);
+		var user_id = req.user_id;
 		console.log('USERID from pre waterfall ', user_id);
 
 		async.waterfall([
@@ -89,7 +88,8 @@ router.route('/:id')
 		var data = {};
 
 		//get user_id
-		var user_id = utils.convertToObjId(req.user._id);
+		//var user_id = utils.convertToObjId(req.user._id);
+		var user_id = req.user_id;
 
 		var query;
 
@@ -149,7 +149,8 @@ router.route('/open/all')
 		});
 
 		//get user_id
-		var user_id = utils.convertToObjId(req.user._id);
+		//var user_id = utils.convertToObjId(req.user._id);
+		var user_id = req.user_id;
 
 		//get all Broadcasts where openPositions != 0
 		//TODO add add user_id field to show only User's Broadcasts
@@ -173,7 +174,8 @@ router.route('/threads/:id')
 	.get(function(req, res) {
 
 		//get user_id
-		var user_id = utils.convertToObjId(req.user._id);
+		//var user_id = utils.convertToObjId(req.user._id);
+		var user_id = req.user_id;
 
 		console.log('user id: ', user_id);
 
@@ -200,7 +202,8 @@ router.route('/filled/all')
 	.get(function(req, res) {
 
 		//get user_id
-		var user_id = utils.convertToObjId(req.user._id);
+		//var user_id = utils.convertToObjId(req.user._id);
+		var user_id = req.user_id;
 
 		//get all Broadcasts where openPositions != 0
 		//TODO add add user_id field to show only User's Broadcasts

@@ -336,6 +336,7 @@ exports.parseOwnerResponse = function(req, res, response, thread, callback) {
 
 	//get user_id
 	var user_id = utils.convertToObjId(req.user._id);
+	var user_id = req.user_id;
 	
 	//check for custom variable
 	CustomResponseVar.findOne({user_id: user_id, responseStatus: response}, function(err, r) {

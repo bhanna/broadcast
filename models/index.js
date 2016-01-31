@@ -1,4 +1,5 @@
-require('./counter');
+require('./counters');
+require('./broadcastCounter');
 require('./user');
 require('./recipient');
 require('./list');
