@@ -144,6 +144,21 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 	};
 	
 })
+.filter('filterStatuses', function() {
+
+	return function(item, status) {
+
+		if(item) {
+
+			return item.filter(function(element, index, array) {
+      			return element.status === status;
+    		});
+		}	
+		return;
+
+	};
+
+})
 .controller('mainCtrl', function MainController ($scope, $http, getOpenBroadcasts, getFilledBroadcasts, manageBroadcasts, toaster) {
 
 	$scope.init = function() {
@@ -164,6 +179,11 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 		var threads;
 
 		var selectedBroadcast;
+
+		//TODO get all status types from some HTTP.get function
+		//TODO display in main.html
+		//FOR NOW:
+		$scope.statuses = ['Confirmed', 'Accepted', 'Available', 'Reopened', 'Pending', 'Owner Declined', 'Owner Cancelled', 'Recipient Declined', 'Recipient Cancelled'];
 
 	};
 
@@ -290,14 +310,6 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 	});
 
 
-	//$scope.filterStatuses = function(item, status) {
-
-	//	return item.threads.status === status;
-
-	//};
-
-
-
 	//select open broadcast
 	//clean this the fuck up
 	$scope.select = function(broadcast) {
@@ -341,6 +353,12 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 			});
 			
 		//QUESTION display all selected broadcast threads?
+
+	};
+
+	$scope.showStatusItems = function(status) {
+
+		$scope.status = status;
 
 	};
 
