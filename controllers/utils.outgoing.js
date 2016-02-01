@@ -396,7 +396,7 @@ exports.parseOwnerResponse = function(req, res, response, thread, callback) {
 	else if (response === 'Owner Cancelled') {
 
 		msg = 'Oh no, the creator of this job has cancelled it.  We\'re sorry for any inconvenience.';
-		module.exports.checkForNewOpenPosition(msg, thread, callback);
+		module.exports.checkForNewOpenPosition(req, msg, thread, callback);
 		console.log('reached response === Owner Cancelled');
 
 		
@@ -428,7 +428,7 @@ exports.parseOwnerResponse = function(req, res, response, thread, callback) {
 };
 
 
-exports.checkForNewOpenPosition = function(msg, thread, callback) {
+exports.checkForNewOpenPosition = function(req, msg, thread, callback) {
 
 	console.log('checking for new open positions...');
 
