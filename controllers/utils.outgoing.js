@@ -241,6 +241,7 @@ exports.updateBroadcastThread = function(req, res, thread, update) {
 	//return 'No more open positions'
 	//TODO TEST
 	//this needs to send back broadcast_id
+	console.log('user_id: ', req.user.user_id);
 	Broadcast.findOne({broadcast_id: thread.broadcast_id, user_ids: req.user.user_id}, function(err, broadcast) {
 
 		if (err) return res.status(500).send(err);
@@ -432,7 +433,8 @@ exports.checkForNewOpenPosition = function(msg, thread, callback) {
 	console.log('checking for new open positions...');
 
 	//update openPositions with a +1
-	Broadcast.findOne({'broadcast_id': thread.broadcast_id}, 
+	//TODO need to find with user_id as well
+	Broadcast.findOne({'broadcast_id': thread.broadcast_id, user_ids: req.user.user_id},
 		function(err, broadcast) {
 
     		if (err) {
