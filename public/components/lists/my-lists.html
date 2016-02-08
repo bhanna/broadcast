@@ -13,8 +13,8 @@
       <div class="col-md-2" ng-hide="noLists">
 
         <ul class="nav nav-pills nav-stacked">
-          <li ng-repeat="list in lists" ng-class="{active: list._id == selected._id}"><a href="" ng-click="getList(list._id)" >{{list.listName}}</a></li>
-          <li ng-class="{active: showCreate}"><a href="" ng-click="showCreateList()">+ Create List</a></li>
+        <li ng-class="{active: showCreate}"><a href="" ng-click="showCreateList()">+ Create List</a></li>
+          <li ng-repeat="list in lists" ng-class="{active: list._id == selected._id}"><a href="" ng-click="getList(list._id)" >{{list.listName}}</a></li>       
         </ul>
 
       </div>
