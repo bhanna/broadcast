@@ -29,7 +29,7 @@
 	        <p>Message: {{selected.broadcast.body}}</p>
 	        <p>Remaining Open Positions:  {{selected.broadcast.openPositions}}</p>
 	        <br/>
-	        <!--<table class="table table-striped table-bordered">-->
+	        <!-- sorting into different statuses
 	        	<table class="table table-striped table-bordered">
 		        	<thead>
 		        		
@@ -42,13 +42,12 @@
 				        </tr>
 		        	</thead>
 		        	<tbody>
-		        		<table ng-repeat="status in statuses" class="table table-striped table-bordered">
+		        		<table ng-repeat="status in statuses" ng-hide="statusEmpty(status)" class="table table-striped table-bordered">
 		        			<thead>
 			        			<tr>
 				        			<th ng-click="showStatusItems(status)">{{status}}</th>
 				        		</tr>
-				        	</thead>
-				        	<tbody>
+				        	</thead> 				        	<tbody>
 					            <tr ng-repeat="t in selected.threads | filterStatuses:status">
 						            <td>{{t.firstName}}</td>
 						            <td>{{t.status}}</td>
@@ -61,12 +60,12 @@
 						            <td>{{t.created_at}}</td>
 					            </tr>		
 				        	</tbody>
-				        </table>
-				       </tbody>
+				        </table> 
+				    </tbody>
 		        </table>
-		    <!--</table>-->
+		 		-->
 
-		        <!--
+		    <table class="table table-striped table-bordered">
 	        	<thead>
 			        <tr>
 			            <th>Name</th>
@@ -77,7 +76,7 @@
 			        </tr>
 		        </thead>
 		        <tbody>
-		            <tr ng-repeat="t in selected.threads | filterStatuses:'Confirmed'">
+		            <tr ng-repeat="t in selected.threads">
 			            <td>{{t.firstName}}</td>
 			            <td>{{t.status}}</td>
 			            <td>
@@ -90,7 +89,7 @@
 		            </tr>
 		        </tbody>
 	        </table>
-	    	-->
+	    	
 	    </div>
     
     </div> <!-- End Row -->

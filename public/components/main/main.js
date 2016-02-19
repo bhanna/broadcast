@@ -356,9 +356,28 @@ angular.module('main', ['ngResource', 'toaster', 'ngAnimate'])
 
 	};
 
+	//Not really in use yet
 	$scope.showStatusItems = function(status) {
 
 		$scope.status = status;
+
+	};
+
+	$scope.statusEmpty = function(selected, status) {
+
+		var count = 0;
+		angular.forEach(selected.threads, function(thread) {
+			if (thread.status === status) {
+				count++;
+			}
+		},function() {
+			console.log("count ", count);
+			if (count > 0)
+				return false;
+			else
+				return true;
+		});
+
 
 	};
 
