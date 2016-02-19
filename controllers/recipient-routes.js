@@ -394,6 +394,8 @@ router.route('/allButCurrentList/:id')
 
 			if (err) return res.status(500).send(err);
 
+			console.log('recipients allBut: ', recipients);
+
 			return res.json(recipients);
 
 		});

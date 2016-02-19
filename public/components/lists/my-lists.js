@@ -35,7 +35,7 @@ angular.module('my-lists', [
 //	return $resource('/api/protected/recipients/:id');
 
 //})
-.controller('listCtrl', function ListController ($scope, $http, $resource, $location, getAllLists, recipients, validate) {
+.controller('listCtrl', function ListController ($scope, $http, $resource, $location, $q, getAllLists, recipients, validate) {
 
 	$scope.init = function() {
 
@@ -166,6 +166,24 @@ angular.module('my-lists', [
 
 
 //RECIPIENTS
+
+	var refreshRecipients = function() {
+		recipients.allButCurrentList($scope.selected._id, function(recipients) {
+
+			if (recipients.length !== 0) {
+				$scope.no_recipients = false;
+				$scope.recipient_list = recipients;
+
+			}
+			else {
+
+				$scope.createRecipientForm = true;
+				$scope.no_recipients = true;
+
+			}
+
+		});
+	};
 	
 	//showCreateList
 	$scope.showAddRecipients = function () {
@@ -173,20 +191,7 @@ angular.module('my-lists', [
 		$scope.addRecipients = true;
 
 		//show list of recipients NOT in current list
-		recipients.allButCurrentList($scope.selected._id, function(recipients) {
-
-			if (recipients.length !== 0) {
-				$scope.no_recipients = false;
-				$scope.recipient_list = recipients;
-				console.log('recipient list ', recipients);
-			}
-			else {
-
-				$scope.createRecipientForm = true;
-
-			}
-
-		});
+		refreshRecipients();
 
 	};
 
@@ -214,6 +219,9 @@ angular.module('my-lists', [
 			$scope.recipient_message = data.message;
 			$scope.recipient = {};
 			refreshList($scope.selected._id);
+			console.log('selected id ', $scope.selected._id);
+			refreshRecipients();
+			
 
 		});
 
@@ -263,7 +271,8 @@ angular.module('my-lists', [
 			$scope.recipient_message = data.message;
 			refreshList($scope.selected._id);
 			setDisabled(true);
-
+			refreshRecipients();
+	
 		});
 	};
 

@@ -25,7 +25,6 @@ angular.module('factories.recipients', [])
 
 				method: 'GET',
 				url: '/api/protected/recipients/allButCurrentList/' + list_id,
-				cache: true
 
 			}).success(callback);
 

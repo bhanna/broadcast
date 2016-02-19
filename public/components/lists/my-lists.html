@@ -40,13 +40,15 @@
         <h2>{{selected.listName}}</h2>
 
         <!-- Delete List -->
-        <div style="float:right; position: relative; bottom: 10px;" >
-          <button class="btn btn-danger" ng-click="deleteList()">Delete List</button>
-        </div>
+        <div class="clearfix">
+          <div style="float:right; position: relative; bottom: 10px;" >
+            <button class="btn btn-danger" ng-click="deleteList()">Delete List</button>
+          </div>
 
-        <!-- Add Recipient -->
-        <div style="float:left; position: relative; bottom: 10px;">
-          <button class="btn btn-primary" ng-click="showAddRecipients()">Add Recipient</button>
+          <!-- Add Recipient -->
+          <div style="float:left; position: relative; bottom: 10px;">
+            <button class="btn btn-primary" ng-click="showAddRecipients()">Add Recipient</button>
+          </div>
         </div>
 
         <div ng-show="recipient_message"class="alert alert-success" role="alert">
