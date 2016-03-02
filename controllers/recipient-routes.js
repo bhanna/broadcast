@@ -130,15 +130,18 @@ router.route('/lists/add/:id')
 					}
 					else {
 
+						console.log('user_id: ', user_id);
 						//check if Recipient exists with this user_id
 						if ( !_.some(recipient.user_ids, user_id) ) {
 							
 							console.log('userid NOT in array');
+
+							/*
 							//associate recipient with user_id
 							recipient.user_ids.push(user_id);
 
 							console.log('add userid: ', recipient.user_ids);
-
+							*/
 						}
 
 						//check for new roles
