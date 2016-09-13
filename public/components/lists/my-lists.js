@@ -78,6 +78,9 @@ angular.module('my-lists', [
 		//new roles list
 		$scope.newRoles = [];
 
+		//list recipients
+		$scope.listEmpty = null;
+
 	};
 
 //LISTS
@@ -88,12 +91,18 @@ angular.module('my-lists', [
 	//disable/enable
 	var disabled = true;
 
+	//does a list have recipients
+	var listEmpty = function (data) {
+		return data === 0;
+	};
+
 	//refresh list 
 	var refreshList = function (id) {
 
 		List.get({id: id}, function(data) {
 
 			$scope.selected = data;
+			$scope.listEmpty = listEmpty(data.recipients.length) ? true : false;
 
 		});
 		$scope.recipient = '';
@@ -109,6 +118,7 @@ angular.module('my-lists', [
 			$scope.selected = data;
 			$scope.list_message = null;
 			$scope.recipient_message = null;
+			$scope.listEmpty = listEmpty(data.recipients.length) ? true : false;
 
 		});
 

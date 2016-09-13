@@ -1,10 +1,14 @@
 <div class="clearfix container-fluid">
   <div class="row">
-    <div ng-show="broadcast_message"class="alert {{broadcast_message_class}}" role="alert">
-      <p>{{broadcast_message}}</p>
+    <div class="col-xs-12">
+      <div ng-show="broadcast_message"class="alert {{broadcast_message_class}}" role="alert">
+        <p>{{broadcast_message}}</p>
+      </div>
     </div>
-  
-    <div class="col-md-4">
+  </div>
+
+  <div class="row">
+    <div class="col-xs-10 col-xs-offset-1 col-sm-4 col-sm-offset-0">
   
       <h2>Send To</h2>
   
@@ -20,50 +24,75 @@
     </div>
   
     <!-- send to single Recipient -->
-    <div class="col-md-4" ng-show="showSingle">
+    <div class="col-xs-10 col-xs-offset-1 col-sm-4 col-sm-offset-0" ng-show="showSingle">
       <h2>Single Broadcast</h2>
       <p></p>
       <form ng-Submit="prepareSingleMessage()">
-        <label>What is this broadcast called?</label>
-        <input required type="text" class="form-control" placeholder="Name your broadcast" ng-model="broadcast.title" />
-        <br/>
-        <label>Who is this going to?</label>
-        <input required type="text" class="form-control" placeholder="Phone number" ng-model="broadcast.phone" />
-        <br/>
-        <label>What would you like to say?</label>
-        <textarea required type="text" rows="4" class="form-control" maxlength="140" placeholder="Type your message here..." ng-model="broadcast.body" ng-trim="false" /></textarea>
-        <!--counter-->
-        <span class="form-help">{{140 - broadcast.body.length}}         
-        Characters left</span>
-        <br/>
-        <br/>
-        <label>How many positions need to be filled?</label>
-        <input required type="text" class="form-control" placeholder="i.e. 25" ng-model="broadcast.numPositions" />
-        <br/>
-        <input ng-disabled="isProcessing" class="btn submit-btn pull-right" type="submit" value="Send!" />
+        <div class="form-group">
+          <label>What is this broadcast called?</label>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1"><i class="glyphicon glyphicon-header"></i></span>
+            <input required type="text" class="form-control" placeholder="Name your broadcast" ng-model="broadcast.title" aria-describedby="basic-addon1" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Who is this going to?</label>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon2"><i class="glyphicon glyphicon-earphone"></i></span>
+            <input required type="text" class="form-control" placeholder="Phone number" ng-model="broadcast.phone" aria-describedby="basic-addon2" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>What would you like to say?</label>
+          <textarea required type="text" rows="4" class="form-control" maxlength="140" placeholder="Type your message here..." ng-model="broadcast.body" ng-trim="false" /></textarea>
+          <!--counter-->
+          <span class="form-help">{{140 - broadcast.body.length}} Characters left</span>
+        </div>
+        <div class="form-group">
+          <label>How many positions need to be filled?</label>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon3"><i class="glyphicon glyphicon-plus-sign"></i></span>
+            <input required type="text" class="form-control" placeholder="i.e. 25" ng-model="broadcast.numPositions" aria-describedby="basic-addon4" />
+          </div>  
+        </div>
+        <div class="form-group">
+          <button ng-disabled="isProcessing" class="btn btn-primary pull-right" type="submit">Send! <span class="glyphicon glyphicon-send"></span></button>
+        </div>
       </form>
   
     </div>
   
   
     <!-- send to List -->
-    <div class="col-md-4" ng-show="selected"> 
+    <div class="col-xs-10 col-xs-offset-1 col-sm-4 col-sm-offset-0" ng-show="selected"> 
       <h2>Send to {{selected.listName}}</h2>
       <form ng-Submit="prepareMultiMessage(selected._id)">
-        <label>What is this broadcast called?</label>
-        <input required type="text" class="form-control" placeholder="Name your broadcast" ng-model="broadcast_multi.title" />
-        <br/>
-        <label>What would you like to say?</label>
-        <textarea required type="text" rows="4" class="form-control" maxlength="140" placeholder="Type your message here..." ng-model="broadcast_multi.body" ng-trim="false" /></textarea>
-        <!--counter-->
-        <span class="form-help">{{140 - broadcast_multi.body.length}}         
-         Characters left</span>
-        <br/>
-        <br/>
-        <label>How many positions need to be filled?</label>
-        <input required type="text" class="form-control" placeholder="i.e. 25" ng-model="broadcast_multi.numPositions" />
-        <br/>
-        <input ng-disabled="isProcessing" class="btn submit-btn pull-right" type="submit" value="Send!" />
+        <div class="form-group">
+          <label>What is this broadcast called?</label>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon5"><i class="glyphicon glyphicon-header"></i></span>
+            <input required type="text" class="form-control" placeholder="Name your broadcast" ng-model="broadcast_multi.title" aria-describedby="basic-addon5" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>What would you like to say?</label>
+          <div class="input-group">
+            <textarea required type="text" rows="4" class="form-control" maxlength="140" placeholder="Type your message here..." ng-model="broadcast_multi.body" ng-trim="false" /></textarea>
+            <!--counter-->
+            <span class="form-help">{{140 - broadcast_multi.body.length}}         
+             Characters left</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>How many positions need to be filled?</label>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon6"><i class="glyphicon glyphicon-plus-sign"></i></span>
+            <input required type="text" class="form-control" placeholder="i.e. 25" ng-model="broadcast_multi.numPositions" aria-describedby="basic-addon6" />
+          </div>
+        </div>
+        <div class="form-group">
+          <button ng-disabled="isProcessing" class="btn btn-primary pull-right" type="submit">Send! <span class="glyphicon glyphicon-send"></span></button>
+        </div>
       </form>
   
     </div>

@@ -1,16 +1,22 @@
 <div class="clearfix container-fluid" ui-view="listMain">
+  <div class="row">
+    <div class="col-xs-12">
+      <h1>My Lists</h1>
 
-  <h1>My Lists</h1>
-
-    <div ng-show="list_message"class="alert {{list_message_class}}" role="alert">
-      <p>{{list_message}}</p>
+        <div ng-show="list_message"class="alert {{list_message_class}}" role="alert">
+          <p>{{list_message}}</p>
+        </div>
+      </div>
     </div>
 
     <div class="row">
-
-      <div class="col-md-6 well well-large" ng-show="noLists">You currently have no lists.  <a ng-click="showCreateList()">Create a List</a></div> 
-
-      <div class="col-md-2" ng-hide="noLists">
+      <div class="col-xs-12 col-sm-6 well well-large" ng-show="noLists">
+        <p>You currently have no lists.</p>  
+        <a ng-click="showCreateList()">Create a List</a>
+      </div> 
+    </div>
+    <div class="row">
+      <div class="col-xs-10 col-xs-offset-1 col-sm-3 col-sm-offset-0 list-top" ng-hide="noLists">
 
         <ul class="nav nav-pills nav-stacked">
         <li ng-class="{active: showCreate}"><a href="" ng-click="showCreateList()">+ Create List</a></li>
@@ -19,23 +25,30 @@
 
       </div>
       
-      <div class="col-md-4 col-md-offset-1" ng-show="showCreate">
+      <div class="col-xs-10 col-xs-offset-1 col-sm-6 col-sm-offset-1 col-lg-4 well well-lg" ng-show="showCreate">
 
         <h4>Create a List</h4>
 
           <form class="form-auth" ng-Submit="createList()" name="list-details">
-            <label>List Name</label>
-            <input type="text" class="form-control"  ng-model="list.listName" required placeholder="Name your list" />
-            <br />
-            <label>List Description (optional)</label>
-            <textarea class="form-control" maxlength="200" rows="3" ng-model="list.listDesc" placeholder="Describe your list"></textarea>
-            <br/>
-            <input class="btn submit-btn pull-right" type="submit"  value="Submit!" ng-disabled="list-details.$invalid" />
+            <div class="form-group">
+              <label>List Name</label>
+              <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1"><i class="glyphicon glyphicon-list"></i></span>
+                <input type="text" class="form-control"  ng-model="list.listName" required placeholder="Name your list" aria-describedby="basic-addon1" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>List Description (optional)</label>
+              <textarea class="form-control" maxlength="200" rows="3" ng-model="list.listDesc" placeholder="Describe your list"></textarea>
+            </div>
+            <div class="form-group">
+              <input class="btn btn-primary pull-right" type="submit"  value="Submit!" ng-disabled="list-details.$invalid" />
+            </div>
           </form>   
   
       </div>  <!-- End createList -->
 
-      <div class="col-md-8 col-md-offset-1" ng-show="selected">
+      <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-1" ng-show="selected">
         
         <h2>{{selected.listName}}</h2>
 
@@ -50,8 +63,8 @@
             <button class="btn btn-primary" ng-click="showAddRecipients()">Add Recipient</button>
           </div>
         </div>
-
-        <div ng-show="recipient_message"class="alert alert-success" role="alert">
+        <!-- TODO add alert class to message on callback -->
+        <div ng-show="recipient_message" class="alert alert-success" role="alert">
           <p>{{recipient_message}}</p>
         </div>
 
@@ -78,19 +91,29 @@
 
         </div>
         <!-- End Add Recipients -->
-
-        <table class="table table-striped table-bordered">
+        <p class="lead" ng-show="listEmpty">This list is currently empty.</p>
+        <table ng-hide="listEmpty" class="table table-hover">
           <tr>
-            <th>Name</th>
-            <th>Roles</th>
-            <th>Remove</th>
+            <th><span class="hidden-xs">Name</span><span class="visible-xs">Recipients</span></th>
+            <th class="hidden-xs">Roles</th>
+            <th class="hidden-xs left">Remove</th>
           </tr>
           </thead>
           <tbody>
             <tr ng-repeat="recipient in selected.recipients | orderBy:'created_at':true">
-              <td><a href="#/recipients/{{recipient._id}}" ui-sref="edit-recipient({id: recipient._id})" >{{recipient.firstName}}</a></td>
-              <td><span ng-repeat="role in recipient.roles">{{role.role}}<br></span></td>
-              <td><button class="glyphicon glyphicon-remove" ng-click="removeRecipientFromList(recipient)"></button>
+              <td colspan="3">
+                <div class="row">
+                  <div class="col-xs-10 col-xs-offset-1 col-sm-4 col-sm-offset-0">
+                    <a href="#/recipients/{{recipient._id}}" ui-sref="edit-recipient({id: recipient._id})" >{{recipient.firstName}}</a>
+                  </div>
+                  <div class="col-xs-10 col-xs-offset-1 col-sm-4 col-sm-offset-0">
+                    <small ng-repeat="role in recipient.roles">{{role.role}}<br/></small>
+                  </div>
+                  <div class="col-xs-10 col-xs-offset-1 col-sm-4 col-sm-offset-0">
+                    <button class="btn btn-danger btn-sm" ng-click="removeRecipientFromList(recipient)"><span class="glyphicon glyphicon-remove hidden-xs"></span><span class="visible-xs">Remove</span></button>
+                  </div>
+                </div>
+              </td>
             </tr>
           </tbody>
 

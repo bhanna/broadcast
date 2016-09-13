@@ -1,25 +1,39 @@
-<div>
-	<h4>Create a Recipient</h4>
-	<form class="form-auth" ng-Submit="createRecipient(recipient, newRoles)" name="recipient-details">
-	    <label>First Name</label>
-	    <input type="text" class="form-control"  ng-model="recipient.firstName" required placeholder="First Name" />
-	    <br />
-	    <!-- <label>Last Name</label>
-	    <input type="text" class="form-control"  ng-model="recipient.lastName" required placeholder="Last Name" />
-	    <br />-->
-	    <label>Phone Number</label>
-	    <div>
-		    <input class="form-control phone1" placeholder="555" ng-model="recipient.phone1" required maxlength="3" /> - 
-		    <input class="form-control phone2" placeholder="555" ng-model="recipient.phone2" required maxlength="3" /> - 
-		    <input class="form-control phone3" placeholder="5555" ng-model="recipient.phone3" required maxlength="4" />
-		    <br/><br/>
-		</div>
-	    <label>Email</label>
-	    <input class="form-control" type="email" required ng-model="recipient.email" placeholder="Email"/>
-	    <br/>
-	    <label>Roles</label>
-	    <input class="form-control role" ng-repeat="role in newRoles" ng-model="role.role" placeholder="i.e. Bar Tender"/>
-	    <div class="pointer" ng-click="addRole()"><span class="glyphicon glyphicon-plus"></span> Role</div>
-	    <input class="btn btn-primary pull-right" type="submit"  value="Create!" ng-disabled="recipient-details.$invalid" />
-	</form>   
-</div>
+<h4>Create a Recipient</h4>
+<form class="form-auth" ng-Submit="createRecipient(recipient, newRoles)" name="recipient-details">
+	<div class="form-group">
+		<label>First Name</label>
+		<div class="input-group">	
+    	<span class="input-group-addon" id="basic-addon1"><i class="glyphicon glyphicon-user"></i></span>
+    	<input type="text" class="form-control"  ng-model="recipient.firstName" required placeholder="First Name" aria-describedby="basic-addon1" />
+  	</div>
+  </div>
+    <!-- <label>Last Name</label>
+    <input type="text" class="form-control"  ng-model="recipient.lastName" required placeholder="Last Name" />
+    <br />-->
+  <div class="form-group">
+    <label>Phone Number</label>
+    <div>
+	    <input class="form-control phone1" placeholder="555" ng-model="recipient.phone1" required maxlength="3" /> - 
+	    <input class="form-control phone2" placeholder="555" ng-model="recipient.phone2" required maxlength="3" /> - 
+	    <input class="form-control phone3" placeholder="5555" ng-model="recipient.phone3" required maxlength="4" />
+	 </div>
+	</div>
+	<div class="form-group">
+    <label>Email</label>
+    <div class="input-group">
+    	<span class="input-group-addon" id="basic-addon2"><i class="glyphicon glyphicon-envelope"></i></span>
+    	<input class="form-control" type="email" required ng-model="recipient.email" placeholder="Email" aria-describedby="basic-addon2" />
+  	</div>
+  </div>
+  <div class="form-group">
+    <label>Roles</label>
+    <!-- <div class="input-group">
+    	<span class="input-group-addon" id="basic-addon3"><i class="glyphicon glyphicon-paperclip"></i></span> -->
+    	<input class="form-control role" ng-repeat="role in newRoles" ng-model="role.role" placeholder="i.e. Bar Tender" aria-describedby="basic-addon3" />
+   <!--  </div> -->
+    <div class="pointer" ng-click="addRole()"><span class="glyphicon glyphicon-plus"></span> Role</div>
+  </div>
+  <div class="form-group">
+    <input class="btn btn-primary pull-right" type="submit"  value="Create!" ng-disabled="recipient-details.$invalid" />
+  </div>
+</form>   
